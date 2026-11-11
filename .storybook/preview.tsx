@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react-vite';
 import '../src/styles/fonts.css';
 import '../src/styles/tokens.css';
 import '../src/styles/global.css';
+import '../src/styles/utilities.css';
 
 const preview: Preview = {
   tags: ['autodocs'],
@@ -15,7 +16,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Foundations', 'Primitives', 'Blocks', 'Templates', 'Pages'],
+        order: ['Foundations', 'Primitives', 'Utilities', 'AI', 'Blocks', 'Templates', 'Pages'],
       },
     },
     a11y: {

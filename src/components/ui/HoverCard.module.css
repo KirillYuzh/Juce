@@ -1,0 +1,32 @@
+.trigger {
+  position: relative;
+  display: inline-flex;
+}
+
+.card {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 700;
+  width: max-content;
+  min-width: 260px;
+  max-width: 340px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--tb-white);
+  box-shadow: var(--tb-shadow-popover);
+  font: 400 13px/20px var(--tb-font-text);
+  color: var(--tb-text-primary);
+  animation: tb-popover-in 0.12s ease;
+}
+
+@keyframes tb-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

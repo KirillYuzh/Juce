@@ -7,10 +7,29 @@ export type IconName =
   | 'user'
   | 'menu'
   | 'close'
+  | 'chevronUp'
   | 'chevronDown'
   | 'chevronLeft'
   | 'chevronRight'
   | 'arrowRight'
+  | 'arrowUp'
+  | 'arrowUpRight'
+  | 'calendar'
+  | 'copy'
+  | 'refresh'
+  | 'thumbsUp'
+  | 'thumbsDown'
+  | 'paperclip'
+  | 'square'
+  | 'globe'
+  | 'external'
+  | 'checkCircle'
+  | 'alertCircle'
+  | 'plus'
+  | 'code'
+  | 'wrap'
+  | 'file'
+  | 'quote'
   | 'check'
   | 'star'
   | 'info'
@@ -40,9 +59,66 @@ const icons: Record<IconName, ReactNode> = {
   menu: <path d="M3 7h18M3 12h18M3 17h18" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
   chevronDown: <path d="m6 9 6 6 6-6" />,
+  chevronUp: <path d="m6 15 6-6 6 6" />,
   chevronLeft: <path d="m15 18-6-6 6-6" />,
   chevronRight: <path d="m9 18 6-6-6-6" />,
   arrowRight: <path d="M4 12h15M13 6l6 6-6 6" />,
+  arrowUp: <path d="M12 20V5M6 11l6-6 6 6" />,
+  arrowUpRight: <path d="M7 17 17 7M8 7h9v9" />,
+  calendar: (
+    <>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M8 3v4M16 3v4M3 10h18" />
+    </>
+  ),
+  copy: (
+    <>
+      <rect x="9" y="9" width="12" height="12" rx="2" />
+      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+    </>
+  ),
+  refresh: <path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6" />,
+  thumbsUp: (
+    <path d="M7 10v11H3V10h4Zm0 0 4-7a2 2 0 0 1 2 2v4h5a2 2 0 0 1 2 2.3l-1.2 6a2 2 0 0 1-2 1.7H7" />
+  ),
+  thumbsDown: (
+    <path d="M17 14V3h4v11h-4Zm0 0-4 7a2 2 0 0 1-2-2v-4H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 3H17" />
+  ),
+  paperclip: (
+    <path d="m20 11-8.5 8.5a5 5 0 0 1-7-7L13 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 6" />
+  ),
+  square: <rect x="6" y="6" width="12" height="12" rx="2" />,
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c2.5 2.5 3.8 5.6 3.8 9S14.5 18.5 12 21c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3Z" />
+    </>
+  ),
+  external: (
+    <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+  ),
+  checkCircle: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8 12 2.5 2.5L16 9" />
+    </>
+  ),
+  alertCircle: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v6M12 17v.1" />
+    </>
+  ),
+  plus: <path d="M12 5v14M5 12h14" />,
+  code: <path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" />,
+  wrap: <path d="M4 6h16M4 12h12a3 3 0 0 1 0 6h-4M8 15l-3 3 3 3M4 18h4" />,
+  file: (
+    <>
+      <path d="M6 3h8l4 4v14H6z" />
+      <path d="M14 3v4h4" />
+    </>
+  ),
+  quote: <path d="M9 11H5a4 4 0 0 1 4-4v8a4 4 0 0 1-4 4M20 11h-4a4 4 0 0 1 4-4v8a4 4 0 0 1-4 4" />,
   check: <path d="m4 12 5 5L20 6" />,
   star: (
     <path d="m12 3 2.7 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17.3 6.5 20.2l1.1-6.2L3 9.6l6.3-.9L12 3Z" />

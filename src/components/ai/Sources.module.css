@@ -1,0 +1,13 @@
+.link {
+  display: block;
+  border-radius: 8px;
+}
+
+.link:hover .title {
+  color: var(--tb-text-link);
+}
+
+.external {
+  flex: none;
+  color: var(--tb-text-tertiary);
+}
