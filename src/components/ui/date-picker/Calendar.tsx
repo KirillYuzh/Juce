@@ -212,7 +212,17 @@ export function Calendar({
                       : '';
 
               return (
-                <div key={key} role="gridcell" aria-selected={isSelected} className={styles.cell}>
+                <div
+                  key={key}
+                  role="gridcell"
+                  aria-selected={isSelected}
+                  className={cx(
+                    styles.cell,
+                    inRange && styles.cellInRange,
+                    isFrom && styles.cellStart,
+                    isTo && styles.cellEnd
+                  )}
+                >
                   <button
                     ref={(element) => {
                       if (element) dayRefs.current.set(key, element);
@@ -224,7 +234,6 @@ export function Calendar({
                     aria-label={`${formatDateFull(day)}${suffix}`}
                     className={cx(
                       styles.day,
-                      inRange && styles.inRange,
                       isSelected && styles.selected,
                       dateKey(day) === todayKey && styles.today
                     )}

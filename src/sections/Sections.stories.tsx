@@ -5,7 +5,6 @@ import {
   JournalBanner,
   MoreSection,
   ProductsSection,
-  QuickLinksSection,
   ResearchPromoSection,
   ServicesSection,
   StatsSection,
@@ -18,7 +17,7 @@ import {
   VacanciesSection,
   ValuesSection,
 } from './ResearcherSections';
-import { articles, moreLinks, products, quickLinks, researchPromos, services } from '../data/home';
+import { articles, moreLinks, products, researchPromos, services } from '../data/home';
 import {
   researcherAwards,
   researcherDirections,
@@ -48,11 +47,6 @@ export const HomeHero: Story = {
       imageAlt="Ассистент Джупсик: поиск, документы и проверка источников"
     />
   ),
-};
-
-export const QuickLinksSectionStory: Story = {
-  name: 'Quick links',
-  render: () => <QuickLinksSection items={quickLinks} />,
 };
 
 export const Products: Story = {

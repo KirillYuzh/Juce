@@ -6,11 +6,9 @@ import { ProductShowcase, type ProjectTemplate } from '../components/blocks/Prod
 import {
   ProductCard,
   PromoCard,
-  QuickLinks,
   StatPanel,
   TextCard,
   WideBanner,
-  type QuickLink,
   type PromoCardProps,
   type StatPanelLink,
 } from '../components/blocks/HomeBlocks';
@@ -68,16 +66,6 @@ export function Hero({
             </div>
           )}
         </div>
-      </div>
-    </section>
-  );
-}
-
-export function QuickLinksSection({ items }: { items: QuickLink[] }) {
-  return (
-    <section>
-      <div className="tb-container">
-        <QuickLinks items={items} />
       </div>
     </section>
   );

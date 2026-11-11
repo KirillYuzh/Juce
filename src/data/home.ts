@@ -1,4 +1,3 @@
-
 export interface NavItem {
   title: string;
   href: string;
@@ -50,15 +49,6 @@ export const homeNav: NavItem[] = [
     ],
   },
 ];
-
-export const quickLinks = [
-  { label: 'Найти статью', href: '#' },
-  { label: 'Собрать обзор', href: '#' },
-  { label: 'Проверить гипотезу', href: '#' },
-  { label: 'Датасеты', href: '#' },
-  { label: 'Оформить ссылки', href: '#' },
-  { label: 'Дедлайны грантов', href: '#/researchers' },
-] satisfies Array<{ label: string; href: string }>;
 
 export interface Product {
   id: string;

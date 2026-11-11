@@ -15,26 +15,6 @@ const toneClass: Record<Product['tone'], string> = {
   sand: styles.productSand,
 };
 
-export interface QuickLink {
-  label: string;
-  href: string;
-  wide?: boolean;
-}
-
-export function QuickLinks({ items }: { items: QuickLink[] }) {
-  return (
-    <ul className={styles.quickList}>
-      {items.map((item) => (
-        <li key={item.label} className={item.wide ? styles.quickWide : undefined}>
-          <a className={styles.quickItem} href={item.href} data-wide={item.wide || undefined}>
-            <span>{item.label}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export function ProductCard({ product }: { product: Product }) {
   return (
     <article
@@ -49,7 +29,7 @@ export function ProductCard({ product }: { product: Product }) {
       <img className={styles.productMedia} src={product.image} alt="" loading="lazy" />
       <span className={styles.productCta}>
         <Button
-          variant={product.tone === 'steel' ? 'white' : 'primary'}
+          variant={product.tone === 'steel' || product.tone === 'dark' ? 'white' : 'primary'}
           size="m"
           href={product.href}
         >

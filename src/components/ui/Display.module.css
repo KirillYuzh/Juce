@@ -72,7 +72,8 @@
 }
 
 .chipDark:hover {
-  background: #4d4d4d;
+  background: var(--tb-secondary);
+  color: var(--tb-primary);
 }
 
 .avatar {

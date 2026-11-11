@@ -1,31 +1,3 @@
-/* Quick links */
-.quickList {
-  display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.quickItem {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 6px;
-  border-radius: 12px;
-  text-align: center;
-  font: 500 14px/20px var(--tb-font-text);
-  color: var(--tb-text-secondary);
-  transition:
-    color 0.15s ease,
-    background-color 0.15s ease;
-}
-
-.quickItem:hover {
-  color: var(--tb-text-primary);
-  background: var(--tb-gray-100);
-}
-
 /* Product cards */
 .product {
   position: relative;
@@ -52,32 +24,22 @@
   color: #fff;
 }
 
-.productIce {
-  background: var(--tb-secondary);
-}
-
-.productLavender {
-  background: var(--tb-secondary);
-}
-
-.productMint {
-  background: var(--tb-secondary);
-}
-
+.productIce,
+.productLavender,
+.productMint,
 .productSand {
-  background: var(--tb-accent);
-  color: var(--tb-primary);
+  background: var(--tb-secondary);
 }
 
 .productDark {
-  background: var(--tb-accent);
-  color: var(--tb-primary);
+  background: var(--tb-primary);
+  color: #fff;
 }
 
 .productTitle {
   position: relative;
   z-index: 1;
-  font: 500 24px/28px var(--tb-font-heading);
+  font: 700 24px/28px var(--tb-font-heading);
 }
 
 .productDescription {
@@ -96,7 +58,7 @@
   width: 100%;
   height: 240px;
   object-fit: cover;
-  object-position: center bottom;
+  object-position: center 10%;
 }
 
 .productCta {
@@ -130,7 +92,7 @@
 .promoTitle {
   position: relative;
   z-index: 1;
-  font: 500 24px/28px var(--tb-font-heading);
+  font: 700 24px/28px var(--tb-font-heading);
 }
 
 .promoText {
@@ -149,7 +111,7 @@
   width: 100%;
   height: 290px;
   object-fit: cover;
-  object-position: center bottom;
+  object-position: center 10%;
 }
 
 .promoCta {
@@ -169,7 +131,7 @@
 }
 
 .textCardTitle {
-  font: 500 24px/28px var(--tb-font-heading);
+  font: 700 24px/28px var(--tb-font-heading);
 }
 
 .textCardText {
@@ -178,16 +140,16 @@
 }
 
 .textCardLink {
-  margin-top: 24px;
   align-self: flex-start;
+  margin-top: auto;
+  padding-top: 24px;
 }
 
 /* App stat panel */
 .statPanel {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 32px;
-  padding: 40px 40px 0;
+  align-items: stretch;
   overflow: hidden;
   border-radius: var(--tb-radius-l);
   background: var(--tb-secondary);
@@ -197,7 +159,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding-bottom: 40px;
+  padding: 40px;
 }
 
 .statIcon {
@@ -233,28 +195,27 @@
   height: 44px;
   padding: 0 16px;
   border-radius: 12px;
-  background: var(--tb-accent);
-  color: var(--tb-primary);
+  background: var(--tb-primary);
+  color: var(--tb-on-primary);
   font: 400 15px/20px var(--tb-font-text);
 }
 
 .store:hover {
-  background: var(--tb-accent-hover);
+  background: var(--tb-primary-hover);
 }
 
 .statMedia {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  position: relative;
   min-height: 460px;
 }
 
 .statMedia img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-width: 500px;
-  margin-top: 40px;
-  object-fit: contain;
-  object-position: top center;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 10%;
 }
 
 /* Wide article banner */
@@ -277,6 +238,7 @@
   width: 68%;
   height: 100%;
   object-fit: cover;
+  object-position: center 10%;
 }
 
 .bannerContent {
@@ -289,7 +251,7 @@
 }
 
 .bannerTitle {
-  font: 500 36px/40px var(--tb-font-heading);
+  font: 700 36px/40px var(--tb-font-heading);
 }
 
 .bannerSource {
@@ -303,36 +265,6 @@
 }
 
 @media (max-width: 1023px) {
-  .quickList {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px 8px;
-  }
-
-  .quickItem[data-wide='true'] {
-    grid-column: 1 / -1;
-    grid-column: 1 / -1;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 16px 20px;
-    background: var(--tb-secondary);
-    color: var(--tb-text-primary);
-  }
-
-  .quickWide {
-    grid-column: 1 / -1;
-  }
-
-  .quickItem[data-wide='true'] span {
-    flex: 1;
-    text-align: left;
-  }
-
-  .quickItem[data-wide='true'] img {
-    width: 48px;
-    height: 48px;
-    order: 2;
-  }
-
   .productLarge,
   .productSmall {
     grid-column: 1 / -1;
@@ -340,15 +272,14 @@
 
   .statPanel {
     grid-template-columns: minmax(0, 1fr);
-    padding: 32px 24px 0;
+  }
+
+  .statContent {
+    padding: 32px 24px;
   }
 
   .statMedia {
     min-height: 320px;
-  }
-
-  .statMedia img {
-    margin-top: 0;
   }
 
   .banner {

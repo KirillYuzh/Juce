@@ -66,7 +66,6 @@ export { Footer } from './components/blocks/Footer';
 export {
   ProductCard,
   PromoCard,
-  QuickLinks,
   StatPanel,
   TextCard,
   WideBanner,

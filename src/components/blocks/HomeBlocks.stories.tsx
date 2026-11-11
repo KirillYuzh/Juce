@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ProductCard, PromoCard, QuickLinks, StatPanel, TextCard, WideBanner } from './HomeBlocks';
-import { quickLinks, products, services } from '../../data/home';
+import { ProductCard, PromoCard, StatPanel, TextCard, WideBanner } from './HomeBlocks';
+import { products, services } from '../../data/home';
 
 const meta: Meta = {
   title: 'Blocks/Home blocks',
@@ -17,14 +17,6 @@ const grid = (columns: number) => ({
   gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
   gap: 24,
 });
-
-export const QuickLinksRow: Story = {
-  render: () => (
-    <div className="tb-container" style={container}>
-      <QuickLinks items={quickLinks} />
-    </div>
-  ),
-};
 
 export const ProductCardsLarge: Story = {
   render: () => (
