@@ -1,32 +1,31 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   ArticlesSection,
-  CareerPromoSection,
   Hero,
+  JournalBanner,
   MoreSection,
   ProductsSection,
   QuickLinksSection,
+  ResearchPromoSection,
   ServicesSection,
-  ShowcaseSection,
   StatsSection,
 } from './HomeSections';
 import {
-  AwardsSection,
-  CareerStartSection,
   DirectionsSection,
-  VacancyCtaSection,
+  FinalCtaSection,
+  LearningSection,
+  RecognitionSection,
+  VacanciesSection,
   ValuesSection,
-} from './CareerSections';
+} from './ResearcherSections';
+import { articles, moreLinks, products, quickLinks, researchPromos, services } from '../data/home';
 import {
-  articles,
-  cardDesigns,
-  careerPromos,
-  moreLinks,
-  products,
-  quickLinks,
-  services,
-} from '../data/home';
-import { careerAwards, careerDirections, careerStart, careerValues } from '../data/career';
+  researcherAwards,
+  researcherDirections,
+  researcherLearning,
+  researcherValues,
+  researcherVacancies,
+} from '../data/researchers';
 
 const meta: Meta = {
   title: 'Templates/Sections',
@@ -41,12 +40,12 @@ export const HomeHero: Story = {
   name: 'Hero — home',
   render: () => (
     <Hero
-      title="Дебетовая карта, которую рекомендуют ваши друзья"
-      text="Кэшбэк рублями до 30%, переводы клиентам Т-Банка без комиссии"
-      cta="Оформить карту"
-      href="https://www.tbank.ru/cards/debit-cards/"
-      image="/images/tbank/hero/debit-card.png"
-      imageAlt="Дебетовая карта Т-Банка"
+      title="Ассистент, который читает статьи вместе с вами"
+      text="Джупсик ищет источники, собирает обзор литературы и объясняет, откуда взялся каждый вывод"
+      cta="Открыть чат"
+      href="#/assistant"
+      image="/images/juce/hero.png"
+      imageAlt="Ассистент Джупсик: поиск, документы и проверка источников"
     />
   ),
 };
@@ -56,27 +55,10 @@ export const QuickLinksSectionStory: Story = {
   render: () => <QuickLinksSection items={quickLinks} />,
 };
 
-export const Showcase: Story = {
-  render: () => (
-    <ShowcaseSection
-      title="Управляйте финансами с выгодой в Т‑Банке"
-      tabs={[
-        {
-          id: 'debit',
-          label: 'Дебетовая карта',
-          title: 'Дебетовая карта Black',
-          designs: cardDesigns,
-          cashbackOptions: [{ value: 'all', label: 'Выберите повышенный кэшбэк (четыре категории)' }],
-        },
-      ]}
-    />
-  ),
-};
-
 export const Products: Story = {
   render: () => (
     <ProductsSection
-      title="Рекомендуемые продукты"
+      title="Кому помогает Джупсик"
       groups={[products.slice(0, 2), products.slice(2)]}
     />
   ),
@@ -85,11 +67,15 @@ export const Products: Story = {
 export const Stats: Story = {
   render: () => (
     <StatsSection
-      title="Более 56 млн клиентов выбрали Т-Банк"
+      title="12 400 исследователей уже работают в Джус"
       panel={{
-        title: 'Мобильное приложение Т-Банка',
-        text: 'Проверяйте баланс, оплачивайте услуги, получайте помощь в чате 24/7',
-        image: '/images/tbank/app/phone.png',
+        title: 'Джупсик в браузере',
+        text: 'Откройте ассистента без установки: поиск, обзоры и ссылки работают прямо в браузере',
+        image: '/images/juce/app.png',
+        links: [
+          { label: 'Открыть чат', href: '#/assistant', icon: 'globe' },
+          { label: 'Документация', href: '#', icon: 'code' },
+        ],
       }}
     />
   ),
@@ -98,22 +84,22 @@ export const Stats: Story = {
 export const Services: Story = {
   render: () => (
     <ServicesSection
-      title="Сервисы и услуги"
+      title="Что умеет Джупсик"
       cards={services}
       promos={[
         {
-          title: 'Приведи друга',
-          text: 'До 10 000 ₽ за рекомендации друзьям',
-          image: '/images/tbank/services/friend.png',
-          cta: 'Подробнее',
-          href: 'https://www.tbank.ru/bring-friend/',
+          title: 'Обзор за вечер',
+          text: 'Ассистент соберёт черновик обзора по вашей теме с ссылками на каждый тезис',
+          image: '/images/juce/promo-1.png',
+          cta: 'Попробовать',
+          href: '#/assistant',
         },
         {
-          title: 'T‑Pay — оплата в одно касание',
-          text: 'Всё как вы привыкли: легко, надежно и с сохранением кэшбэка',
-          image: '/images/tbank/services/tpay.png',
-          cta: 'Попробовать',
-          href: 'https://www.tbank.ru/tpay/',
+          title: 'Граф связей между статьями',
+          text: 'Показывает, кто на кого ссылается и где выводы расходятся',
+          image: '/images/juce/promo-2.png',
+          cta: 'Посмотреть',
+          href: '#/assistant',
           tone: 'dark',
         },
       ]}
@@ -122,68 +108,87 @@ export const Services: Story = {
 };
 
 export const Articles: Story = {
-  render: () => (
-    <ArticlesSection title="Актуально сейчас" articles={articles} moreHref="https://www.tbank.ru/blog/" />
-  ),
+  render: () => <ArticlesSection title="Из блога" articles={articles} moreHref="#" />,
 };
 
-export const CareerPromo: Story = {
-  name: 'Career promo',
-  render: () => <CareerPromoSection title="Работа и развитие" items={careerPromos} />,
+export const ResearchPromo: Story = {
+  name: 'Promo pair',
+  render: () => <ResearchPromoSection title="Лабораториям и группам" items={researchPromos} />,
+};
+
+export const Banner: Story = {
+  render: () => (
+    <JournalBanner
+      title="Как собрать обзор литературы за вечер"
+      source="Блог Джус"
+      image="/images/juce/banner.png"
+      cta="Читать"
+      href="#"
+    />
+  ),
 };
 
 export const More: Story = {
   render: () => <MoreSection title="Дополнительно" items={moreLinks} />,
 };
 
-export const CareerHero: Story = {
-  name: 'Hero — career',
+export const ResearchersHero: Story = {
+  name: 'Hero — researchers',
   render: () => (
     <Hero
-      title="Работа в Т-Банке"
-      text="Развивайте продукты, двигайте технологии вперед и помогайте клиентам. У нас можно видеть результат своей работы и расти вместе с Т-Командой"
-      cta="Выбрать вакансию"
-      href="https://www.tbank.ru/career/vacancies/"
+      title="Исследователям"
+      text="Аспирантам, научным группам и лабораториям: обзор литературы, данные и ссылки в одном месте"
+      cta="Начать исследование"
+      href="#/researchers"
+      image="/images/juce/researchers-hero.png"
+      imageAlt="Платформа Джус для исследователей"
     />
   ),
 };
 
-export const CareerDirections: Story = {
-  name: 'Career directions',
-  render: () => <DirectionsSection directions={careerDirections} />,
+export const ResearcherDirections: Story = {
+  name: 'Researcher directions',
+  render: () => <DirectionsSection directions={researcherDirections} />,
 };
 
-export const CareerValues: Story = {
-  name: 'Career values',
+export const ResearcherValues: Story = {
+  name: 'Researcher values',
   render: () => (
-    <ValuesSection title="У нас разные роли — и общий подход к работе" values={careerValues} />
+    <ValuesSection title="Как мы работаем с научным знанием" values={researcherValues} />
   ),
 };
 
-export const CareerAwards: Story = {
-  name: 'Career awards',
+export const ResearcherRecognition: Story = {
+  name: 'Researcher recognition',
   render: () => (
-    <AwardsSection
-      title="Т-Банк — среди лучших работодателей"
-      awards={careerAwards}
-      heroImage="/images/tbank/career/awards-hero.png"
-      bannerImage="/images/tbank/career/award-forbes.png"
+    <RecognitionSection
+      title="Принципы, которые проверяем на себе"
+      items={researcherAwards}
+      heroImage="/images/juce/researchers-2.png"
+      bannerImage="/images/juce/researchers-4.png"
+      bannerTitle="Открытая наука"
     />
   ),
 };
 
-export const CareerStart: Story = {
-  name: 'Career start',
-  render: () => <CareerStartSection title="Начните карьеру в Т-Банке" cards={careerStart} />,
+export const ResearcherLearning: Story = {
+  name: 'Researcher learning',
+  render: () => <LearningSection title="Обучение и стажировки" cards={researcherLearning} />,
 };
 
-export const CareerVacancyCta: Story = {
-  name: 'Career vacancy CTA',
+export const ResearcherVacancies: Story = {
+  name: 'Researcher vacancies',
+  render: () => <VacanciesSection title="Открытые позиции" vacancies={researcherVacancies} />,
+};
+
+export const ResearcherCta: Story = {
+  name: 'Researcher CTA',
   render: () => (
-    <VacancyCtaSection
-      title="Найдите ту самую вакансию"
-      cta="Выбрать вакансию"
-      href="https://www.tbank.ru/career/vacancies/"
+    <FinalCtaSection
+      title="Начните исследование на платформе Джус"
+      text="Ассистент поможет с обзором, данными и оформлением"
+      cta="Создать проект"
+      href="#/assistant"
     />
   ),
 };

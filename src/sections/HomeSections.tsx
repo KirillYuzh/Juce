@@ -1,8 +1,6 @@
-import { useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import styles from './Sections.module.css';
 import { Button } from '../components/ui/Button';
-import { Tabs } from '../components/ui/Navigation';
-import { ProductShowcase, type CardDesign } from '../components/blocks/ProductShowcase';
 import {
   ProductCard,
   PromoCard,
@@ -12,7 +10,9 @@ import {
   WideBanner,
   type QuickLink,
   type PromoCardProps,
+  type StatPanelLink,
 } from '../components/blocks/HomeBlocks';
+import type { IconName } from '../components/ui/icons';
 import type { Product } from '../data/home';
 
 const cx = (...values: Array<string | false | null | undefined>) =>
@@ -108,45 +108,17 @@ export function ProductsSection({
   );
 }
 
-export interface ShowcaseTab {
-  id: string;
-  label: string;
-  title: string;
-  designs: CardDesign[];
-  cashbackOptions: Array<{ value: string; label: string }>;
-}
-
-export function ShowcaseSection({ title, tabs }: { title: string; tabs: ShowcaseTab[] }) {
-  const [activeTab, setActiveTab] = useState(tabs[0]?.id);
-  const active = tabs.find((tab) => tab.id === activeTab) ?? tabs[0];
-  if (!active) return null;
-
-  return (
-    <Section title={title}>
-      <div className={styles.productsTabs}>
-        <Tabs
-          items={tabs.map((tab) => ({ id: tab.id, label: tab.label }))}
-          value={active.id}
-          onChange={setActiveTab}
-          label="Тип продукта"
-        />
-      </div>
-      <ProductShowcase
-        key={active.id}
-        title={active.title}
-        designs={active.designs}
-        cashbackOptions={active.cashbackOptions}
-      />
-    </Section>
-  );
-}
-
 export function StatsSection({
   title,
   panel,
 }: {
   title: string;
-  panel: { title: string; text: string; image: string };
+  panel: {
+    title: string;
+    text: string;
+    image: string;
+    links: StatPanelLink[];
+  };
 }) {
   return (
     <Section title={title}>
@@ -163,7 +135,7 @@ export function ServicesSection({
   title: string;
   cards: Array<{
     id: string;
-    icon: string;
+    icon: IconName;
     title: string;
     text: string;
     link: { label: string; href: string };
@@ -224,7 +196,7 @@ export function ArticlesSection({
   );
 }
 
-export function CareerPromoSection({
+export function ResearchPromoSection({
   title,
   items,
 }: {
@@ -256,17 +228,23 @@ export function CareerPromoSection({
   );
 }
 
-export function CreditPromoSection() {
+export function JournalBanner({
+  title,
+  source,
+  image,
+  cta,
+  href,
+}: {
+  title: string;
+  source: string;
+  image: string;
+  cta: string;
+  href: string;
+}) {
   return (
     <section>
       <div className="tb-container">
-        <WideBanner
-          title="Как на самом деле пользоваться кредиткой"
-          source="Т—Ж"
-          image="/images/tbank/articles/credit.png"
-          cta="Читать"
-          href="https://journal.tinkoff.ru/"
-        />
+        <WideBanner title={title} source={source} image={image} cta={cta} href={href} />
       </div>
     </section>
   );
@@ -279,7 +257,7 @@ export function MoreSection({
   title: string;
   items: Array<{
     id: string;
-    icon: string;
+    icon: IconName;
     title: string;
     text: string;
     link: { label: string; href: string };

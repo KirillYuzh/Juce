@@ -162,7 +162,19 @@
 }
 
 .logo {
-  display: block;
-  width: auto;
-  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--tb-primary);
+}
+
+.logoMark {
+  flex: none;
+  width: 32px;
+  height: 32px;
+}
+
+.logoWord {
+  font: 700 20px/1 var(--tb-font-heading);
+  letter-spacing: -0.01em;
 }

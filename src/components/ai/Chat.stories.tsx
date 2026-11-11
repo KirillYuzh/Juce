@@ -16,19 +16,19 @@ const startMessages: ChatMessage[] = [
   {
     id: 'u1',
     role: 'user',
-    content: 'Какая дебетовая карта подойдёт для путешествий?',
+    content: 'Как оценивают воспроизводимость результатов в последних обзорах?',
   },
   {
     id: 'a1',
     role: 'assistant',
     content:
-      'Для путешествий подойдёт дебетовая карта Black: кэшбэк рублями до 30% и бесплатные переводы клиентам Т-Банка.\n\nОформление занимает несколько минут, карту привезёт курьер.',
+      'В обзорах 2023–2025 годов чаще всего встречаются три подхода: повторный анализ открытых данных, независимая репликация эксперимента и проверка кода авторов.\n\nДля аспирантских работ обычно достаточно первого и третьего — они дешевле и быстрее.',
     reasoning:
-      'Сравниваю условия дебетовых карт: кэшбэк, стоимость обслуживания, снятие наличных и переводы.',
+      'Сравниваю, какие методы проверки воспроизводимости чаще упоминаются в метаобзорах и какие из них реалистичны для учебной лаборатории.',
     reasoningDuration: 4,
     sources: [
-      { url: 'https://www.tbank.ru/cards/debit-cards/', title: 'Дебетовые карты Т-Банка' },
-      { url: 'https://www.tbank.ru/tpay/', title: 'T-Pay' },
+      { url: 'https://arxiv.org/', title: 'arXiv: препринты' },
+      { url: 'https://www.nature.com/', title: 'Nature' },
     ],
   },
 ];
@@ -65,9 +65,9 @@ function ChatDemo({
           role: 'assistant',
           content:
             'Это демонстрационный ответ. В реальном приложении сюда приходит поток от модели.\n\nМожно передать reasoning, источники и действия под сообщением.',
-          reasoning: 'Проверяю контекст диалога и подбираю подходящий ответ.',
+          reasoning: 'Проверяю контекст диалога и подбираю источники по теме.',
           reasoningDuration: 2,
-          sources: [{ url: 'https://www.tbank.ru/', title: 'Т-Банк' }],
+          sources: [{ url: 'https://scholar.google.com/', title: 'Google Scholar' }],
         },
       ]);
       setStatus('ready');
@@ -89,9 +89,7 @@ function ChatDemo({
         onStop={stop}
         status={status}
         suggestions={suggestions}
-        onRetry={(id) =>
-          setMessages((current) => current.filter((message) => message.id !== id))
-        }
+        onRetry={(id) => setMessages((current) => current.filter((message) => message.id !== id))}
       />
     </div>
   );
@@ -106,9 +104,9 @@ export const Empty: Story = {
     <ChatDemo
       initial={[]}
       suggestions={[
-        'Как оформить карту?',
-        'Какие условия по вкладам?',
-        'Как перевести деньги другу?',
+        'Найди статьи про воспроизводимость',
+        'Собери обзор по теме',
+        'Оформи ссылки по ГОСТ',
       ]}
     />
   ),

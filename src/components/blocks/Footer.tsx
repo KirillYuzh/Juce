@@ -1,25 +1,28 @@
 import styles from './Footer.module.css';
 import { footerSections, type FooterSection } from '../../data/footer';
-import { careerFooterLinks } from '../../data/career';
+import { researcherFooterLinks } from '../../data/researchers';
 import { Chip } from '../ui/Display';
 import { Icon } from '../ui/Icon';
 
 const cx = (...values: Array<string | false | null | undefined>) =>
   values.filter(Boolean).join(' ');
 
-const hrefFor = (label: string) => `https://www.tbank.ru/search/?query=${encodeURIComponent(label)}`;
-
 export interface FooterProps {
-  variant?: 'home' | 'career';
+  variant?: 'light' | 'dark';
   sections?: FooterSection[];
   chips?: string[];
   className?: string;
 }
 
-export function Footer({ variant = 'home', sections = footerSections, chips = careerFooterLinks, className }: FooterProps) {
-  if (variant === 'career') {
+export function Footer({
+  variant = 'light',
+  sections = footerSections,
+  chips = researcherFooterLinks,
+  className,
+}: FooterProps) {
+  if (variant === 'dark') {
     return (
-      <footer className={cx(styles.footer, styles.footerCareer, className)}>
+      <footer className={cx(styles.footer, styles.footerDark, className)}>
         <div className="tb-container">
           <div className={styles.chips}>
             {chips.map((chip) => (
@@ -30,35 +33,32 @@ export function Footer({ variant = 'home', sections = footerSections, chips = ca
           </div>
 
           <p className={styles.darkMeta}>
-            Рейтинги: Future Today, Forbes, РБК, Forbes
+            Открытый доступ, воспроизводимость и честная атрибуция — принципы, на которых работает
+            платформа
           </p>
 
           <div className={styles.darkLegal}>
             <p>
-              Информация на данной странице предоставлена исключительно в целях ознакомления с
-              предложениями о сотрудничестве, но не гарантирует его. Термины, используемые на
-              настоящей странице, не являются юридически значимыми, приведены исключительно для
-              удобства навигации и не отражают характер/вид отношений, которые могут сложиться в
-              рамках сотрудничества (трудовые отношения, гражданско-правовые отношения).
+              Материалы платформы носят информационный характер и не заменяют консультацию научного
+              руководителя. Ассистент может ошибаться — проверяйте цитаты и численные результаты по
+              первоисточникам.
             </p>
             <p>
-              <a href="https://www.tbank.ru/about/privacy/">Политика обработки персональных данных Т‑Банка</a>
+              <a href="#">Политика обработки персональных данных</a>
             </p>
           </div>
 
           <div className={styles.darkBottom}>
-            <span>
-              © 2006—2026, АО «ТБанк», официальный сайт, универсальная лицензия ЦБ РФ № 2673
-            </span>
+            <span>© 2026, Джус — платформа научных исследований</span>
             <div className={styles.socials}>
-              <a href="https://t.me/tbank/" aria-label="Telegram">
+              <a href="#" aria-label="Telegram">
                 <Icon name="telegram" size={20} />
               </a>
-              <a href="https://vk.com/tbank/" aria-label="ВКонтакте">
+              <a href="#" aria-label="ВКонтакте">
                 <Icon name="vk" size={20} />
               </a>
-              <a href="https://ok.ru/tbank/" aria-label="Одноклассники">
-                <Icon name="ok" size={20} />
+              <a href="#" aria-label="Почта">
+                <Icon name="mail" size={20} />
               </a>
             </div>
           </div>
@@ -78,7 +78,7 @@ export function Footer({ variant = 'home', sections = footerSections, chips = ca
                 styles.section,
                 section.columns.length === 3 && styles.section3,
                 section.columns.length === 2 && styles.section2,
-                section.columns.length === 1 && styles.section1,
+                section.columns.length === 1 && styles.section1
               )}
             >
               <span className={styles.heading}>{section.heading}</span>
@@ -89,7 +89,7 @@ export function Footer({ variant = 'home', sections = footerSections, chips = ca
                       <div className={styles.group} key={group.title}>
                         <span className={styles.groupTitle}>{group.title}</span>
                         {group.links.map((link) => (
-                          <a className={styles.link} key={`${group.title}-${link}`} href={hrefFor(link)}>
+                          <a className={styles.link} key={`${group.title}-${link}`} href="#">
                             {link}
                           </a>
                         ))}
@@ -104,26 +104,18 @@ export function Footer({ variant = 'home', sections = footerSections, chips = ca
 
         <div className={styles.bottom}>
           <div className={styles.phoneBlock}>
-            <a className={styles.phone} href="tel:88003333333">
-              8 800 333-33-33
+            <a className={styles.phone} href="mailto:support@juce.edu">
+              support@juce.edu
             </a>
-            <span>Бесплатно для звонков по России</span>
-            <span>999 — Короткий номер</span>
+            <span>Ответим в течение рабочего дня</span>
+            <span>Пн–Пт, 9:00–19:00</span>
           </div>
           <div className={styles.legal}>
             <p>
-              На информационном ресурсе применяются рекомендательные технологии. При применении
-              информационных технологий предоставления информации осуществляется сбор,
-              систематизация и анализ сведений, относящихся к предпочтениям пользователей сети
-              «Интернет», находящихся на территории Российской Федерации.
+              Джус помогает искать источники и собирать черновики, но не принимает решений за
+              исследователя. Проверяйте выводы, цитаты и данные перед публикацией.
             </p>
-            <p>
-              Пример расчета условий носит исключительно информационный характер, а также не
-              является публичной офертой.
-            </p>
-            <span className={styles.copyright}>
-              © 2006—2026, АО «ТБанк», официальный сайт, универсальная лицензия ЦБ РФ № 2673
-            </span>
+            <span className={styles.copyright}>© 2026, Джус — платформа научных исследований</span>
           </div>
         </div>
       </div>

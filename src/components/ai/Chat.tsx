@@ -55,13 +55,13 @@ export function Chat({
   onRetry,
   status = 'ready',
   suggestions = [],
-  title = 'Ассистент',
-  subtitle = 'Поможет с продуктами Т-Банка',
-  placeholder = 'Спросите что-нибудь…',
+  title = 'Джупсик',
+  subtitle = 'ИИ-ассистент для научных исследований',
+  placeholder = 'Спросите про статьи, методы или данные…',
   emptyTitle = 'Чем помочь?',
-  emptyText = 'Опишите задачу, и ассистент предложит решение.',
+  emptyText = 'Найдите источники, соберите обзор литературы или проверьте гипотезу.',
   className,
-  footnote = 'Ассистент может ошибаться. Проверяйте важную информацию.',
+  footnote = 'Джупсик может ошибаться. Проверяйте цитаты и числа по первоисточникам.',
 }: ChatProps) {
   return (
     <div className={cx(styles.chat, className)}>
@@ -77,7 +77,7 @@ export function Chat({
               className={cx(
                 styles.dot,
                 status === 'error' && styles.dotError,
-                status === 'ready' && styles.dot,
+                status === 'ready' && styles.dot
               )}
             />
           )}
@@ -135,12 +135,7 @@ export function Chat({
             ))}
           </Suggestions>
         )}
-        <PromptInput
-          onSubmit={onSend}
-          onStop={onStop}
-          status={status}
-          placeholder={placeholder}
-        />
+        <PromptInput onSubmit={onSend} onStop={onStop} status={status} placeholder={placeholder} />
         {footnote && <p className={styles.footnote}>{footnote}</p>}
       </div>
     </div>
@@ -177,8 +172,8 @@ function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?
   return (
     <Message>
       <span className={styles.author}>
-        <Avatar initials="AI" size="s" />
-        Ассистент
+        <Avatar initials="Дж" size="s" />
+        Джупсик
       </span>
       <MessageContent>
         {message.reasoning !== undefined && (
@@ -201,9 +196,7 @@ function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?
           </div>
         )}
         {message.error && (
-          <span className={styles.subtitle}>
-            Не удалось получить ответ. Попробуйте ещё раз.
-          </span>
+          <span className={styles.subtitle}>Не удалось получить ответ. Попробуйте ещё раз.</span>
         )}
         {message.sources && message.sources.length > 0 && <Sources sources={message.sources} />}
         <MessageFooter>

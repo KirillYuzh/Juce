@@ -22,8 +22,8 @@
   align-items: center;
 }
 
-.logo img {
-  height: 34px;
+.logo svg {
+  height: 32px;
 }
 
 .nav {

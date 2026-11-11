@@ -50,18 +50,18 @@ export const PromoCards: Story = {
   render: () => (
     <div className="tb-container" style={{ ...container, ...grid(2) }}>
       <PromoCard
-        title="Приведи друга"
-        text="До 10 000 ₽ за рекомендации друзьям"
-        image="/images/tbank/services/friend.png"
-        cta="Подробнее"
-        href="https://www.tbank.ru/bring-friend/"
+        title="Обзор за вечер"
+        text="Черновик обзора по вашей теме с ссылками на каждый тезис"
+        image="/images/juce/promo-1.png"
+        cta="Попробовать"
+        href="#/assistant"
       />
       <PromoCard
-        title="T‑Pay — оплата в одно касание"
-        text="Всё как вы привыкли: легко, надежно и с сохранением кэшбэка"
-        image="/images/tbank/services/tpay.png"
-        cta="Попробовать"
-        href="https://www.tbank.ru/tpay/"
+        title="Граф связей между статьями"
+        text="Показывает, кто на кого ссылается и где выводы расходятся"
+        image="/images/juce/promo-2.png"
+        cta="Посмотреть"
+        href="#/assistant"
         tone="dark"
       />
     </div>
@@ -90,9 +90,13 @@ export const StatPanelStory: Story = {
   render: () => (
     <div className="tb-container" style={container}>
       <StatPanel
-        title="Мобильное приложение Т-Банка"
-        text="Проверяйте баланс, оплачивайте услуги, получайте помощь в чате 24/7"
-        image="/images/tbank/app/phone.png"
+        title="Джупсик в браузере"
+        text="Откройте ассистента без установки: поиск, обзоры и ссылки работают прямо в браузере"
+        image="/images/juce/app.png"
+        links={[
+          { label: 'Открыть чат', href: '#/assistant', icon: 'globe' },
+          { label: 'Документация', href: '#', icon: 'code' },
+        ]}
       />
     </div>
   ),
@@ -103,11 +107,11 @@ export const WideBannerStory: Story = {
   render: () => (
     <div className="tb-container" style={container}>
       <WideBanner
-        title="Как на самом деле пользоваться кредиткой"
-        source="Т—Ж"
-        image="/images/tbank/articles/credit.png"
+        title="Как собрать обзор литературы за вечер"
+        source="Блог Джус"
+        image="/images/juce/banner.png"
         cta="Читать"
-        href="https://journal.tinkoff.ru/"
+        href="#"
       />
     </div>
   ),

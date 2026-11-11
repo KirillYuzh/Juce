@@ -10,7 +10,7 @@ const cx = (...values: Array<string | false | null | undefined>) =>
 
 export interface HeaderProps {
   nav: NavItem[];
-  variant?: 'home' | 'career';
+  variant?: 'home' | 'researchers';
   loginLabel?: string;
   loginHref?: string;
   homeHref?: string;
@@ -21,8 +21,8 @@ export function Header({
   nav,
   variant = 'home',
   loginLabel,
-  loginHref = 'https://www.tbank.ru/login/',
-  homeHref = 'https://www.tbank.ru/',
+  loginHref = '#',
+  homeHref = '#',
   className,
 }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
@@ -44,15 +44,15 @@ export function Header({
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  const label = loginLabel ?? (variant === 'career' ? 'Войти' : 'Личный кабинет');
+  const label = loginLabel ?? (variant === 'researchers' ? 'Войти' : 'Личный кабинет');
 
   return (
     <header className={cx(styles.header, scrolled && styles.scrolled, className)}>
       <div className={cx('tb-container', styles.inner)}>
         <a
           className={styles.logo}
-          href={variant === 'career' ? 'https://www.tbank.ru/career/' : homeHref}
-          aria-label="Т-Банк"
+          href={variant === 'researchers' ? '#/researchers' : homeHref}
+          aria-label="Джус"
         >
           <Logo />
         </a>
@@ -78,7 +78,7 @@ export function Header({
 
         <div className={styles.actions}>
           <div className={styles.desktopActions}>
-            {variant === 'career' ? (
+            {variant === 'researchers' ? (
               <Button variant="secondary" size="l" href={loginHref}>
                 {label}
               </Button>

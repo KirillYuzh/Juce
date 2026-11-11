@@ -1,8 +1,17 @@
-import styles from './CareerBlocks.module.css';
+// ponytail: CSS-модуль остаётся под прежним именем — стили ведёт другой человек.
+import styles from './ResearcherBlocks.module.css';
 import { Button } from '../ui/Button';
+import { Icon, type IconName } from '../ui/Icon';
 
 const cx = (...values: Array<string | false | null | undefined>) =>
   values.filter(Boolean).join(' ');
+
+// Ряд карточек, который сам собирается в одну, две или три колонки.
+const rowOfCards = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+  gap: 24,
+} as const;
 
 export interface Direction {
   id: string;
@@ -18,12 +27,7 @@ export function DirectionCard({ direction }: { direction: Direction }) {
     <article className={styles.direction}>
       <h3 className={styles.directionTitle}>{direction.title}</h3>
       <p className={styles.directionText}>{direction.text}</p>
-      <img
-        className={styles.directionMedia}
-        src={direction.image}
-        alt={direction.title}
-        loading="lazy"
-      />
+      <img className={styles.directionMedia} src={direction.image} alt="" loading="lazy" />
       <span className={styles.directionCta}>
         <Button variant="white" size="m" href={direction.href}>
           {direction.cta}
@@ -33,7 +37,7 @@ export function DirectionCard({ direction }: { direction: Direction }) {
   );
 }
 
-export interface CareerValue {
+export interface ResearchValue {
   id: string;
   title: string;
   text: string;
@@ -41,7 +45,7 @@ export interface CareerValue {
   wide?: boolean;
 }
 
-export function ValuesGrid({ values }: { values: CareerValue[] }) {
+export function ValuesGrid({ values }: { values: ResearchValue[] }) {
   return (
     <div className={styles.values}>
       {values.map((value) => (
@@ -62,45 +66,47 @@ export function ValuesGrid({ values }: { values: CareerValue[] }) {
   );
 }
 
-export interface Award {
+export interface RecognitionItem {
   id: string;
   title: string;
   text: string;
 }
 
-export function Awards({
-  awards,
+export function Recognition({
+  items,
   heroImage,
   bannerImage,
+  bannerTitle = 'Открытая наука',
 }: {
-  awards: Award[];
+  items: RecognitionItem[];
   heroImage: string;
   bannerImage: string;
+  bannerTitle?: string;
 }) {
   return (
     <div>
       <div className={styles.awards}>
         <div className={styles.awardsList}>
-          {awards.map((award) => (
-            <div key={award.id}>
-              <h3 className={styles.awardTitle}>{award.title}</h3>
-              <p className={styles.awardText}>{award.text}</p>
+          {items.map((item) => (
+            <div key={item.id}>
+              <h3 className={styles.awardTitle}>{item.title}</h3>
+              <p className={styles.awardText}>{item.text}</p>
             </div>
           ))}
         </div>
-        <img className={styles.awardsHero} src={heroImage} alt="Награды Т-Банка" loading="lazy" />
+        <img className={styles.awardsHero} src={heroImage} alt="" loading="lazy" />
       </div>
       <div className={styles.awardBanner}>
         <img src={bannerImage} alt="" loading="lazy" />
-        <span className={styles.awardBannerTitle}>Forbes</span>
+        <span className={styles.awardBannerTitle}>{bannerTitle}</span>
       </div>
     </div>
   );
 }
 
-export interface CareerStartCard {
+export interface ResearchTrack {
   id: string;
-  icon: string;
+  icon: IconName;
   title: string;
   text: string;
   cta: string;
@@ -108,9 +114,9 @@ export interface CareerStartCard {
   tone: 'gray' | 'accent';
 }
 
-export function StartCards({ cards }: { cards: CareerStartCard[] }) {
+export function StartCards({ cards }: { cards: ResearchTrack[] }) {
   return (
-    <div className={styles.tracks}>
+    <div style={rowOfCards}>
       {cards.map((card) => (
         <article
           key={card.id}
@@ -119,12 +125,51 @@ export function StartCards({ cards }: { cards: CareerStartCard[] }) {
             card.tone === 'accent' ? styles.trackAccent : styles.trackGray
           )}
         >
-          <img className={styles.trackIcon} src={card.icon} alt="" loading="lazy" />
+          <Icon name={card.icon} size={32} style={{ marginBottom: 32 }} />
           <h3 className={styles.trackTitle}>{card.title}</h3>
           <p className={styles.trackText}>{card.text}</p>
           <span className={styles.trackCta}>
             <Button variant="white" size="m" href={card.href}>
               {card.cta}
+            </Button>
+          </span>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+export interface Vacancy {
+  id: string;
+  icon: IconName;
+  title: string;
+  meta: string;
+  text: string;
+  cta: string;
+  href: string;
+}
+
+export function VacancyCards({ vacancies }: { vacancies: Vacancy[] }) {
+  return (
+    <div style={rowOfCards}>
+      {vacancies.map((vacancy) => (
+        <article key={vacancy.id} className={cx(styles.track, styles.trackGray)}>
+          <Icon name={vacancy.icon} size={32} style={{ marginBottom: 32 }} />
+          <h3 className={styles.trackTitle}>{vacancy.title}</h3>
+          <p
+            className={styles.trackText}
+            style={{
+              marginTop: 4,
+              font: '400 14px/20px var(--tb-font-text)',
+              color: 'var(--tb-text-secondary)',
+            }}
+          >
+            {vacancy.meta}
+          </p>
+          <p className={styles.trackText}>{vacancy.text}</p>
+          <span className={styles.trackCta}>
+            <Button variant="white" size="m" href={vacancy.href} iconRight="arrowRight">
+              {vacancy.cta}
             </Button>
           </span>
         </article>

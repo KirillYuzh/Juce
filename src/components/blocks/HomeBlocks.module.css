@@ -22,10 +22,12 @@
   color: var(--tb-text-primary);
 }
 
-.quickItem img {
+.quickItem img,
+.quickItem svg {
   width: 72px;
   height: 72px;
   object-fit: contain;
+  color: var(--tb-text-secondary);
 }
 
 /* Product cards */
@@ -170,9 +172,15 @@
 }
 
 .textCardIcon {
-  width: 36px;
-  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
   margin-bottom: 16px;
+  border-radius: 16px;
+  background: var(--tb-bg-secondary);
+  color: var(--tb-primary);
 }
 
 .textCardTitle {

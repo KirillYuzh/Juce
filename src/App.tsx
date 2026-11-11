@@ -1,7 +1,10 @@
 import { HomePage } from './pages/HomePage';
-import { CareerPage } from './pages/CareerPage';
+import { ResearchersPage } from './pages/ResearchersPage';
+import { AssistantPage } from './pages/AssistantPage';
 
 export function App() {
-  const career = window.location.hash.startsWith('#/career');
-  return career ? <CareerPage /> : <HomePage />;
+  const { hash } = window.location;
+  if (hash.startsWith('#/researchers')) return <ResearchersPage />;
+  if (hash.startsWith('#/assistant')) return <AssistantPage />;
+  return <HomePage />;
 }

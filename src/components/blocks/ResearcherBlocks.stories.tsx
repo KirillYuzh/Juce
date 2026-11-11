@@ -1,9 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Awards, DirectionCard, StartCards, ValuesGrid } from './CareerBlocks';
-import { careerAwards, careerDirections, careerStart, careerValues } from '../../data/career';
+import {
+  Recognition,
+  DirectionCard,
+  StartCards,
+  VacancyCards,
+  ValuesGrid,
+} from './ResearcherBlocks';
+import {
+  researcherAwards,
+  researcherDirections,
+  researcherLearning,
+  researcherVacancies,
+  researcherValues,
+} from '../../data/researchers';
 
 const meta: Meta = {
-  title: 'Blocks/Career blocks',
+  title: 'Blocks/Researchers',
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
 };
@@ -13,8 +25,16 @@ type Story = StoryObj;
 
 export const Directions: Story = {
   render: () => (
-    <div className="tb-container" style={{ paddingBlock: 32, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-      {careerDirections.map((direction) => (
+    <div
+      className="tb-container"
+      style={{
+        paddingBlock: 32,
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+        gap: 24,
+      }}
+    >
+      {researcherDirections.map((direction) => (
         <DirectionCard key={direction.id} direction={direction} />
       ))}
     </div>
@@ -24,28 +44,38 @@ export const Directions: Story = {
 export const Values: Story = {
   render: () => (
     <div className="tb-container" style={{ paddingBlock: 32 }}>
-      <ValuesGrid values={careerValues} />
+      <ValuesGrid values={researcherValues} />
     </div>
   ),
 };
 
-export const AwardsBlock: Story = {
-  name: 'Awards',
+export const RecognitionBlock: Story = {
+  name: 'Recognition',
   render: () => (
     <div className="tb-container" style={{ paddingBlock: 32 }}>
-      <Awards
-        awards={careerAwards}
-        heroImage="/images/tbank/career/awards-hero.png"
-        bannerImage="/images/tbank/career/award-forbes.png"
+      <Recognition
+        items={researcherAwards}
+        heroImage="/images/juce/researchers-2.png"
+        bannerImage="/images/juce/researchers-3.png"
+        bannerTitle="Открытая наука"
       />
     </div>
   ),
 };
 
-export const Start: Story = {
+export const Learning: Story = {
+  name: 'Learning',
   render: () => (
     <div className="tb-container" style={{ paddingBlock: 32 }}>
-      <StartCards cards={careerStart} />
+      <StartCards cards={researcherLearning} />
+    </div>
+  ),
+};
+
+export const Vacancies: Story = {
+  render: () => (
+    <div className="tb-container" style={{ paddingBlock: 32 }}>
+      <VacancyCards vacancies={researcherVacancies} />
     </div>
   ),
 };

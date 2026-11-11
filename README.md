@@ -1,25 +1,34 @@
-# T-Bank UI Kit
+# Джус — UI-кит платформы научных исследований
 
-React-библиотека компонентов и шаблонов страниц, собранная по публичным страницам [tbank.ru](https://www.tbank.ru/) и [tbank.ru/career](https://www.tbank.ru/career/). Всё живёт в Storybook: примитивы, блоки, секции и две готовые страницы.
+React-библиотека компонентов и шаблонов для платформы «Джус» и её ИИ-ассистента Джупсика. Всё живёт в Storybook: токены, примитивы, AI-элементы, блоки, секции и три готовые страницы.
 
 ## Запуск
 
 ```bash
 npm install
-npm run storybook     # Storybook на http://localhost:6006
-npm run dev           # демо-приложение на http://localhost:5173, /#/career для карьерной страницы
-npm run build         # проверка типов + production-сборка демо
+npm run storybook        # Storybook на http://localhost:6006
+npm run dev              # демо: /#/researchers и /#/assistant
+npm run build            # проверка типов + production-сборка демо
+npm run build:lib        # сборка npm-пакета в dist/
 npm run build-storybook
 ```
 
-## Карта источников
+## Установка как пакета
 
-| Источник                       | Локальная страница       | Файл                       |
-| ------------------------------ | ------------------------ | -------------------------- |
-| `https://www.tbank.ru/`        | `Templates/Pages/Home`   | `src/pages/HomePage.tsx`   |
-| `https://www.tbank.ru/career/` | `Templates/Pages/Career` | `src/pages/CareerPage.tsx` |
+```bash
+npm i github:KirillYuzh/Juce#develop
+```
 
-Вспомогательные материалы: замеры, порядок секций и карта ассетов в `docs/research/tbank/brief.md`. Скриншоты источника и локальной сборки в `docs/research/tbank/screens/`.
+```tsx
+import { Button, Chat, PromptInput } from 'juce-ui';
+import 'juce-ui/styles.css';
+
+export function App() {
+  return <Button>Начать исследование</Button>;
+}
+```
+
+Пакет собирается при установке (`prepare` → `build:lib`), поэтому из git ставится из ветки `develop`. React и React DOM — peer-зависимости (`>=18`), в бандл не попадают. Стили, шрифты и CSS Modules приезжают одним файлом `styles.css`, ассеты шрифтов лежат рядом в `dist/assets`.
 
 ## Структура Storybook
 
@@ -31,11 +40,11 @@ npm run build-storybook
 
 `AI`: Message, Message scroller, Prompt input, Chat, Task, Trace, Sources, Stack trace, Reasoning, Inline citation, Suggestions.
 
-`Blocks`: Header, Footer, QuickLinks, ProductCard, PromoCard, TextCard, StatPanel, WideBanner, ProductShowcase, DirectionCard, ValuesGrid, Awards, StartCards.
+`Blocks`: Header, Footer, QuickLinks, ProductCard, PromoCard, TextCard, StatPanel, WideBanner, DirectionCard, ValuesGrid, StartCards, VacancyCards.
 
 `Templates/Sections`: готовые секции страниц, которые можно собирать в любом порядке.
 
-`Templates/Pages`: целые страницы с хедером, контентом, футером и куки-баннером.
+`Templates/Pages`: `Home`, `Researchers`, `Assistant` — целые страницы с хедером и футером.
 
 ## Слои
 
@@ -48,62 +57,44 @@ src/
   sections/      секции-обёртки с заголовками
   pages/         шаблоны страниц
   lib/           чистые функции без React (работа с датами)
-  data/          тексты и ссылки, снятые с источника
+  data/          тексты и ссылки страниц
 ```
 
 Все стили на CSS Modules и переменных из `src/styles/tokens.css`. Палитра: графитовый primary `#222526`, secondary `#ccdcef`, коралловый accent `#ff6574`. Текст `rgba(0,0,0,.8)`, радиус карточек 24px, кнопок 12px, контейнер 1152px с полями 24px, хедер 64px.
 
-Шрифты лежат в `public/fonts` и разбиты на subsets: Manrope (кириллица, латиница, latin-ext) — база интерфейса и заголовков, Linux Libertine — цитаты и длинный научный текст, JetBrains Mono — код, стек-трейсы и номера строк. Токены: `--tb-font-text` и `--tb-font-heading` (Manrope), `--tb-font-quote`, `--tb-font-mono`. Живые образцы в `Foundations/Tokens/Typography`.
+## Шрифты
 
-Manrope и JetBrains Mono распространяются под OFL, взяты subset-файлами с Google Fonts. Linux Libertine — GPL-2.0 с font exception, дополнительно OFL; OTF с CTAN сжат в woff2. Локальные изображения и 3D-иконки в `public/images/tbank`, имена папок повторяют секции.
+Manrope — база интерфейса и заголовков, Linux Libertine — цитаты и длинный научный текст, JetBrains Mono — код, стек-трейсы и номера строк. Токены: `--tb-font-text`, `--tb-font-heading`, `--tb-font-quote`, `--tb-font-mono`. Файлы лежат в `src/assets/fonts` и собираются в `dist/assets`, поэтому работают и в демо, и в пакете.
 
-Иконки — Ant Design Icons (MIT). Данные лежат снапшотом в `src/components/ui/icons.ts`, runtime-зависимости нет: чтобы добавить иконку, допишите пару `имя: [путь]` из `@ant-design/icons-svg` или [shadcn.io/icons](https://www.shadcn.io/icons/ant-design). VK и Odnoklassniki в Ant Design отсутствуют и остались собственными путями.
+Manrope и JetBrains Mono распространяются под OFL, взяты subset-файлами с Google Fonts. Linux Libertine — GPL-2.0 с font exception, дополнительно OFL; OTF с CTAN сжат в woff2.
 
-## AI-элементы и утилиты
+## Иконки
 
-Набор `src/components/ai` повторяет состав и API shadcn/ui, но написан с нуля под этот кит: CSS Modules на общих токенах, русские тексты, свои иконки и aria. Ни одна зависимость shadcn не подключена.
+Ant Design Icons (MIT). Данные лежат снапшотом в `src/components/ui/icons.ts`, runtime-зависимости нет: чтобы добавить иконку, допишите пару `имя: [путь]` из `@ant-design/icons-svg` или [shadcn.io/icons](https://www.shadcn.io/icons/ant-design). VK и Odnoklassniki в Ant Design отсутствуют и остались собственными путями.
 
-Поведение вынесено в headless-примитивы, поверх которых собраны готовые элементы:
+## Графика
 
-- `Collapsible` — `open`/`defaultOpen`/`onOpenChange`, `aria-expanded`/`aria-controls`, `keepMounted` для содержимого, которое должно остаться в DOM.
-- `HoverCard` — задержки открытия и закрытия, Escape, закрытие при уходе фокуса, вложенные интерактивные элементы доступны с клавиатуры.
-- `Popover` — позиционирование от триггера, закрытие по Escape и клику мимо.
-- `MessageScroller` — `Provider`/`Root`/`Viewport`/`Content`/`Item`/`Button`, автоскролл только пока читатель внизу, сохранение позиции при подгрузке старых сообщений, хуки `useMessageScroller`, `useMessageScrollerScrollable`, `useMessageScrollerVisibility`.
-- `CodeBlock` — свой регулярный токенизатор на js/ts/tsx/jsx/json/css/html/bash и diff-строки, без highlight.js и prism.
-- `DatePicker` — календарь и пресеты периодов на `Date` из `src/lib/date.ts`, без date-fns.
+Все иллюстрации — композиции из иконок кита, прогнанные через 4×4 Bayer-дизеринг в три брендовых цвета. Готовые PNG лежат в `public/images/juce`:
 
-Утилиты лежат в `src/styles/utilities.css` и подключаются классами:
+| Файл                                     | Где используется               |
+| ---------------------------------------- | ------------------------------ |
+| `hero.png`                               | hero главной                   |
+| `researchers-hero.png`                   | hero страницы «Исследователям» |
+| `audience-1…4.png`                       | карточки аудиторий             |
+| `researchers-1…4.png`                    | карточки и ценности            |
+| `promo-1/2.png`, `banner.png`, `app.png` | промо-блоки и баннер           |
 
-| Класс                        | Что делает                                                        |
-| ---------------------------- | ----------------------------------------------------------------- |
-| `.tb-scroll-fade-y`          | вертикальные mask-fade по краям, сила зависит от прокрутки        |
-| `.tb-scroll-fade-x`          | то же по горизонтали, для лент чипов                              |
-| `.tb-scroll-fade-t/-b/-l/-r` | fade только с одной стороны                                       |
-| `.tb-scroll-fade-none`       | отключает маску                                                   |
-| `.tb-shimmer`                | блик по тексту для «печатает…», есть `-once`, `-reverse`, `-none` |
-
-Fade работает на scroll-driven animation с `@property`: смещения краёв — зарегистрированные `<length>`, поэтому анимация может их интерполировать. Слушателей прокрутки нет. В браузерах без `animation-timeline` срабатывает `@supports not`: края затенены статично, содержимое доступно. При `prefers-reduced-motion` блик отключается, текст остаётся обычным.
-
-Размер фейда настраивается через `--tb-sf-size` (по умолчанию 40px), длина перехода — `--tb-sf-reveal` (96px). Только длины: процент в этих переменных ломает интерполяцию.
+Пересобрать: `node .research/tools/art.mjs` (нужен локальный Chrome и puppeteer-core в `.research/tools`, служебная папка в `.gitignore`).
 
 ## Проверки
 
 ```bash
-npx tsc -b
+npx tsc --noEmit -p tsconfig.app.json
 npm run build
+npm run build:lib
 npm run build-storybook
 ```
 
-Сборка Storybook проходит, страницы рендерятся без ошибок в консоли. Сравнение с источником делалось на 1440px и 390px, скриншоты в `docs/research/tbank/screens/`.
+## Лицензии
 
-## Что осталось за рамками
-
-Мобильный текст hero на career-странице у источника короче десктопного; здесь используется один вариант текста.
-
-Футер home сокращён по количеству ссылок и юридических абзацев: структура и стили совпадают, полный список ссылок источника не переносился.
-
-Табы «Кредитная карта» и «Вклад» в блоке оформления меняют заголовок и набор полей, но используют ту же форму, что и дебетовая карта. У источника это отдельные формы.
-
-Логотип Forbes на жёлтом баннере набран текстом Georgia, а не фирменным логотипом.
-
-Фотографии и 3D-ассеты принадлежат Т-Банку и скачаны с публичных CDN только для демонстрации компонентов. Для реального использования нужны собственные ассеты. Часть иллюстраций осталась в исходных цветах, у hero, карточек направлений и ценностей жёлтый сдвинут в коралловый фильтром.
+Код — MIT. Иконки — Ant Design Icons (MIT). Шрифты — по лицензиям выше. Иллюстрации сгенерированы из иконок кита и распространяются вместе с кодом.

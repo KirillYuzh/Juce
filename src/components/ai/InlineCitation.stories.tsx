@@ -29,16 +29,18 @@ const paragraph: CSSProperties = {
 export const InText: Story = {
   render: () => (
     <p style={paragraph}>
-      <InlineCitationText>Кэшбэк начисляется рублями в конце расчётного периода</InlineCitationText>
+      <InlineCitationText>
+        Воспроизводимость проверяют повторным анализом открытых данных
+      </InlineCitationText>
       <InlineCitation>
         <InlineCitationCard>
-          <InlineCitationCardTrigger sources={[{ url: 'https://www.tbank.ru/debit/' }]} />
+          <InlineCitationCardTrigger sources={[{ url: 'https://arxiv.org/' }]} />
           <InlineCitationCardBody>
-            <InlineCitationSource url="https://www.tbank.ru/debit/" title="Дебетовые карты" />
+            <InlineCitationSource url="https://arxiv.org/" title="arXiv: препринты" />
           </InlineCitationCardBody>
         </InlineCitationCard>
       </InlineCitation>
-      <InlineCitationText>, а категории можно менять раз в месяц.</InlineCitationText>
+      <InlineCitationText>, реже — независимой репликацией.</InlineCitationText>
     </p>
   ),
 };
@@ -46,20 +48,20 @@ export const InText: Story = {
 export const MultipleSources: Story = {
   render: () => (
     <p style={paragraph}>
-      <InlineCitationText>Про стажировки и офисы можно прочитать в разделах</InlineCitationText>
+      <InlineCitationText>Про методы и данные можно прочитать в разделах</InlineCitationText>
       <InlineCitation>
         <InlineCitationCard>
           <InlineCitationCardTrigger
             sources={[
-              { url: 'https://www.tbank.ru/career/' },
-              { url: 'https://www.tbank.ru/about/' },
-              { url: 'https://www.tbank.ru/invest/' },
+              { url: 'https://arxiv.org/' },
+              { url: 'https://www.nature.com/' },
+              { url: 'https://scholar.google.com/' },
             ]}
           />
           <InlineCitationCardBody>
-            <InlineCitationSource url="https://www.tbank.ru/career/" title="Карьера в Т-Банке" />
-            <InlineCitationSource url="https://www.tbank.ru/about/" title="О компании" />
-            <InlineCitationSource url="https://www.tbank.ru/invest/" />
+            <InlineCitationSource url="https://arxiv.org/" title="arXiv: препринты" />
+            <InlineCitationSource url="https://www.nature.com/" title="Nature" />
+            <InlineCitationSource url="https://scholar.google.com/" />
           </InlineCitationCardBody>
         </InlineCitationCard>
       </InlineCitation>

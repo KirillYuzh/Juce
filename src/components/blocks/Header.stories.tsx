@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Header } from './Header';
 import { homeNav } from '../../data/home';
-import { careerNav } from '../../data/career';
+import { researcherNav } from '../../data/researchers';
 
 const meta: Meta = {
   title: 'Blocks/Header',
@@ -17,6 +17,6 @@ export const Home: Story = {
   args: { nav: homeNav, variant: 'home' },
 };
 
-export const Career: Story = {
-  args: { nav: careerNav, variant: 'career' },
+export const Researchers: Story = {
+  args: { nav: researcherNav, variant: 'researchers' },
 };

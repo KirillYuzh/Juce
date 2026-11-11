@@ -1,6 +1,6 @@
 import styles from './HomeBlocks.module.css';
 import { Button, TextLink } from '../ui/Button';
-import { Icon } from '../ui/Icon';
+import { Icon, type IconName } from '../ui/Icon';
 import type { Product } from '../../data/home';
 
 const cx = (...values: Array<string | false | null | undefined>) =>
@@ -18,7 +18,7 @@ const toneClass: Record<Product['tone'], string> = {
 export interface QuickLink {
   label: string;
   href: string;
-  icon: string;
+  icon: IconName;
   wide?: boolean;
 }
 
@@ -28,7 +28,7 @@ export function QuickLinks({ items }: { items: QuickLink[] }) {
       {items.map((item) => (
         <li key={item.label} className={item.wide ? styles.quickWide : undefined}>
           <a className={styles.quickItem} href={item.href} data-wide={item.wide || undefined}>
-            <img src={item.icon} alt="" loading="lazy" />
+            <Icon name={item.icon} size={26} />
             <span>{item.label}</span>
           </a>
         </li>
@@ -83,7 +83,7 @@ export function PromoCard({ title, text, image, cta, href, tone = 'light' }: Pro
 }
 
 export interface TextCardProps {
-  icon?: string;
+  icon?: IconName;
   title: string;
   text: string;
   linkLabel: string;
@@ -94,7 +94,11 @@ export interface TextCardProps {
 export function TextCard({ icon, title, text, linkLabel, href, className }: TextCardProps) {
   return (
     <article className={cx(styles.textCard, className)}>
-      {icon && <img className={styles.textCardIcon} src={icon} alt="" loading="lazy" />}
+      {icon && (
+        <span className={styles.textCardIcon}>
+          <Icon name={icon} size={28} />
+        </span>
+      )}
       <h3 className={styles.textCardTitle}>{title}</h3>
       <p className={styles.textCardText}>{text}</p>
       <span className={styles.textCardLink}>
@@ -104,26 +108,39 @@ export function TextCard({ icon, title, text, linkLabel, href, className }: Text
   );
 }
 
-export function StatPanel({ title, text, image }: { title: string; text: string; image: string }) {
+export interface StatPanelLink {
+  label: string;
+  href: string;
+  icon: IconName;
+}
+
+export function StatPanel({
+  title,
+  text,
+  image,
+  links,
+}: {
+  title: string;
+  text: string;
+  image: string;
+  links: StatPanelLink[];
+}) {
   return (
     <div className={styles.statPanel}>
       <div className={styles.statContent}>
-        <img className={styles.statIcon} src="/images/tbank/app/icon.svg" alt="" />
         <h3 className={styles.statTitle}>{title}</h3>
         <p className={styles.statText}>{text}</p>
         <div className={styles.stores}>
-          <a className={styles.store} href="https://www.tbank.ru/mobile-app/">
-            <Icon name="android" size={20} />
-            android
-          </a>
-          <a className={styles.store} href="https://www.tbank.ru/mobile-app/">
-            <Icon name="apple" size={20} />
-            iOS
-          </a>
+          {links.map((link) => (
+            <a className={styles.store} key={link.label} href={link.href}>
+              <Icon name={link.icon} size={20} />
+              {link.label}
+            </a>
+          ))}
         </div>
       </div>
       <div className={styles.statMedia}>
-        <img src={image} alt="Мобильное приложение Т-Банка" loading="lazy" />
+        <img src={image} alt="" loading="lazy" />
       </div>
     </div>
   );

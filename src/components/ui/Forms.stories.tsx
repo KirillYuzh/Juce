@@ -22,7 +22,7 @@ export const Inputs: Story = {
         label="Промокод"
         placeholder="Введите промокод"
         error="Такого промокода не существует"
-        defaultValue="TBANK2026"
+        defaultValue="JUCE2026"
       />
     </div>
   ),

@@ -58,7 +58,7 @@ export function CookieNotice({
   text = (
     <>
       Мы используем{' '}
-      <a className={styles.cookieLink} href="https://www.tbank.ru/about/cookie/">
+      <a className={styles.cookieLink} href="#">
         куки
       </a>
       , чтобы делать сайт удобным для вас

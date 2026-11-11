@@ -15,6 +15,6 @@ export const Home: Story = {
   args: { variant: 'home' },
 };
 
-export const Career: Story = {
-  args: { variant: 'career' },
+export const Researchers: Story = {
+  args: { variant: 'dark' },
 };

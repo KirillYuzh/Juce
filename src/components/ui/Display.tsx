@@ -8,7 +8,11 @@ const cx = (...values: Array<string | false | null | undefined>) =>
 export type BadgeTone = 'neutral' | 'accent' | 'success' | 'error' | 'warning';
 
 export function Badge({ tone = 'neutral', children }: { tone?: BadgeTone; children: ReactNode }) {
-  return <span className={cx(styles.badge, styles[`badge${tone[0].toUpperCase()}${tone.slice(1)}`])}>{children}</span>;
+  return (
+    <span className={cx(styles.badge, styles[`badge${tone[0].toUpperCase()}${tone.slice(1)}`])}>
+      {children}
+    </span>
+  );
 }
 
 export interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -25,7 +29,7 @@ export function Chip({ active, tone = 'light', className, children, ...rest }: C
         styles.chip,
         tone === 'dark' && styles.chipDark,
         active && styles.chipActive,
-        className,
+        className
       )}
       aria-pressed={active}
       {...rest}
@@ -45,10 +49,15 @@ export interface AvatarProps {
 
 export function Avatar({ src, alt = '', initials, size = 'm', className }: AvatarProps) {
   if (src) {
-    return <img className={cx(styles.avatar, styles[`avatar-${size}`], className)} src={src} alt={alt} />;
+    return (
+      <img className={cx(styles.avatar, styles[`avatar-${size}`], className)} src={src} alt={alt} />
+    );
   }
   return (
-    <span className={cx(styles.avatar, styles[`avatar-${size}`], className)} aria-label={alt || initials}>
+    <span
+      className={cx(styles.avatar, styles[`avatar-${size}`], className)}
+      aria-label={alt || initials}
+    >
       {initials}
     </span>
   );
@@ -104,7 +113,19 @@ export function Divider({ className }: { className?: string }) {
 }
 
 export function Logo({ className }: { className?: string }) {
-  return <img className={cx(styles.logo, className)} src="/images/tbank/logo/tbank.svg" alt="Т-Банк" />;
+  return (
+    <span className={cx(styles.logo, className)}>
+      <svg className={styles.logoMark} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="10" fill="currentColor" />
+        <path
+          d="M16 7.5c3.6 4 5.6 7 5.6 9.6a5.6 5.6 0 1 1-11.2 0c0-2.6 2-5.6 5.6-9.6Z"
+          fill="#ff6574"
+        />
+        <circle cx="16" cy="17.4" r="2.2" fill="#fff" />
+      </svg>
+      <span className={styles.logoWord}>Джус</span>
+    </span>
+  );
 }
 
 export function IconTile({ icon, size = 36 }: { icon: IconName; size?: number }) {

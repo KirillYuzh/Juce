@@ -2,31 +2,42 @@ import styles from './Sections.module.css';
 import { Button } from '../components/ui/Button';
 import { Section } from './HomeSections';
 import {
-  Awards,
   DirectionCard,
+  Recognition,
   StartCards,
+  VacancyCards,
   ValuesGrid,
-  type Award,
-  type CareerStartCard,
-  type CareerValue,
   type Direction,
-} from '../components/blocks/CareerBlocks';
+  type RecognitionItem,
+  type ResearchTrack,
+  type ResearchValue,
+  type Vacancy,
+} from '../components/blocks/ResearcherBlocks';
 
-export function DirectionsSection({ directions }: { directions: Direction[] }) {
+// Три направления не делятся на две колонки без пустого места в последнем ряду.
+const rowOfCards = {
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+} as const;
+
+export function DirectionsSection({
+  title,
+  directions,
+}: {
+  title?: string;
+  directions: Direction[];
+}) {
   return (
-    <section>
-      <div className="tb-container">
-        <div className={styles.directions}>
-          {directions.map((direction) => (
-            <DirectionCard key={direction.id} direction={direction} />
-          ))}
-        </div>
+    <Section title={title}>
+      <div className={styles.directions} style={rowOfCards}>
+        {directions.map((direction) => (
+          <DirectionCard key={direction.id} direction={direction} />
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
 
-export function ValuesSection({ title, values }: { title: string; values: CareerValue[] }) {
+export function ValuesSection({ title, values }: { title: string; values: ResearchValue[] }) {
   return (
     <Section title={title} className={styles.valuesSection}>
       <ValuesGrid values={values} />
@@ -34,25 +45,32 @@ export function ValuesSection({ title, values }: { title: string; values: Career
   );
 }
 
-export function AwardsSection({
+export function RecognitionSection({
   title,
-  awards,
+  items,
   heroImage,
   bannerImage,
+  bannerTitle,
 }: {
   title: string;
-  awards: Award[];
+  items: RecognitionItem[];
   heroImage: string;
   bannerImage: string;
+  bannerTitle?: string;
 }) {
   return (
     <Section title={title}>
-      <Awards awards={awards} heroImage={heroImage} bannerImage={bannerImage} />
+      <Recognition
+        items={items}
+        heroImage={heroImage}
+        bannerImage={bannerImage}
+        bannerTitle={bannerTitle}
+      />
     </Section>
   );
 }
 
-export function CareerStartSection({ title, cards }: { title: string; cards: CareerStartCard[] }) {
+export function LearningSection({ title, cards }: { title: string; cards: ResearchTrack[] }) {
   return (
     <Section title={title}>
       <StartCards cards={cards} />
@@ -60,19 +78,44 @@ export function CareerStartSection({ title, cards }: { title: string; cards: Car
   );
 }
 
-export function VacancyCtaSection({
+export function VacanciesSection({ title, vacancies }: { title: string; vacancies: Vacancy[] }) {
+  return (
+    <Section title={title}>
+      <VacancyCards vacancies={vacancies} />
+    </Section>
+  );
+}
+
+export function FinalCtaSection({
   title,
+  text,
   cta,
   href,
 }: {
   title: string;
+  text?: string;
   cta: string;
   href: string;
 }) {
   return (
     <Section title={title}>
+      {text && (
+        <p
+          style={{
+            maxWidth: 640,
+            margin: '0 auto',
+            textAlign: 'center',
+            font: '400 17px/28px var(--tb-font-text)',
+            color: 'var(--tb-text-secondary)',
+          }}
+        >
+          {text}
+        </p>
+      )}
       <div className={styles.centeredAction}>
-        <Button href={href}>{cta}</Button>
+        <Button href={href} iconRight="arrowRight">
+          {cta}
+        </Button>
       </div>
     </Section>
   );

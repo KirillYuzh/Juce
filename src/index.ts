@@ -71,7 +71,13 @@ export {
   TextCard,
   WideBanner,
 } from './components/blocks/HomeBlocks';
-export { ProductShowcase } from './components/blocks/ProductShowcase';
-export { Awards, DirectionCard, StartCards, ValuesGrid } from './components/blocks/CareerBlocks';
+export {
+  Recognition,
+  DirectionCard,
+  StartCards,
+  VacancyCards,
+  ValuesGrid,
+} from './components/blocks/ResearcherBlocks';
 export { HomePage } from './pages/HomePage';
-export { CareerPage } from './pages/CareerPage';
+export { ResearchersPage } from './pages/ResearchersPage';
+export { AssistantPage } from './pages/AssistantPage';

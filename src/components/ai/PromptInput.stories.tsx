@@ -62,7 +62,7 @@ export const WithActions: Story = {
               font: '500 12px/18px var(--tb-font-text)',
             }}
           >
-            Модель: Т-Банк
+            Модель: Джус-1
           </button>
         }
         hint="Ответ придёт в чат"

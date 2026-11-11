@@ -3,33 +3,24 @@ import { Footer } from '../components/blocks/Footer';
 import { CookieNotice } from '../components/ui/Feedback';
 import {
   ArticlesSection,
-  CareerPromoSection,
-  CreditPromoSection,
   Hero,
+  JournalBanner,
   MoreSection,
   ProductsSection,
   QuickLinksSection,
+  ResearchPromoSection,
   ServicesSection,
-  ShowcaseSection,
   StatsSection,
 } from '../sections/HomeSections';
 import {
   articles,
-  cardDesigns,
-  careerPromos,
   homeNav,
   moreLinks,
   products,
   quickLinks,
+  researchPromos,
   services,
 } from '../data/home';
-
-const cashbackOptions = [
-  { value: 'all', label: 'Выберите повышенный кэшбэк (четыре категории)' },
-  { value: 'travel', label: 'Путешествия' },
-  { value: 'food', label: 'Кафе и рестораны' },
-  { value: 'transport', label: 'Транспорт' },
-];
 
 export function HomePage() {
   return (
@@ -38,101 +29,74 @@ export function HomePage() {
 
       <main>
         <Hero
-          title="Дебетовая карта, которую рекомендуют ваши друзья"
-          text="Кэшбэк рублями до 30%, переводы клиентам Т-Банка без комиссии"
-          cta="Оформить карту"
-          href="https://www.tbank.ru/cards/debit-cards/"
-          image="/images/tbank/hero/debit-card.png"
-          imageAlt="Дебетовая карта Т-Банка"
+          title="Ассистент, который читает статьи вместе с вами"
+          text="Джупсик ищет источники, собирает обзор литературы и объясняет, откуда взялся каждый вывод"
+          cta="Открыть чат"
+          href="#/assistant"
+          image="/images/juce/hero.png"
+          imageAlt="Ассистент Джупсик: поиск, документы и проверка источников"
         />
 
         <QuickLinksSection items={quickLinks} />
 
-        <ShowcaseSection
-          title="Управляйте финансами с выгодой в Т‑Банке"
-          tabs={[
-            {
-              id: 'debit',
-              label: 'Дебетовая карта',
-              title: 'Дебетовая карта Black',
-              designs: cardDesigns,
-              cashbackOptions,
-            },
-            {
-              id: 'credit',
-              label: 'Кредитная карта',
-              title: 'Кредитная карта «Платинум»',
-              designs: cardDesigns,
-              cashbackOptions,
-            },
-            {
-              id: 'deposit',
-              label: 'Вклад',
-              title: 'Вклад с пополнением',
-              designs: [],
-              cashbackOptions: [
-                { value: '6m', label: 'Срок вклада — 6 месяцев' },
-                { value: '12m', label: 'Срок вклада — 12 месяцев' },
-                { value: '24m', label: 'Срок вклада — 24 месяца' },
-              ],
-            },
-          ]}
-        />
-
         <ProductsSection
-          title="Рекомендуемые продукты"
+          title="Кому помогает Джупсик"
           groups={[products.slice(0, 2), products.slice(2)]}
         />
 
         <StatsSection
-          title="Более 56 млн клиентов выбрали Т-Банк"
+          title="12 400 исследователей уже работают в Джус"
           panel={{
-            title: 'Мобильное приложение Т-Банка',
-            text: 'Проверяйте баланс, оплачивайте услуги, получайте помощь в чате 24/7',
-            image: '/images/tbank/app/phone.png',
+            title: 'Джупсик в браузере',
+            text: 'Откройте ассистента без установки: поиск, обзоры и ссылки работают прямо в браузере',
+            image: '/images/juce/app.png',
+            links: [
+              { label: 'Открыть чат', href: '#/assistant', icon: 'globe' },
+              { label: 'Документация', href: '#', icon: 'code' },
+            ],
           }}
         />
 
         <ServicesSection
-          title="Сервисы и услуги"
+          title="Что умеет Джупсик"
           cards={services}
           promos={[
             {
-              title: 'Приведи друга',
-              text: 'До 10 000 ₽ за рекомендации друзьям',
-              image: '/images/tbank/services/friend.png',
-              cta: 'Подробнее',
-              href: 'https://www.tbank.ru/bring-friend/',
+              title: 'Обзор за вечер',
+              text: 'Ассистент соберёт черновик обзора по вашей теме с ссылками на каждый тезис',
+              image: '/images/juce/promo-1.png',
+              cta: 'Попробовать',
+              href: '#/assistant',
               tone: 'light',
             },
             {
-              title: 'T‑Pay — оплата в одно касание',
-              text: 'Всё как вы привыкли: легко, надежно и с сохранением кэшбэка',
-              image: '/images/tbank/services/tpay.png',
-              cta: 'Попробовать',
-              href: 'https://www.tbank.ru/tpay/',
+              title: 'Граф связей между статьями',
+              text: 'Показывает, кто на кого ссылается и где выводы расходятся',
+              image: '/images/juce/promo-2.png',
+              cta: 'Посмотреть',
+              href: '#/assistant',
               tone: 'dark',
             },
           ]}
         />
 
-        <ArticlesSection
-          title="Актуально сейчас"
-          articles={articles}
-          moreHref="https://www.tbank.ru/blog/"
+        <ArticlesSection title="Из блога" articles={articles} moreHref="#" />
+
+        <ResearchPromoSection title="Лабораториям и группам" items={researchPromos} />
+
+        <JournalBanner
+          title="Как собрать обзор литературы за вечер"
+          source="Блог Джус"
+          image="/images/juce/banner.png"
+          cta="Читать"
+          href="#"
         />
-
-        <CareerPromoSection title="Работа и развитие" items={careerPromos} />
-
-        <div style={{ marginTop: 48 }}>
-          <CreditPromoSection />
-        </div>
 
         <MoreSection title="Дополнительно" items={moreLinks} />
       </main>
 
       <div>
-        <Footer variant="home" />
+        <Footer />
       </div>
 
       <CookieNotice />

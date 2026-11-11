@@ -11,23 +11,31 @@ export default meta;
 type Story = StoryObj;
 
 const sources = [
-  { url: 'https://www.tbank.ru/debit/', title: 'Дебетовые карты' },
-  { url: 'https://www.tbank.ru/career/', title: 'Карьера в Т-Банке' },
-  { url: 'https://www.tbank.ru/invest/' },
+  { url: 'https://arxiv.org/', title: 'arXiv: препринты' },
+  { url: 'https://www.nature.com/', title: 'Nature' },
+  { url: 'https://scholar.google.com/' },
 ];
 
 export const Collapsed: Story = {
-  render: () => <div style={{ width: 420 }}><Sources sources={sources} /></div>,
+  render: () => (
+    <div style={{ width: 420 }}>
+      <Sources sources={sources} />
+    </div>
+  ),
 };
 
 export const Expanded: Story = {
-  render: () => <div style={{ width: 420 }}><Sources sources={sources} defaultOpen /></div>,
+  render: () => (
+    <div style={{ width: 420 }}>
+      <Sources sources={sources} defaultOpen />
+    </div>
+  ),
 };
 
 export const Single: Story = {
   render: () => (
     <div style={{ width: 420 }}>
-      <Sources sources={[{ url: 'https://www.tbank.ru/invest/' }]} defaultOpen />
+      <Sources sources={[{ url: 'https://scholar.google.com/' }]} defaultOpen />
     </div>
   ),
 };

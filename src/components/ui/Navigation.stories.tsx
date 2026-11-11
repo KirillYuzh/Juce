@@ -24,24 +24,33 @@ export const SegmentedTabs: Story = {
 
 export const AccordionExample: Story = {
   render: () => (
-    <div style={{ width: 640, padding: 24, borderRadius: 24, background: 'var(--tb-white)', boxShadow: 'var(--tb-shadow-popover)' }}>
+    <div
+      style={{
+        width: 640,
+        padding: 24,
+        borderRadius: 24,
+        background: 'var(--tb-white)',
+        boxShadow: 'var(--tb-shadow-popover)',
+      }}
+    >
       <Accordion
-        defaultOpenId="cashback"
+        defaultOpenId="sources"
         items={[
           {
-            id: 'cashback',
-            title: 'Как начисляется кэшбэк?',
-            content: 'Кэшбэк приходит рублями в течение 5 рабочих дней после закрытия расчётного периода.',
+            id: 'sources',
+            title: 'Откуда Джупсик берёт статьи?',
+            content:
+              'Из открытых каталогов препринтов и рецензируемых журналов; у каждого тезиса есть ссылка на источник.',
           },
           {
-            id: 'limit',
-            title: 'Есть ли лимит на переводы?',
-            content: 'До 1 000 000 ₽ в месяц без комиссии клиентам Т-Банка.',
+            id: 'limits',
+            title: 'Есть ли лимит на запросы?',
+            content: 'Учебные аккаунты — до 300 запросов в сутки, у лабораторий лимит выше.',
           },
           {
-            id: 'delivery',
-            title: 'Как получить карту?',
-            content: 'Курьер привезёт карту в удобное время в пределах города доставки.',
+            id: 'export',
+            title: 'Можно ли выгрузить обзор?',
+            content: 'Да, в Markdown, DOCX и LaTeX — вместе со списком литературы.',
           },
         ]}
       />

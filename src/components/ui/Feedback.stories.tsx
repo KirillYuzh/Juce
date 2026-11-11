@@ -21,12 +21,11 @@ export const Alerts: Story = {
           </Button>
         }
       >
-        Установите сертификаты безопасности Минцифры, чтобы сохранить доступ к сервисам и услугам
-        Т-Банка
+        Установите сертификат университета, чтобы сохранить доступ к платформе из внешней сети
       </Alert>
-      <Alert tone="success">Заявка одобрена. Карту привезём завтра</Alert>
-      <Alert tone="warning">Проверьте реквизиты перед отправкой перевода</Alert>
-      <Alert tone="error">Не удалось отправить платёж. Попробуйте ещё раз</Alert>
+      <Alert tone="success">Обзор готов: 34 источника, все ссылки проверены</Alert>
+      <Alert tone="warning">Два источника не удалось открыть — проверьте вручную</Alert>
+      <Alert tone="error">Не удалось загрузить датасет. Попробуйте ещё раз</Alert>
     </div>
   ),
 };
@@ -34,7 +33,7 @@ export const Alerts: Story = {
 export const Tooltips: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 24, paddingBlock: 48 }}>
-      <Tooltip text="Кэшбэк рублями до 30%">
+      <Tooltip text="Ссылки оформляются по ГОСТ">
         <Button variant="secondary" size="m">
           Наведите на меня
         </Button>

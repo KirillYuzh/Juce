@@ -4,67 +4,74 @@ import { Alert, CookieNotice } from '../components/ui/Feedback';
 import { Button } from '../components/ui/Button';
 import { Hero } from '../sections/HomeSections';
 import {
-  AwardsSection,
-  CareerStartSection,
   DirectionsSection,
-  VacancyCtaSection,
+  FinalCtaSection,
+  LearningSection,
+  RecognitionSection,
+  VacanciesSection,
   ValuesSection,
-} from '../sections/CareerSections';
+} from '../sections/ResearcherSections';
 import {
-  careerAwards,
-  careerDirections,
-  careerNav,
-  careerStart,
-  careerValues,
-} from '../data/career';
+  researcherAwards,
+  researcherDirections,
+  researcherLearning,
+  researcherNav,
+  researcherVacancies,
+  researcherValues,
+} from '../data/researchers';
 
-export function CareerPage() {
+export function ResearchersPage() {
   return (
     <>
-      <Header nav={careerNav} variant="career" />
+      <Header nav={researcherNav} variant="researchers" />
 
       <main>
         <div className="tb-container" style={{ paddingTop: 24 }}>
           <Alert
             action={
-              <Button variant="secondary" size="s" href="https://www.tbank.ru/about/certificates/">
-                Как это сделать?
+              <Button variant="secondary" size="s" href="#/researchers">
+                Что умеет Джупсик
               </Button>
             }
           >
-            Установите сертификаты безопасности Минцифры, чтобы сохранить доступ к сервисам и
-            услугам Т-Банка
+            Джупсик сверяет список литературы с открытыми базами и подсказывает, где не хватает
+            ссылки на данные
           </Alert>
         </div>
 
         <Hero
-          title="Работа в Т-Банке"
-          text="Развивайте продукты, двигайте технологии вперед и помогайте клиентам. У нас можно видеть результат своей работы и расти вместе с Т-Командой"
-          cta="Выбрать вакансию"
-          href="https://www.tbank.ru/career/vacancies/"
+          title="Исследователям"
+          text="Джус собирает в одном месте датасеты, препринты, рецензии и лабораторные журналы. Рядом работает Джупсик — встроенный ассистент: найдёт статьи по теме, проверит ссылки и поможет собрать черновик"
+          cta="Начать исследование"
+          href="#/researchers"
+          image="/images/juce/researchers-hero.png"
         />
 
-        <DirectionsSection directions={careerDirections} />
+        <DirectionsSection title="Кому помогает платформа" directions={researcherDirections} />
 
-        <ValuesSection title="У нас разные роли — и общий подход к работе" values={careerValues} />
+        <ValuesSection title="Как мы работаем с данными и результатами" values={researcherValues} />
 
-        <AwardsSection
-          title="Т-Банк — среди лучших работодателей"
-          awards={careerAwards}
-          heroImage="/images/tbank/career/awards-hero.png"
-          bannerImage="/images/tbank/career/award-forbes.png"
+        <LearningSection title="Обучение и стажировки" cards={researcherLearning} />
+
+        <RecognitionSection
+          title="Признание в научном сообществе"
+          items={researcherAwards}
+          heroImage="/images/juce/researchers-2.png"
+          bannerImage="/images/juce/researchers-3.png"
+          bannerTitle="Открытая наука"
         />
 
-        <CareerStartSection title="Начните карьеру в Т-Банке" cards={careerStart} />
+        <VacanciesSection title="Открытые позиции" vacancies={researcherVacancies} />
 
-        <VacancyCtaSection
-          title="Найдите ту самую вакансию"
-          cta="Выбрать вакансию"
-          href="https://www.tbank.ru/career/vacancies/"
+        <FinalCtaSection
+          title="Начните исследование на платформе Джус"
+          text="Заведите проект, пригласите группу и позовите Джупсика — он разберётся с литературой, пока вы формулируете гипотезу"
+          cta="Создать проект"
+          href="#/researchers"
         />
       </main>
 
-      <Footer variant="career" />
+      <Footer variant="dark" />
       <CookieNotice />
     </>
   );
