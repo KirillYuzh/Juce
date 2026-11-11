@@ -1,0 +1,99 @@
+/*
+ * Design tokens derived from tbank.ru (tui-css-variables/desktop.min.css)
+ * and from computed styles measured on the live pages.
+ */
+:root {
+  /* Brand */
+  --tb-yellow: #ffdd2d;
+  --tb-yellow-hover: #fcc521;
+  --tb-yellow-active: #fab619;
+  --tb-yellow-soft: #fff8d9;
+
+  /* Neutrals */
+  --tb-white: #ffffff;
+  --tb-black: #000000;
+  --tb-dark: #333333;
+  --tb-dark-soft: #404040;
+  --tb-gray-100: #f5f5f6;
+  --tb-gray-150: #f6f7f8;
+  --tb-gray-200: #e7e8ea;
+  --tb-gray-250: #e2e8f0;
+  --tb-gray-300: #cbcfd3;
+  --tb-gray-400: #959ba4;
+  --tb-gray-500: #79818c;
+  --tb-gray-600: #616871;
+
+  /* Text */
+  --tb-text-primary: rgba(0, 0, 0, 0.8);
+  --tb-text-secondary: rgba(0, 0, 0, 0.54);
+  --tb-text-tertiary: rgba(0, 0, 0, 0.4);
+  --tb-text-inverse: rgba(255, 255, 255, 0.9);
+  --tb-text-inverse-secondary: rgba(255, 255, 255, 0.64);
+  --tb-text-link: #1771e6;
+  --tb-text-link-hover: #1464cc;
+
+  /* Surfaces */
+  --tb-bg: #ffffff;
+  --tb-bg-secondary: #f6f7f8;
+  --tb-bg-tertiary: #ecf1f7;
+  --tb-bg-hover: #f5f5f6;
+  --tb-field: #ecf1f7;
+  --tb-field-hover: #e4ebf3;
+
+  /* Status */
+  --tb-success: #39b54a;
+  --tb-success-text: #168821;
+  --tb-error: #e01f19;
+  --tb-error-text: #c40b08;
+  --tb-warning: #ffdd2d;
+
+  /* Lines */
+  --tb-border: #e7e8ea;
+  --tb-border-strong: #cbcfd3;
+
+  /* Radii */
+  --tb-radius-xs: 8px;
+  --tb-radius-s: 12px;
+  --tb-radius-m: 16px;
+  --tb-radius-l: 24px;
+  --tb-radius-pill: 999px;
+
+  /* Shadows */
+  --tb-shadow-popover: 0 25px 15px rgba(0, 0, 0, 0.03), 0 11px 11px rgba(0, 0, 0, 0.04),
+    0 3px 6px rgba(0, 0, 0, 0.05);
+  --tb-shadow-modal: 0 18px 30px rgba(51, 51, 51, 0.24);
+  --tb-shadow-control: 0 1px 4px rgba(0, 0, 0, 0.12);
+  --tb-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  /* Spacing */
+  --tb-space-1: 4px;
+  --tb-space-2: 8px;
+  --tb-space-3: 12px;
+  --tb-space-4: 16px;
+  --tb-space-5: 20px;
+  --tb-space-6: 24px;
+  --tb-space-8: 32px;
+  --tb-space-10: 40px;
+  --tb-space-12: 48px;
+  --tb-space-16: 64px;
+  --tb-space-20: 80px;
+  --tb-space-24: 96px;
+  --tb-space-32: 128px;
+
+  /* Typography */
+  --tb-font-heading: 'dsHeading', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+    sans-serif;
+  --tb-font-text: 'dsText', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+    sans-serif;
+
+  /* Layout */
+  --tb-container: 1152px;
+  --tb-gutter: 24px;
+  --tb-header-height: 64px;
+}
+
+@media (max-width: 599px) {
+  :root {
+    --tb-gutter: 16px;
+  }
+}

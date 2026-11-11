@@ -1,0 +1,391 @@
+/* Quick links */
+.quickList {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.quickItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-radius: 16px;
+  text-align: center;
+  font: 400 13px/18px var(--tb-font-text);
+  color: var(--tb-text-secondary);
+  transition: color 0.15s ease;
+}
+
+.quickItem:hover {
+  color: var(--tb-text-primary);
+}
+
+.quickItem img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+/* Product cards */
+.product {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 408px;
+  padding: 32px;
+  overflow: hidden;
+  border-radius: var(--tb-radius-l);
+  text-align: center;
+}
+
+.productLarge {
+  grid-column: span 3;
+}
+
+.productSmall {
+  grid-column: span 2;
+}
+
+.productSteel {
+  background: #767b8f;
+  color: #fff;
+}
+
+.productIce {
+  background: #e3e9f0;
+}
+
+.productLavender {
+  background: #efe9f7;
+}
+
+.productMint {
+  background: #d8f2ec;
+}
+
+.productSand {
+  background: #f1e7d8;
+}
+
+.productDark {
+  background: #1f1f21;
+  color: #fff;
+}
+
+.productTitle {
+  position: relative;
+  z-index: 1;
+  font: 500 24px/28px var(--tb-font-heading);
+}
+
+.productDescription {
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  max-width: 420px;
+  font: 400 15px/24px var(--tb-font-text);
+}
+
+.productMedia {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+.productCta {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+}
+
+/* Promo cards */
+.promo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 408px;
+  padding: 32px;
+  overflow: hidden;
+  border-radius: var(--tb-radius-l);
+  text-align: center;
+}
+
+.promoLight {
+  background: var(--tb-bg-secondary);
+}
+
+.promoDark {
+  background: #1f1f21;
+  color: #fff;
+}
+
+.promoTitle {
+  position: relative;
+  z-index: 1;
+  font: 500 24px/28px var(--tb-font-heading);
+}
+
+.promoText {
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  max-width: 460px;
+  font: 400 15px/24px var(--tb-font-text);
+}
+
+.promoMedia {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 290px;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+.promoCta {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+}
+
+/* Text cards */
+.textCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px;
+  border-radius: var(--tb-radius-l);
+  background: var(--tb-bg-secondary);
+}
+
+.textCardIcon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 16px;
+}
+
+.textCardTitle {
+  font: 500 24px/28px var(--tb-font-heading);
+}
+
+.textCardText {
+  font: 400 15px/24px var(--tb-font-text);
+  color: var(--tb-text-secondary);
+}
+
+.textCardLink {
+  margin-top: 24px;
+  align-self: flex-start;
+}
+
+/* App stat panel */
+.statPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+  padding: 40px 40px 0;
+  overflow: hidden;
+  border-radius: var(--tb-radius-l);
+  background: #e6ecf2;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 40px;
+}
+
+.statIcon {
+  width: 120px;
+  height: 120px;
+}
+
+.statTitle {
+  max-width: 420px;
+  margin-top: 24px;
+  font: 700 36px/40px var(--tb-font-heading);
+  text-wrap: balance;
+}
+
+.statText {
+  max-width: 420px;
+  font: 400 15px/24px var(--tb-font-text);
+  color: var(--tb-text-secondary);
+}
+
+.stores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.store {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: #000;
+  color: #fff;
+  font: 400 15px/20px var(--tb-font-text);
+}
+
+.store:hover {
+  background: #262626;
+}
+
+.statMedia {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 460px;
+}
+
+.statMedia img {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 40px;
+  object-fit: contain;
+  object-position: top center;
+}
+
+/* Wide article banner */
+.banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 412px;
+  padding: 40px;
+  overflow: hidden;
+  border-radius: var(--tb-radius-l);
+  background: #767b8f;
+  color: #fff;
+}
+
+.bannerMedia {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 68%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bannerContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+}
+
+.bannerTitle {
+  font: 500 36px/40px var(--tb-font-heading);
+}
+
+.bannerSource {
+  color: rgba(255, 255, 255, 0.64);
+  font: 400 15px/24px var(--tb-font-text);
+}
+
+.bannerCta {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+@media (max-width: 1023px) {
+  .quickList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px 8px;
+  }
+
+  .quickItem[data-wide='true'] {
+    grid-column: 1 / -1;
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: #efe3cf;
+    color: var(--tb-text-primary);
+  }
+
+  .quickWide {
+    grid-column: 1 / -1;
+  }
+
+  .quickItem[data-wide='true'] span {
+    flex: 1;
+    text-align: left;
+  }
+
+  .quickItem[data-wide='true'] img {
+    width: 48px;
+    height: 48px;
+    order: 2;
+  }
+
+  .productLarge,
+  .productSmall {
+    grid-column: 1 / -1;
+  }
+
+  .statPanel {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 32px 24px 0;
+  }
+
+  .statMedia {
+    min-height: 320px;
+  }
+
+  .statMedia img {
+    margin-top: 0;
+  }
+
+  .banner {
+    min-height: 360px;
+    padding: 32px 24px;
+  }
+
+  .bannerMedia {
+    width: 100%;
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 599px) {
+  .product,
+  .promo {
+    min-height: 340px;
+    padding: 24px;
+  }
+
+  .productMedia,
+  .promoMedia {
+    height: 200px;
+  }
+
+  .textCard {
+    padding: 24px;
+  }
+
+  .statTitle {
+    font: 700 28px/32px var(--tb-font-heading);
+  }
+}

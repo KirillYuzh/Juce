@@ -1,0 +1,168 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font: 500 13px/18px var(--tb-font-text);
+  white-space: nowrap;
+}
+
+.badgeNeutral {
+  background: var(--tb-bg-tertiary);
+  color: var(--tb-text-secondary);
+}
+
+.badgeAccent {
+  background: var(--tb-yellow);
+  color: var(--tb-text-primary);
+}
+
+.badgeSuccess {
+  background: #e8f6ea;
+  color: var(--tb-success-text);
+}
+
+.badgeError {
+  background: #fdeae9;
+  color: var(--tb-error-text);
+}
+
+.badgeWarning {
+  background: var(--tb-yellow-soft);
+  color: #7a6100;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--tb-white);
+  box-shadow: inset 0 0 0 1px var(--tb-border);
+  font: 400 15px/20px var(--tb-font-text);
+  color: var(--tb-text-primary);
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.chip:hover {
+  background: var(--tb-gray-100);
+}
+
+.chipActive {
+  background: var(--tb-dark);
+  color: var(--tb-white);
+  box-shadow: none;
+}
+
+.chipActive:hover {
+  background: var(--tb-dark-soft);
+}
+
+.chipDark {
+  background: var(--tb-dark-soft);
+  color: var(--tb-text-inverse);
+  box-shadow: none;
+}
+
+.chipDark:hover {
+  background: #4d4d4d;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--tb-bg-tertiary);
+  color: var(--tb-text-secondary);
+  font: 500 15px/20px var(--tb-font-text);
+  object-fit: cover;
+}
+
+.avatar-s {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.avatar-m {
+  width: 40px;
+  height: 40px;
+}
+
+.avatar-l {
+  width: 48px;
+  height: 48px;
+  font-size: 17px;
+}
+
+.progress {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--tb-gray-200);
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--tb-text-link);
+  transition: width 0.3s ease;
+}
+
+.progressAccent .progressBar {
+  background: var(--tb-yellow);
+}
+
+.spinner {
+  display: inline-block;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.skeleton {
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f0f1f2 25%, #e7e8ea 37%, #f0f1f2 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.divider {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: var(--tb-border);
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 34px;
+}

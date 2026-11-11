@@ -1,0 +1,47 @@
+@font-face {
+  font-family: 'dsHeading';
+  src: url('/fonts/TinkoffSans.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'dsHeading';
+  src: url('/fonts/TinkoffSans_Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'dsHeading';
+  src: url('/fonts/TinkoffSans_Bold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'dsText';
+  src: url('/fonts/NeueHaasUnicaW1G-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'dsText';
+  src: url('/fonts/NeueHaasUnicaW1G-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'dsText';
+  src: url('/fonts/NeueHaasUnicaW1G-Bold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

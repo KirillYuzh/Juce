@@ -1,0 +1,72 @@
+# T-Bank UI Kit
+
+React-библиотека компонентов и шаблонов страниц, собранная по публичным страницам [tbank.ru](https://www.tbank.ru/) и [tbank.ru/career](https://www.tbank.ru/career/). Всё живёт в Storybook: примитивы, блоки, секции и две готовые страницы.
+
+## Запуск
+
+```bash
+npm install
+npm run storybook     # Storybook на http://localhost:6006
+npm run dev           # демо-приложение на http://localhost:5173, /#/career для карьерной страницы
+npm run build         # проверка типов + production-сборка демо
+npm run build-storybook
+```
+
+## Карта источников
+
+| Источник | Локальная страница | Файл |
+| --- | --- | --- |
+| `https://www.tbank.ru/` | `Templates/Pages/Home` | `src/pages/HomePage.tsx` |
+| `https://www.tbank.ru/career/` | `Templates/Pages/Career` | `src/pages/CareerPage.tsx` |
+
+Вспомогательные материалы: замеры, порядок секций и карта ассетов в `docs/research/tbank/brief.md`. Скриншоты источника и локальной сборки в `docs/research/tbank/screens/`.
+
+## Структура Storybook
+
+`Foundations/Tokens`: цвета, типографика, отступы, иконки.
+
+`Primitives`: Button, IconButton, TextLink, Input, Textarea, Select, Checkbox, Radio, Switch, Badge, Chip, Avatar, Progress, Spinner, Skeleton, Divider, Logo, Icon, Alert, Tooltip, CookieNotice, Tabs, Accordion.
+
+`Blocks`: Header, Footer, QuickLinks, ProductCard, PromoCard, TextCard, StatPanel, WideBanner, ProductShowcase, DirectionCard, ValuesGrid, Awards, StartCards.
+
+`Templates/Sections`: готовые секции страниц, которые можно собирать в любом порядке.
+
+`Templates/Pages`: целые страницы с хедером, контентом, футером и куки-баннером.
+
+## Слои
+
+```
+src/
+  styles/        токены, шрифты, базовая типографика
+  components/ui/ примитивы и их stories
+  components/blocks/ блоки страниц
+  sections/      секции-обёртки с заголовками
+  pages/         шаблоны страниц
+  data/          тексты и ссылки, снятые с источника
+```
+
+Все стили на CSS Modules и переменных из `src/styles/tokens.css`. Значения взяты из `tui-css-variables` tbank.ru и из computed styles живых страниц: жёлтый `#FFDD2D`, текст `rgba(0,0,0,.8)`, радиус карточек 24px, кнопок 12px, контейнер 1152px с полями 24px, хедер 64px.
+
+Шрифты Tinkoff Sans и Neue Haas Unica лежат в `public/fonts`. Локальные изображения и 3D-иконки в `public/images/tbank`, имена папок повторяют секции.
+
+## Проверки
+
+```bash
+npx tsc -b
+npm run build
+npm run build-storybook
+```
+
+Сборка Storybook проходит, страницы рендерятся без ошибок в консоли. Сравнение с источником делалось на 1440px и 390px, скриншоты в `docs/research/tbank/screens/`.
+
+## Что осталось за рамками
+
+Мобильный текст hero на career-странице у источника короче десктопного; здесь используется один вариант текста.
+
+Футер home сокращён по количеству ссылок и юридических абзацев: структура и стили совпадают, полный список ссылок источника не переносился.
+
+Табы «Кредитная карта» и «Вклад» в блоке оформления меняют заголовок и набор полей, но используют ту же форму, что и дебетовая карта. У источника это отдельные формы.
+
+Логотип Forbes на жёлтом баннере набран текстом Georgia, а не фирменным логотипом.
+
+Фотографии и 3D-ассеты принадлежат Т-Банку и скачаны с публичных CDN только для демонстрации компонентов. Для реального использования нужны собственные ассеты.

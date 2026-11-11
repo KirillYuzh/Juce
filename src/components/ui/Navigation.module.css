@@ -1,0 +1,80 @@
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 16px;
+  background: var(--tb-gray-100);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.tab {
+  flex: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font: 400 15px/24px var(--tb-font-text);
+  color: var(--tb-text-primary);
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.tabActive,
+.tabActive:hover {
+  background: var(--tb-white);
+  box-shadow: var(--tb-shadow-control);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordionItem {
+  border-bottom: 1px solid var(--tb-border);
+}
+
+.accordionItem:last-child {
+  border-bottom: 0;
+}
+
+.accordionButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 20px 0;
+  text-align: left;
+  font: 500 17px/24px var(--tb-font-text);
+}
+
+.accordionButton:focus-visible {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.accordionChevron {
+  flex: none;
+  transition: transform 0.2s ease;
+}
+
+.accordionOpen .accordionChevron {
+  transform: rotate(180deg);
+}
+
+.accordionPanel {
+  padding: 0 0 20px;
+  font: 400 15px/24px var(--tb-font-text);
+  color: var(--tb-text-secondary);
+}
