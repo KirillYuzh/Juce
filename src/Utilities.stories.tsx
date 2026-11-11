@@ -14,20 +14,27 @@ const items = Array.from({ length: 30 }, (_, index) => `Строка ${index + 1
 export const ScrollFadeVertical: Story = {
   render: () => (
     <div
-      className="tb-scroll-fade-y"
       style={{
         width: 320,
         height: 260,
-        padding: 16,
         borderRadius: 16,
         background: 'var(--tb-bg-secondary)',
-        fontSize: 15,
-        lineHeight: '28px',
+        overflow: 'hidden',
       }}
     >
-      {items.map((item) => (
-        <div key={item}>{item}</div>
-      ))}
+      <div
+        className="tb-scroll-fade-y"
+        style={{
+          height: '100%',
+          padding: 16,
+          fontSize: 15,
+          lineHeight: '28px',
+        }}
+      >
+        {items.map((item) => (
+          <div key={item}>{item}</div>
+        ))}
+      </div>
     </div>
   ),
 };

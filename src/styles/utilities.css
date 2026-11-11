@@ -1,4 +1,6 @@
-/* Scroll-aware edge fades (adapted from shadcn scroll-fade, no JS). */
+/* Scroll-aware edge fades (adapted from shadcn scroll-fade, no JS).
+   The four offsets are registered lengths so scroll-driven animations can
+   interpolate them; the mask reads them directly. */
 @property --tb-sf-t {
   syntax: '<length>';
   inherits: false;
@@ -26,7 +28,9 @@
 .tb-scroll-fade-y,
 .tb-scroll-fade-x,
 .tb-scroll-fade {
-  --tb-sf-size: min(12%, 40px);
+  /* Keep it a plain length: a percentage would be invalid inside the
+     registered <length> properties that the keyframes animate. */
+  --tb-sf-size: 40px;
   --tb-sf-reveal: 96px;
   scrollbar-width: none;
 }
@@ -42,8 +46,8 @@
   mask-image: linear-gradient(
     to bottom,
     transparent 0,
-    #000 var(--tb-sf-t, 0px),
-    #000 calc(100% - var(--tb-sf-b, var(--tb-sf-size))),
+    #000 var(--tb-sf-t),
+    #000 calc(100% - var(--tb-sf-b)),
     transparent 100%
   );
 }
@@ -53,8 +57,8 @@
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 var(--tb-sf-l, 0px),
-    #000 calc(100% - var(--tb-sf-r, var(--tb-sf-size))),
+    #000 var(--tb-sf-l),
+    #000 calc(100% - var(--tb-sf-r)),
     transparent 100%
   );
 }
@@ -65,15 +69,15 @@
     linear-gradient(
       to bottom,
       transparent 0,
-      #000 var(--tb-sf-t, 0px),
-      #000 calc(100% - var(--tb-sf-b, var(--tb-sf-size))),
+      #000 var(--tb-sf-t),
+      #000 calc(100% - var(--tb-sf-b)),
       transparent 100%
     ),
     linear-gradient(
       to right,
       transparent 0,
-      #000 var(--tb-sf-l, 0px),
-      #000 calc(100% - var(--tb-sf-r, var(--tb-sf-size))),
+      #000 var(--tb-sf-l),
+      #000 calc(100% - var(--tb-sf-r)),
       transparent 100%
     );
   mask-composite: intersect;
@@ -84,6 +88,8 @@
 .tb-scroll-fade-b,
 .tb-scroll-fade-l,
 .tb-scroll-fade-r {
+  --tb-sf-size: 40px;
+  --tb-sf-reveal: 96px;
   scrollbar-width: none;
 }
 
@@ -96,7 +102,7 @@
 
 .tb-scroll-fade-t {
   overflow-y: auto;
-  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--tb-sf-t, 0px), #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--tb-sf-t), #000 100%);
 }
 
 .tb-scroll-fade-b {
@@ -104,29 +110,93 @@
   mask-image: linear-gradient(
     to bottom,
     #000 0,
-    #000 calc(100% - var(--tb-sf-b, var(--tb-sf-size))),
+    #000 calc(100% - var(--tb-sf-b)),
     transparent 100%
   );
 }
 
 .tb-scroll-fade-l {
   overflow-x: auto;
-  mask-image: linear-gradient(to right, transparent 0, #000 var(--tb-sf-l, 0px), #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--tb-sf-l), #000 100%);
 }
 
 .tb-scroll-fade-r {
   overflow-x: auto;
-  mask-image: linear-gradient(
-    to right,
-    #000 0,
-    #000 calc(100% - var(--tb-sf-r, var(--tb-sf-size))),
-    transparent 100%
-  );
+  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - var(--tb-sf-r)), transparent 100%);
 }
 
 .tb-scroll-fade-none {
   mask-image: none !important;
   animation: none !important;
+}
+
+@supports not (animation-timeline: scroll()) {
+  /* Без scroll-driven animations края затеняются статично. */
+  .tb-scroll-fade-y {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--tb-sf-size),
+      #000 calc(100% - var(--tb-sf-size)),
+      transparent 100%
+    );
+  }
+
+  .tb-scroll-fade-x {
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--tb-sf-size),
+      #000 calc(100% - var(--tb-sf-size)),
+      transparent 100%
+    );
+  }
+
+  .tb-scroll-fade {
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent 0,
+        #000 var(--tb-sf-size),
+        #000 calc(100% - var(--tb-sf-size)),
+        transparent 100%
+      ),
+      linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--tb-sf-size),
+        #000 calc(100% - var(--tb-sf-size)),
+        transparent 100%
+      );
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+
+  .tb-scroll-fade-t {
+    mask-image: linear-gradient(to bottom, transparent 0, #000 var(--tb-sf-size), #000 100%);
+  }
+
+  .tb-scroll-fade-b {
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0,
+      #000 calc(100% - var(--tb-sf-size)),
+      transparent 100%
+    );
+  }
+
+  .tb-scroll-fade-l {
+    mask-image: linear-gradient(to right, transparent 0, #000 var(--tb-sf-size), #000 100%);
+  }
+
+  .tb-scroll-fade-r {
+    mask-image: linear-gradient(
+      to right,
+      #000 0,
+      #000 calc(100% - var(--tb-sf-size)),
+      transparent 100%
+    );
+  }
 }
 
 @supports (animation-timeline: scroll()) {
@@ -146,6 +216,20 @@
       tb-sf-right-out 1ms linear both;
     animation-timeline: scroll(self inline), scroll(self inline);
     animation-range:
+      0 var(--tb-sf-reveal),
+      calc(100% - var(--tb-sf-reveal)) 100%;
+  }
+
+  .tb-scroll-fade {
+    animation:
+      tb-sf-top-in 1ms linear both,
+      tb-sf-bottom-out 1ms linear both,
+      tb-sf-left-in 1ms linear both,
+      tb-sf-right-out 1ms linear both;
+    animation-timeline: scroll(self y), scroll(self y), scroll(self inline), scroll(self inline);
+    animation-range:
+      0 var(--tb-sf-reveal),
+      calc(100% - var(--tb-sf-reveal)) 100%,
       0 var(--tb-sf-reveal),
       calc(100% - var(--tb-sf-reveal)) 100%;
   }
