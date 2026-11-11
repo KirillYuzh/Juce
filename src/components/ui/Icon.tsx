@@ -1,188 +1,15 @@
 import type { ReactNode, SVGProps } from 'react';
+import { ANTD_VIEW_BOX, antdIcons, type IconName } from './icons';
 
-// Single source of truth for glyphs used across the kit.
+export type { IconName };
 
-export type IconName =
-  | 'search'
-  | 'user'
-  | 'menu'
-  | 'close'
-  | 'chevronUp'
-  | 'chevronDown'
-  | 'chevronLeft'
-  | 'chevronRight'
-  | 'arrowRight'
-  | 'arrowUp'
-  | 'arrowUpRight'
-  | 'calendar'
-  | 'copy'
-  | 'refresh'
-  | 'thumbsUp'
-  | 'thumbsDown'
-  | 'paperclip'
-  | 'square'
-  | 'globe'
-  | 'external'
-  | 'checkCircle'
-  | 'alertCircle'
-  | 'plus'
-  | 'code'
-  | 'wrap'
-  | 'file'
-  | 'quote'
-  | 'check'
-  | 'star'
-  | 'info'
-  | 'shield'
-  | 'phone'
-  | 'mail'
-  | 'doc'
-  | 'apple'
-  | 'android'
-  | 'vk'
-  | 'ok'
-  | 'telegram';
-
-const icons: Record<IconName, ReactNode> = {
-  search: (
-    <>
-      <circle cx="11" cy="11" r="7" />
-      <path d="M16.5 16.5 21 21" />
-    </>
-  ),
-  user: (
-    <>
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" />
-    </>
-  ),
-  menu: <path d="M3 7h18M3 12h18M3 17h18" />,
-  close: <path d="M6 6l12 12M18 6 6 18" />,
-  chevronDown: <path d="m6 9 6 6 6-6" />,
-  chevronUp: <path d="m6 15 6-6 6 6" />,
-  chevronLeft: <path d="m15 18-6-6 6-6" />,
-  chevronRight: <path d="m9 18 6-6-6-6" />,
-  arrowRight: <path d="M4 12h15M13 6l6 6-6 6" />,
-  arrowUp: <path d="M12 20V5M6 11l6-6 6 6" />,
-  arrowUpRight: <path d="M7 17 17 7M8 7h9v9" />,
-  calendar: (
-    <>
-      <rect x="3" y="5" width="18" height="16" rx="2" />
-      <path d="M8 3v4M16 3v4M3 10h18" />
-    </>
-  ),
-  copy: (
-    <>
-      <rect x="9" y="9" width="12" height="12" rx="2" />
-      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
-    </>
-  ),
-  refresh: <path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6" />,
-  thumbsUp: (
-    <path d="M7 10v11H3V10h4Zm0 0 4-7a2 2 0 0 1 2 2v4h5a2 2 0 0 1 2 2.3l-1.2 6a2 2 0 0 1-2 1.7H7" />
-  ),
-  thumbsDown: (
-    <path d="M17 14V3h4v11h-4Zm0 0-4 7a2 2 0 0 1-2-2v-4H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 3H17" />
-  ),
-  paperclip: (
-    <path d="m20 11-8.5 8.5a5 5 0 0 1-7-7L13 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 6" />
-  ),
-  square: <rect x="6" y="6" width="12" height="12" rx="2" />,
-  globe: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3 12h18M12 3c2.5 2.5 3.8 5.6 3.8 9S14.5 18.5 12 21c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3Z" />
-    </>
-  ),
-  external: (
-    <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
-  ),
-  checkCircle: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="m8 12 2.5 2.5L16 9" />
-    </>
-  ),
-  alertCircle: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v6M12 17v.1" />
-    </>
-  ),
-  plus: <path d="M12 5v14M5 12h14" />,
-  code: <path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" />,
-  wrap: <path d="M4 6h16M4 12h12a3 3 0 0 1 0 6h-4M8 15l-3 3 3 3M4 18h4" />,
-  file: (
-    <>
-      <path d="M6 3h8l4 4v14H6z" />
-      <path d="M14 3v4h4" />
-    </>
-  ),
-  quote: <path d="M9 11H5a4 4 0 0 1 4-4v8a4 4 0 0 1-4 4M20 11h-4a4 4 0 0 1 4-4v8a4 4 0 0 1-4 4" />,
-  check: <path d="m4 12 5 5L20 6" />,
-  star: (
-    <path d="m12 3 2.7 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17.3 6.5 20.2l1.1-6.2L3 9.6l6.3-.9L12 3Z" />
-  ),
-  info: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 11v5M12 7.6v.1" />
-    </>
-  ),
-  shield: (
-    <>
-      <path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6l-7-3Z" />
-      <path d="m9 12 2 2 4-4" />
-    </>
-  ),
-  phone: (
-    <path d="M5 3h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4c0 1-1 2-2 2A17 17 0 0 1 3 5c0-1 1-2 2-2Z" />
-  ),
-  mail: (
-    <>
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="m3 7 9 6 9-6" />
-    </>
-  ),
-  doc: (
-    <>
-      <path d="M6 3h8l4 4v14H6z" />
-      <path d="M14 3v4h4M9 12h6M9 16h6" />
-    </>
-  ),
-  apple: (
-    <path
-      d="M16.4 12.7c0-2 1.6-3 1.7-3.1-.9-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7-1.3 0-2.6.8-3.3 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7s1.6.7 2.7.7c1.1 0 1.8-1 2.5-2 .8-1.2 1.1-2.3 1.1-2.4-.1 0-2.5-1-2.5-2.9ZM14.4 6.5c.5-.7.9-1.6.8-2.5-.8 0-1.8.5-2.4 1.2-.5.6-1 1.6-.8 2.5.9.1 1.8-.5 2.4-1.2Z"
-      fill="currentColor"
-      stroke="none"
-    />
-  ),
-  android: (
-    <>
-      <path d="M5 9h14v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9Z" />
-      <path d="m7 9 1.2-3M17 9l-1.2-3M9.5 13.5v.1M14.5 13.5v.1M3 10v6M21 10v6" />
-    </>
-  ),
+// Brand marks Ant Design does not ship: VK and Odnoklassniki keep their own paths.
+const customIcons: Record<'vk' | 'ok', ReactNode> = {
   vk: (
-    <path
-      d="M3 8h2.4c.3 4 2 6 3 6 .7 0 .8-.6.8-2.2V8h2.3v3.4c0 1 .2 1.3.5 1.3.4 0 .9-.5 1.7-1.7.6-1 1-2 1.2-3h2.3c-.2 1.6-1.1 3.4-2.3 4.9 1.4 1.5 2.4 3 2.9 4.1h-2.5c-.4-.8-1.1-1.8-1.9-2.7-.3-.3-.5-.5-.8-.5-.4 0-.6.3-.6 1V15H10c-3.6 0-6-2.7-6-7Z"
-      fill="currentColor"
-      stroke="none"
-    />
+    <path d="M3 8h2.4c.3 4 2 6 3 6 .7 0 .8-.6.8-2.2V8h2.3v3.4c0 1 .2 1.3.5 1.3.4 0 .9-.5 1.7-1.7.6-1 1-2 1.2-3h2.3c-.2 1.6-1.1 3.4-2.3 4.9 1.4 1.5 2.4 3 2.9 4.1h-2.5c-.4-.8-1.1-1.8-1.9-2.7-.3-.3-.5-.5-.8-.5-.4 0-.6.3-.6 1V15H10c-3.6 0-6-2.7-6-7Z" />
   ),
   ok: (
-    <path
-      d="M12 3a4.2 4.2 0 1 0 0 8.4A4.2 4.2 0 0 0 12 3Zm0 2a2.2 2.2 0 1 1 0 4.4A2.2 2.2 0 0 1 12 5Zm-4.6 6.9c.5.9 1.3 1.7 2.3 2.3l-2.2 2.2 1.4 1.4 2.1-2.1c.3.1.7.2 1 .2s.7-.1 1-.2l2.1 2.1 1.4-1.4-2.2-2.2c1-.6 1.8-1.4 2.3-2.3l-1.5-1.1c-.9 1.6-2.2 2.4-3.1 2.4s-2.2-.8-3.1-2.4l-1.5 1.1Z"
-      fill="currentColor"
-      stroke="none"
-    />
-  ),
-  telegram: (
-    <path
-      d="M21 4.3 2.9 11.2c-.9.3-.9.9-.2 1.1l4.6 1.4 1.8 5.3c.2.5.4.6.9.3l2.6-1.9 4.5 3.3c.7.4 1.1.2 1.3-.7L21 4.3Zm-3.2 3-8 7.1-.4 2.4-1.3-3.9 9.7-5.6Z"
-      fill="currentColor"
-      stroke="none"
-    />
+    <path d="M12 3a4.2 4.2 0 1 0 0 8.4A4.2 4.2 0 0 0 12 3Zm0 2a2.2 2.2 0 1 1 0 4.4A2.2 2.2 0 0 1 12 5Zm-4.6 6.9c.5.9 1.3 1.7 2.3 2.3l-2.2 2.2 1.4 1.4 2.1-2.1c.3.1.7.2 1 .2s.7-.1 1-.2l2.1 2.1 1.4-1.4-2.2-2.2c1-.6 1.8-1.4 2.3-2.3l-1.5-1.1c-.9 1.6-2.2 2.4-3.1 2.4s-2.2-.8-3.1-2.4l-1.5 1.1Z" />
   ),
 };
 
@@ -191,22 +18,20 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name'> {
   size?: number;
 }
 
-export function Icon({ name, size = 24, strokeWidth = 1.8, ...rest }: IconProps) {
+export function Icon({ name, size = 24, ...rest }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      viewBox={name === 'vk' || name === 'ok' ? '1.7 1.7 20.6 20.6' : ANTD_VIEW_BOX}
+      fill="currentColor"
       aria-hidden="true"
       focusable="false"
       {...rest}
     >
-      {icons[name]}
+      {name === 'vk' || name === 'ok'
+        ? customIcons[name]
+        : antdIcons[name].map((path) => <path key={path} d={path} />)}
     </svg>
   );
 }

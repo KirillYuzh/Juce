@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Icon, type IconName } from './components/ui/Icon';
+import { antdIcons } from './components/ui/icons';
 
 const meta: Meta = {
   title: 'Foundations/Tokens',
@@ -52,28 +53,7 @@ const spacing = [
   ['96', '--tb-space-24'],
 ] as const;
 
-const iconNames: IconName[] = [
-  'search',
-  'user',
-  'menu',
-  'close',
-  'chevronDown',
-  'chevronLeft',
-  'chevronRight',
-  'arrowRight',
-  'check',
-  'star',
-  'info',
-  'shield',
-  'phone',
-  'mail',
-  'doc',
-  'apple',
-  'android',
-  'vk',
-  'ok',
-  'telegram',
-];
+const iconNames = [...Object.keys(antdIcons), 'vk', 'ok'] as IconName[];
 
 export const Colors: Story = {
   render: () => (
@@ -209,9 +189,16 @@ export const Spacing: Story = {
 export const Icons: Story = {
   render: () => (
     <div className="tb-container" style={{ paddingBlock: 32 }}>
-      <h2 className="tb-h2" style={{ marginBottom: 24 }}>
+      <h2 className="tb-h2" style={{ marginBottom: 8 }}>
         Иконки
       </h2>
+      <p className="tb-text-s" style={{ margin: '0 0 24px', color: 'var(--tb-text-secondary)' }}>
+        Ant Design Icons (MIT), данные лежат в
+        <code style={{ font: '400 13px/20px var(--tb-font-mono)' }}>
+          src/components/ui/icons.ts
+        </code>
+        .
+      </p>
       <div
         style={{
           display: 'grid',

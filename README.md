@@ -57,6 +57,8 @@ src/
 
 Manrope и JetBrains Mono распространяются под OFL, взяты subset-файлами с Google Fonts. Linux Libertine — GPL-2.0 с font exception, дополнительно OFL; OTF с CTAN сжат в woff2. Локальные изображения и 3D-иконки в `public/images/tbank`, имена папок повторяют секции.
 
+Иконки — Ant Design Icons (MIT). Данные лежат снапшотом в `src/components/ui/icons.ts`, runtime-зависимости нет: чтобы добавить иконку, допишите пару `имя: [путь]` из `@ant-design/icons-svg` или [shadcn.io/icons](https://www.shadcn.io/icons/ant-design). VK и Odnoklassniki в Ant Design отсутствуют и остались собственными путями.
+
 ## AI-элементы и утилиты
 
 Набор `src/components/ai` повторяет состав и API shadcn/ui, но написан с нуля под этот кит: CSS Modules на общих токенах, русские тексты, свои иконки и aria. Ни одна зависимость shadcn не подключена.
