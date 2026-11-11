@@ -40,7 +40,7 @@
   overflow: auto;
   border-radius: 8px;
   background: var(--tb-bg-secondary);
-  font: 400 12px/18px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font: 400 12px/18px var(--tb-font-mono);
 }
 
 .error {

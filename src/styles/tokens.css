@@ -90,9 +90,11 @@
 
   /* Typography */
   --tb-font-heading:
-    'dsHeading', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   --tb-font-text:
-    'dsText', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --tb-font-quote: 'Linux Libertine', 'Linux Libertine O', Georgia, 'Times New Roman', serif;
+  --tb-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Layout */
   --tb-container: 1152px;

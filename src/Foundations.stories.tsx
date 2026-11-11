@@ -34,8 +34,8 @@ const headings = [
   ['tb-h2', 'Управляйте финансами с выгодой', 'H2 · 44/48 · 700'],
   ['tb-h3', 'Рекомендуемые продукты', 'H3 · 32/36 · 700'],
   ['tb-h4', 'Кредитная карта «Платинум»', 'H4 · 24/28 · 500'],
-  ['tb-text-l', 'Основной текст страницы — 17/28, Neue Haas Unica.', 'L · 17/28 · 400'],
-  ['tb-text-m', 'Текст интерфейса и карточек — 15/24, Neue Haas Unica.', 'M · 15/24 · 400'],
+  ['tb-text-l', 'Основной текст страницы — 17/28, Manrope.', 'L · 17/28 · 400'],
+  ['tb-text-m', 'Текст интерфейса и карточек — 15/24, Manrope.', 'M · 15/24 · 400'],
   ['tb-text-s', 'Подписи и служебный текст — 13/20.', 'S · 13/20 · 400'],
   ['tb-text-xs', 'МЕТКА · 11/14 · 0.4px', 'XS · 11/14 · 400'],
 ] as const;
@@ -99,7 +99,12 @@ export const Colors: Story = {
               }}
             />
             <div style={{ marginTop: 8, font: '500 13px/18px var(--tb-font-text)' }}>{label}</div>
-            <code style={{ font: '400 11px/16px monospace', color: 'var(--tb-text-secondary)' }}>
+            <code
+              style={{
+                font: '400 11px/16px var(--tb-font-mono)',
+                color: 'var(--tb-text-secondary)',
+              }}
+            >
               {token}
             </code>
           </div>
@@ -128,11 +133,46 @@ export const Typography: Story = {
           }}
         >
           <span className={className}>{sample}</span>
-          <code style={{ font: '400 12px/18px monospace', color: 'var(--tb-text-secondary)' }}>
+          <code
+            style={{ font: '400 12px/18px var(--tb-font-mono)', color: 'var(--tb-text-secondary)' }}
+          >
             {note}
           </code>
         </div>
       ))}
+
+      <div style={{ marginTop: 40, display: 'grid', gap: 24 }}>
+        <div>
+          <code
+            style={{ font: '400 12px/18px var(--tb-font-mono)', color: 'var(--tb-text-secondary)' }}
+          >
+            --tb-font-quote · Linux Libertine
+          </code>
+          <blockquote style={{ margin: '8px 0 0', font: '400 21px/32px var(--tb-font-quote)' }}>
+            «Деньги — это не цель, а инструмент. Мы делаем так, чтобы инструмент было приятно
+            держать в руках».
+          </blockquote>
+        </div>
+        <div>
+          <code
+            style={{ font: '400 12px/18px var(--tb-font-mono)', color: 'var(--tb-text-secondary)' }}
+          >
+            --tb-font-mono · JetBrains Mono
+          </code>
+          <pre
+            style={{
+              margin: '8px 0 0',
+              padding: 16,
+              borderRadius: 12,
+              background: 'var(--tb-bg-secondary)',
+              font: '400 13px/20px var(--tb-font-mono)',
+              overflowX: 'auto',
+            }}
+          >
+            {`const cashback = rates.find((rate) => rate.category === 'travel');`}
+          </pre>
+        </div>
+      </div>
     </div>
   ),
 };
@@ -156,7 +196,7 @@ export const Spacing: Story = {
               borderRadius: 4,
             }}
           />
-          <code style={{ font: '400 13px/20px monospace' }}>{token}</code>
+          <code style={{ font: '400 13px/20px var(--tb-font-mono)' }}>{token}</code>
           <span className="tb-text-s" style={{ color: 'var(--tb-text-secondary)' }}>
             {label}px
           </span>
@@ -193,7 +233,12 @@ export const Icons: Story = {
             }}
           >
             <Icon name={name} size={28} />
-            <code style={{ font: '400 11px/14px monospace', color: 'var(--tb-text-secondary)' }}>
+            <code
+              style={{
+                font: '400 11px/14px var(--tb-font-mono)',
+                color: 'var(--tb-text-secondary)',
+              }}
+            >
               {name}
             </code>
           </div>

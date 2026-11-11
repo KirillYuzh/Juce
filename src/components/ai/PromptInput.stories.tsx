@@ -32,7 +32,7 @@ function Demo({ initialStatus = 'ready' as PromptInputStatus }) {
             padding: 12,
             borderRadius: 12,
             background: 'var(--tb-bg-secondary)',
-            font: '400 12px/18px monospace',
+            font: '400 12px/18px var(--tb-font-mono)',
             whiteSpace: 'pre-wrap',
           }}
         >

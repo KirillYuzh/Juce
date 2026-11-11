@@ -53,7 +53,9 @@ src/
 
 Все стили на CSS Modules и переменных из `src/styles/tokens.css`. Палитра: графитовый primary `#222526`, secondary `#ccdcef`, коралловый accent `#ff6574`. Текст `rgba(0,0,0,.8)`, радиус карточек 24px, кнопок 12px, контейнер 1152px с полями 24px, хедер 64px.
 
-Шрифты Tinkoff Sans и Neue Haas Unica лежат в `public/fonts`. Локальные изображения и 3D-иконки в `public/images/tbank`, имена папок повторяют секции.
+Шрифты лежат в `public/fonts` и разбиты на subsets: Manrope (кириллица, латиница, latin-ext) — база интерфейса и заголовков, Linux Libertine — цитаты и длинный научный текст, JetBrains Mono — код, стек-трейсы и номера строк. Токены: `--tb-font-text` и `--tb-font-heading` (Manrope), `--tb-font-quote`, `--tb-font-mono`. Живые образцы в `Foundations/Tokens/Typography`.
+
+Manrope и JetBrains Mono распространяются под OFL, взяты subset-файлами с Google Fonts. Linux Libertine — GPL-2.0 с font exception, дополнительно OFL; OTF с CTAN сжат в woff2. Локальные изображения и 3D-иконки в `public/images/tbank`, имена папок повторяют секции.
 
 ## AI-элементы и утилиты
 

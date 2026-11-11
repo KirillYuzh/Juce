@@ -68,10 +68,10 @@
 .quote {
   display: block;
   margin: 0;
-  padding: 8px 10px;
+  padding: 10px 14px;
   border-left: 2px solid var(--tb-accent);
   border-radius: 0 8px 8px 0;
   background: var(--tb-accent-soft);
-  font: 400 13px/20px var(--tb-font-text);
+  font: 400 17px/26px var(--tb-font-quote);
   color: var(--tb-text-secondary);
 }

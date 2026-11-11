@@ -1,5 +1,5 @@
 .surface {
-  --cb-font: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --cb-font: var(--tb-font-mono);
   --cb-bg: var(--tb-gray-150);
   --cb-chrome: var(--tb-white);
   --cb-border: var(--tb-border);
