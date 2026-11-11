@@ -1,4 +1,3 @@
-import type { IconName } from '../components/ui/icons';
 
 export interface NavItem {
   title: string;
@@ -53,13 +52,13 @@ export const homeNav: NavItem[] = [
 ];
 
 export const quickLinks = [
-  { label: 'Найти статью', href: '#', icon: 'search' },
-  { label: 'Собрать обзор', href: '#', icon: 'doc' },
-  { label: 'Проверить гипотезу', href: '#', icon: 'checkCircle' },
-  { label: 'Датасеты', href: '#', icon: 'globe' },
-  { label: 'Оформить ссылки', href: '#', icon: 'quote' },
-  { label: 'Дедлайны грантов', href: '#/researchers', icon: 'calendar', wide: true },
-] satisfies Array<{ label: string; href: string; icon: IconName; wide?: boolean }>;
+  { label: 'Найти статью', href: '#' },
+  { label: 'Собрать обзор', href: '#' },
+  { label: 'Проверить гипотезу', href: '#' },
+  { label: 'Датасеты', href: '#' },
+  { label: 'Оформить ссылки', href: '#' },
+  { label: 'Дедлайны грантов', href: '#/researchers' },
+] satisfies Array<{ label: string; href: string }>;
 
 export interface Product {
   id: string;
@@ -77,7 +76,7 @@ export const products: Product[] = [
     id: 'phd',
     title: 'Аспирантам',
     description: 'Первый обзор литературы, оформление ссылок и разбор чужих методов',
-    image: '/images/juce/audience-1.png',
+    image: '/images/wang/conversation.jpeg',
     cta: 'Начать',
     href: '#/researchers',
     size: 'large',
@@ -87,7 +86,7 @@ export const products: Product[] = [
     id: 'groups',
     title: 'Научным группам',
     description: 'Общая библиотека, заметки и проверка гипотез',
-    image: '/images/juce/audience-2.png',
+    image: '/images/wang/explain.jpeg',
     cta: 'Подробнее',
     href: '#/researchers',
     size: 'large',
@@ -97,7 +96,7 @@ export const products: Product[] = [
     id: 'labs',
     title: 'Лабораториям',
     description: 'Доступ к датасетам и воспроизводимые эксперименты',
-    image: '/images/juce/audience-3.png',
+    image: '/images/wang/laugh.jpeg',
     cta: 'Подробнее',
     href: '#/researchers',
     size: 'small',
@@ -107,7 +106,7 @@ export const products: Product[] = [
     id: 'libraries',
     title: 'Библиотекам',
     description: 'Подписки, каталоги и помощь с поиском источников',
-    image: '/images/juce/audience-4.png',
+    image: '/images/wang/listen.png',
     cta: 'Подробнее',
     href: '#/researchers',
     size: 'small',
@@ -115,31 +114,40 @@ export const products: Product[] = [
   },
 ];
 
+export const projectTemplates = [
+  { id: 'blank', image: '/images/wang/smile.png', label: 'Пустой проект' },
+  { id: 'review', image: '/images/wang/conversation.jpeg', label: 'Обзор литературы' },
+  { id: 'hypothesis', image: '/images/wang/explain.jpeg', label: 'Проверка гипотезы' },
+  { id: 'data', image: '/images/wang/laugh.jpeg', label: 'Работа с данными' },
+];
+
+export const reviewFormats = [
+  { value: 'systematic', label: 'Систематический обзор' },
+  { value: 'narrative', label: 'Обзор по теме' },
+  { value: 'methods', label: 'Обзор методов' },
+];
+
 export const services = [
   {
     id: 'search',
-    icon: 'search',
     title: 'Поиск по 48 млн статей',
     text: 'Находит препринты и рецензируемые работы, отбрасывает нерелевантное и показывает, почему выбрал источник.',
     link: { label: 'Попробовать', href: '#/assistant' },
   },
   {
     id: 'review',
-    icon: 'doc',
     title: 'Обзор литературы',
     text: 'Собирает обзор по теме: выделяет методы, выборки и противоречия, оставляет ссылки на каждый тезис.',
     link: { label: 'Как это работает', href: '#' },
   },
   {
     id: 'cite',
-    icon: 'quote',
     title: 'Ссылки и цитирование',
     text: 'Оформляет библиографию по ГОСТ, APA и Vancouver, проверяет, что источник действительно существует.',
     link: { label: 'Стандарты', href: '#' },
   },
 ] satisfies Array<{
   id: string;
-  icon: IconName;
   title: string;
   text: string;
   link: { label: string; href: string };
@@ -171,7 +179,7 @@ export const researchPromos = [
     id: 'lab',
     title: 'Лабораториям и группам',
     text: 'Общая библиотека источников, заметки и история запросов для всей команды',
-    image: '/images/juce/researchers-1.png',
+    image: '/images/wang/conversation.jpeg',
     cta: 'Подключить группу',
     href: '#/researchers',
   },
@@ -179,7 +187,7 @@ export const researchPromos = [
     id: 'grants',
     title: 'Грантовая мастерская',
     text: 'Помощь с обзором литературы для заявки и списком литературы по требованиям фонда',
-    image: '/images/juce/researchers-3.png',
+    image: '/images/wang/explain.jpeg',
     cta: 'Узнать больше',
     href: '#/researchers',
   },
@@ -188,21 +196,18 @@ export const researchPromos = [
 export const moreLinks = [
   {
     id: 'api',
-    icon: 'code',
     title: 'API платформы',
     text: 'Подключите поиск и ассистента к своим инструментам: REST, вебхуки, экспорт в LaTeX.',
     link: { label: 'Документация', href: '#' },
   },
   {
     id: 'ethics',
-    icon: 'shield',
     title: 'Этика и данные',
     text: 'Как мы храним запросы, что попадает в модель и как отказаться от использования данных.',
     link: { label: 'Политика', href: '#' },
   },
 ] satisfies Array<{
   id: string;
-  icon: IconName;
   title: string;
   text: string;
   link: { label: string; href: string };

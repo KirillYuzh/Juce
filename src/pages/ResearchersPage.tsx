@@ -8,7 +8,6 @@ import {
   FinalCtaSection,
   LearningSection,
   RecognitionSection,
-  VacanciesSection,
   ValuesSection,
 } from '../sections/ResearcherSections';
 import {
@@ -16,7 +15,6 @@ import {
   researcherDirections,
   researcherLearning,
   researcherNav,
-  researcherVacancies,
   researcherValues,
 } from '../data/researchers';
 
@@ -44,24 +42,22 @@ export function ResearchersPage() {
           text="Джус собирает в одном месте датасеты, препринты, рецензии и лабораторные журналы. Рядом работает Джупсик — встроенный ассистент: найдёт статьи по теме, проверит ссылки и поможет собрать черновик"
           cta="Начать исследование"
           href="#/researchers"
-          image="/images/juce/researchers-hero.png"
+          image="/images/wang/roof.png"
         />
 
         <DirectionsSection title="Кому помогает платформа" directions={researcherDirections} />
 
         <ValuesSection title="Как мы работаем с данными и результатами" values={researcherValues} />
 
-        <LearningSection title="Обучение и стажировки" cards={researcherLearning} />
-
         <RecognitionSection
           title="Признание в научном сообществе"
           items={researcherAwards}
-          heroImage="/images/juce/researchers-2.png"
-          bannerImage="/images/juce/researchers-3.png"
+          heroImage="/images/wang/listen.png"
+          bannerImage="/images/wang/explain.jpeg"
           bannerTitle="Открытая наука"
         />
 
-        <VacanciesSection title="Открытые позиции" vacancies={researcherVacancies} />
+        <LearningSection title="Обучение и стажировки" cards={researcherLearning} />
 
         <FinalCtaSection
           title="Начните исследование на платформе Джус"

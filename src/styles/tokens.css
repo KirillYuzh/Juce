@@ -1,63 +1,105 @@
 /*
- * Design tokens of the Juce research platform
- * and from computed styles measured on the live pages.
+ * Design tokens: T-Bank component structure, Juce palette.
+ * Only the key variables below are swapped — every component still reads --tb-*.
  */
 :root {
-  /* Brand: graphite primary, blue-grey secondary, coral accent */
-  --tb-primary: #222526;
+  color-scheme: light;
+
+  /* Palette: #222526 (ink), #ccdcef (mist), #ff6574 (coral) */
+  --ink: #222526;
+  --mist: #ccdcef;
+  --coral: #ff6574;
+
+  --bg: #f3f7fc;
+  --bg-2: #ffffff;
+  --bg-3: #e3eaf3;
+
+  --label: #222526;
+  --label-2: rgb(34 37 38 / 0.62);
+  --label-3: rgb(34 37 38 / 0.4);
+  --label-4: rgb(34 37 38 / 0.18);
+  --separator: rgb(34 37 38 / 0.18);
+
+  --gray: #8e99a6;
+  --gray-2: #aab4bf;
+  --gray-3: #c0cad6;
+  --gray-4: #d1dbe7;
+  --gray-5: #e3eaf3;
+  --gray-6: #f0f4f9;
+
+  --accent: #e04458;
+  --on-accent: #222526;
+  --link: #3b82d9;
+  --link-hover: #2f6cbb;
+
+  --pink: #ff6574;
+  --red: #f0482f;
+  --orange: #ff8a3d;
+  --yellow: #f2c230;
+  --green: #35b86a;
+  --mint: #1fc2a8;
+  --teal: #12b5c4;
+  --cyan: #3dbcf0;
+  --blue: #3b82d9;
+  --indigo: #6460e8;
+  --purple: #b555d6;
+  --brown: #a8856a;
+
+  /* Brand */
+  --tb-primary: var(--ink);
   --tb-primary-hover: #3a3d3e;
   --tb-primary-active: #111314;
   --tb-on-primary: #ffffff;
-  --tb-secondary: #ccdcef;
+  --tb-secondary: var(--mist);
   --tb-secondary-hover: #b9cde5;
-  --tb-secondary-soft: #e6eef8;
-  --tb-accent: #ff6574;
+  --tb-secondary-soft: var(--mist);
+  --tb-accent: var(--coral);
   --tb-accent-hover: #f04c5d;
-  --tb-accent-soft: #ffe8eb;
+  --tb-accent-soft: #ffdfe3;
   --tb-accent-text: #c03445;
   --tb-accent-text-hover: #a52435;
 
   /* Neutrals */
   --tb-white: #ffffff;
-  --tb-black: #000000;
-  --tb-dark: #222526;
+  --tb-black: var(--ink);
+  --tb-dark: var(--ink);
   --tb-dark-soft: #3a3d3e;
-  --tb-gray-100: #f5f5f6;
-  --tb-gray-150: #f6f7f8;
-  --tb-gray-200: #e7e8ea;
-  --tb-gray-250: #e2e8f0;
-  --tb-gray-300: #cbcfd3;
-  --tb-gray-400: #959ba4;
+  --tb-gray-100: #f0f3f8;
+  --tb-gray-150: #f4f6fa;
+  --tb-gray-200: var(--gray-4);
+  --tb-gray-250: var(--gray-5);
+  --tb-gray-300: var(--gray-3);
+  --tb-gray-400: var(--gray);
   --tb-gray-500: #79818c;
   --tb-gray-600: #616871;
 
   /* Text */
-  --tb-text-primary: rgba(0, 0, 0, 0.8);
-  --tb-text-secondary: rgba(0, 0, 0, 0.54);
-  --tb-text-tertiary: rgba(0, 0, 0, 0.4);
-  --tb-text-inverse: rgba(255, 255, 255, 0.9);
-  --tb-text-inverse-secondary: rgba(255, 255, 255, 0.64);
-  --tb-text-link: #c03445;
-  --tb-text-link-hover: #a52435;
+  --tb-text-primary: var(--label);
+  --tb-text-secondary: var(--label-2);
+  --tb-text-tertiary: var(--label-3);
+  --tb-text-inverse: rgb(255 255 255 / 0.9);
+  --tb-text-inverse-secondary: rgb(255 255 255 / 0.64);
+  --tb-text-link: var(--link);
+  --tb-text-link-hover: var(--link-hover);
 
   /* Surfaces */
   --tb-bg: #ffffff;
-  --tb-bg-secondary: #f6f7f8;
-  --tb-bg-tertiary: #e6eef8;
-  --tb-bg-hover: #f5f5f6;
-  --tb-field: #e6eef8;
-  --tb-field-hover: #dbe8f5;
+  --tb-bg-secondary: var(--bg);
+  --tb-bg-tertiary: var(--bg-3);
+  --tb-bg-hover: var(--gray-6);
+  --tb-field: var(--gray-5);
+  --tb-field-hover: #d6e0ec;
 
   /* Status */
-  --tb-success: #39b54a;
+  --tb-success: var(--green);
   --tb-success-text: #168821;
   --tb-error: #e01f19;
   --tb-error-text: #c40b08;
-  --tb-warning: #e0a800;
+  --tb-warning: var(--yellow);
 
   /* Lines */
   --tb-border: #e7e8ea;
-  --tb-border-strong: #cbcfd3;
+  --tb-border-strong: var(--gray-3);
 
   /* Radii */
   --tb-radius-xs: 8px;
@@ -100,6 +142,22 @@
   --tb-container: 1152px;
   --tb-gutter: 24px;
   --tb-header-height: 64px;
+}
+
+/* Increased contrast */
+@media (prefers-contrast: more) {
+  :root {
+    --accent: #c9283e;
+    --blue: #1d5fb8;
+    --red: #c42a14;
+    --label-2: rgb(34 37 38 / 0.8);
+    --separator: rgb(34 37 38 / 0.4);
+
+    --tb-text-link: var(--blue);
+    --tb-accent-text: #a02030;
+    --tb-border: var(--gray-4);
+    --tb-border-strong: var(--gray-2);
+  }
 }
 
 @media (max-width: 599px) {

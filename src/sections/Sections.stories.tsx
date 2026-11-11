@@ -44,7 +44,7 @@ export const HomeHero: Story = {
       text="Джупсик ищет источники, собирает обзор литературы и объясняет, откуда взялся каждый вывод"
       cta="Открыть чат"
       href="#/assistant"
-      image="/images/juce/hero.png"
+      image="/images/wang/roof.png"
       imageAlt="Ассистент Джупсик: поиск, документы и проверка источников"
     />
   ),
@@ -71,7 +71,7 @@ export const Stats: Story = {
       panel={{
         title: 'Джупсик в браузере',
         text: 'Откройте ассистента без установки: поиск, обзоры и ссылки работают прямо в браузере',
-        image: '/images/juce/app.png',
+        image: '/images/wang/listen.png',
         links: [
           { label: 'Открыть чат', href: '#/assistant', icon: 'globe' },
           { label: 'Документация', href: '#', icon: 'code' },
@@ -90,14 +90,14 @@ export const Services: Story = {
         {
           title: 'Обзор за вечер',
           text: 'Ассистент соберёт черновик обзора по вашей теме с ссылками на каждый тезис',
-          image: '/images/juce/promo-1.png',
+          image: '/images/wang/roof.png',
           cta: 'Попробовать',
           href: '#/assistant',
         },
         {
           title: 'Граф связей между статьями',
           text: 'Показывает, кто на кого ссылается и где выводы расходятся',
-          image: '/images/juce/promo-2.png',
+          image: '/images/wang/smile.png',
           cta: 'Посмотреть',
           href: '#/assistant',
           tone: 'dark',
@@ -121,7 +121,7 @@ export const Banner: Story = {
     <JournalBanner
       title="Как собрать обзор литературы за вечер"
       source="Блог Джус"
-      image="/images/juce/banner.png"
+      image="/images/wang/listen.png"
       cta="Читать"
       href="#"
     />
@@ -140,7 +140,7 @@ export const ResearchersHero: Story = {
       text="Аспирантам, научным группам и лабораториям: обзор литературы, данные и ссылки в одном месте"
       cta="Начать исследование"
       href="#/researchers"
-      image="/images/juce/researchers-hero.png"
+      image="/images/wang/roof.png"
       imageAlt="Платформа Джус для исследователей"
     />
   ),
@@ -164,8 +164,8 @@ export const ResearcherRecognition: Story = {
     <RecognitionSection
       title="Принципы, которые проверяем на себе"
       items={researcherAwards}
-      heroImage="/images/juce/researchers-2.png"
-      bannerImage="/images/juce/researchers-4.png"
+      heroImage="/images/wang/listen.png"
+      bannerImage="/images/wang/laugh.jpeg"
       bannerTitle="Открытая наука"
     />
   ),

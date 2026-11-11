@@ -10,6 +10,7 @@ import {
   QuickLinksSection,
   ResearchPromoSection,
   ServicesSection,
+  ShowcaseSection,
   StatsSection,
 } from '../sections/HomeSections';
 import {
@@ -17,10 +18,24 @@ import {
   homeNav,
   moreLinks,
   products,
+  projectTemplates,
   quickLinks,
   researchPromos,
+  reviewFormats,
   services,
 } from '../data/home';
+
+const hypothesisFormats = [
+  { value: 'quick', label: 'Быстрая проверка гипотезы' },
+  { value: 'deep', label: 'Разбор с источниками' },
+  { value: 'peer', label: 'С рецензированием группы' },
+];
+
+const dataFormats = [
+  { value: 'catalog', label: 'Каталог датасетов' },
+  { value: 'repro', label: 'Воспроизведение эксперимента' },
+  { value: 'export', label: 'Выгрузка в LaTeX' },
+];
 
 export function HomePage() {
   return (
@@ -33,11 +48,38 @@ export function HomePage() {
           text="Джупсик ищет источники, собирает обзор литературы и объясняет, откуда взялся каждый вывод"
           cta="Открыть чат"
           href="#/assistant"
-          image="/images/juce/hero.png"
-          imageAlt="Ассистент Джупсик: поиск, документы и проверка источников"
+          image="/images/wang/roof.png"
+          imageAlt="Исследовательская группа за работой"
         />
 
         <QuickLinksSection items={quickLinks} />
+
+        <ShowcaseSection
+          title="Соберите проект под свою задачу"
+          tabs={[
+            {
+              id: 'review',
+              label: 'Обзор литературы',
+              title: 'Систематический обзор',
+              designs: projectTemplates,
+              options: reviewFormats,
+            },
+            {
+              id: 'hypothesis',
+              label: 'Проверка гипотезы',
+              title: 'Проверка гипотезы',
+              designs: projectTemplates,
+              options: hypothesisFormats,
+            },
+            {
+              id: 'data',
+              label: 'Работа с данными',
+              title: 'Работа с датасетами',
+              designs: projectTemplates,
+              options: dataFormats,
+            },
+          ]}
+        />
 
         <ProductsSection
           title="Кому помогает Джупсик"
@@ -49,7 +91,7 @@ export function HomePage() {
           panel={{
             title: 'Джупсик в браузере',
             text: 'Откройте ассистента без установки: поиск, обзоры и ссылки работают прямо в браузере',
-            image: '/images/juce/app.png',
+            image: '/images/wang/listen.png',
             links: [
               { label: 'Открыть чат', href: '#/assistant', icon: 'globe' },
               { label: 'Документация', href: '#', icon: 'code' },
@@ -64,7 +106,7 @@ export function HomePage() {
             {
               title: 'Обзор за вечер',
               text: 'Ассистент соберёт черновик обзора по вашей теме с ссылками на каждый тезис',
-              image: '/images/juce/promo-1.png',
+              image: '/images/wang/roof.png',
               cta: 'Попробовать',
               href: '#/assistant',
               tone: 'light',
@@ -72,7 +114,7 @@ export function HomePage() {
             {
               title: 'Граф связей между статьями',
               text: 'Показывает, кто на кого ссылается и где выводы расходятся',
-              image: '/images/juce/promo-2.png',
+              image: '/images/wang/smile.png',
               cta: 'Посмотреть',
               href: '#/assistant',
               tone: 'dark',
@@ -87,7 +129,7 @@ export function HomePage() {
         <JournalBanner
           title="Как собрать обзор литературы за вечер"
           source="Блог Джус"
-          image="/images/juce/banner.png"
+          image="/images/wang/listen.png"
           cta="Читать"
           href="#"
         />

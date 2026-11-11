@@ -18,7 +18,6 @@ const toneClass: Record<Product['tone'], string> = {
 export interface QuickLink {
   label: string;
   href: string;
-  icon: IconName;
   wide?: boolean;
 }
 
@@ -28,7 +27,6 @@ export function QuickLinks({ items }: { items: QuickLink[] }) {
       {items.map((item) => (
         <li key={item.label} className={item.wide ? styles.quickWide : undefined}>
           <a className={styles.quickItem} href={item.href} data-wide={item.wide || undefined}>
-            <Icon name={item.icon} size={26} />
             <span>{item.label}</span>
           </a>
         </li>
@@ -50,7 +48,11 @@ export function ProductCard({ product }: { product: Product }) {
       {product.description && <p className={styles.productDescription}>{product.description}</p>}
       <img className={styles.productMedia} src={product.image} alt="" loading="lazy" />
       <span className={styles.productCta}>
-        <Button variant="white" size="m" href={product.href}>
+        <Button
+          variant={product.tone === 'steel' ? 'white' : 'primary'}
+          size="m"
+          href={product.href}
+        >
           {product.cta}
         </Button>
       </span>
@@ -74,7 +76,7 @@ export function PromoCard({ title, text, image, cta, href, tone = 'light' }: Pro
       <p className={styles.promoText}>{text}</p>
       <img className={styles.promoMedia} src={image} alt="" loading="lazy" />
       <span className={styles.promoCta}>
-        <Button variant="white" size="m" href={href}>
+        <Button variant={tone === 'dark' ? 'white' : 'primary'} size="m" href={href}>
           {cta}
         </Button>
       </span>
@@ -83,7 +85,6 @@ export function PromoCard({ title, text, image, cta, href, tone = 'light' }: Pro
 }
 
 export interface TextCardProps {
-  icon?: IconName;
   title: string;
   text: string;
   linkLabel: string;
@@ -91,14 +92,9 @@ export interface TextCardProps {
   className?: string;
 }
 
-export function TextCard({ icon, title, text, linkLabel, href, className }: TextCardProps) {
+export function TextCard({ title, text, linkLabel, href, className }: TextCardProps) {
   return (
     <article className={cx(styles.textCard, className)}>
-      {icon && (
-        <span className={styles.textCardIcon}>
-          <Icon name={icon} size={28} />
-        </span>
-      )}
       <h3 className={styles.textCardTitle}>{title}</h3>
       <p className={styles.textCardText}>{text}</p>
       <span className={styles.textCardLink}>

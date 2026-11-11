@@ -7,27 +7,23 @@
 
 .quickItem {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-  border-radius: 16px;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 6px;
+  border-radius: 12px;
   text-align: center;
-  font: 400 13px/18px var(--tb-font-text);
+  font: 500 14px/20px var(--tb-font-text);
   color: var(--tb-text-secondary);
-  transition: color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .quickItem:hover {
   color: var(--tb-text-primary);
-}
-
-.quickItem img,
-.quickItem svg {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  color: var(--tb-text-secondary);
+  background: var(--tb-gray-100);
 }
 
 /* Product cards */
@@ -57,11 +53,11 @@
 }
 
 .productIce {
-  background: var(--tb-secondary-soft);
+  background: var(--tb-secondary);
 }
 
 .productLavender {
-  background: var(--tb-accent-soft);
+  background: var(--tb-secondary);
 }
 
 .productMint {
@@ -69,12 +65,13 @@
 }
 
 .productSand {
-  background: var(--tb-secondary-soft);
+  background: var(--tb-accent);
+  color: var(--tb-primary);
 }
 
 .productDark {
-  background: var(--tb-primary);
-  color: #fff;
+  background: var(--tb-accent);
+  color: var(--tb-primary);
 }
 
 .productTitle {
@@ -126,8 +123,8 @@
 }
 
 .promoDark {
-  background: var(--tb-primary);
-  color: #fff;
+  background: var(--tb-accent);
+  color: var(--tb-primary);
 }
 
 .promoTitle {
@@ -171,18 +168,6 @@
   background: var(--tb-bg-secondary);
 }
 
-.textCardIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  margin-bottom: 16px;
-  border-radius: 16px;
-  background: var(--tb-bg-secondary);
-  color: var(--tb-primary);
-}
-
 .textCardTitle {
   font: 500 24px/28px var(--tb-font-heading);
 }
@@ -205,7 +190,7 @@
   padding: 40px 40px 0;
   overflow: hidden;
   border-radius: var(--tb-radius-l);
-  background: var(--tb-secondary-soft);
+  background: var(--tb-secondary);
 }
 
 .statContent {
@@ -248,13 +233,13 @@
   height: 44px;
   padding: 0 16px;
   border-radius: 12px;
-  background: #000;
-  color: #fff;
+  background: var(--tb-accent);
+  color: var(--tb-primary);
   font: 400 15px/20px var(--tb-font-text);
 }
 
 .store:hover {
-  background: #262626;
+  background: var(--tb-accent-hover);
 }
 
 .statMedia {

@@ -12,7 +12,7 @@ export const researcherDirections = [
     id: 'postgraduate',
     title: 'Аспирантам',
     text: 'Соберите обзор литературы, оформите заявку на грант и ведите лабораторный журнал в одном месте. Джупсик подскажет статьи по теме и проверит ссылки перед отправкой',
-    image: '/images/juce/researchers-1.png',
+    image: '/images/wang/conversation.jpeg',
     cta: 'Подробнее',
     href: '#/researchers',
   },
@@ -20,7 +20,7 @@ export const researcherDirections = [
     id: 'groups',
     title: 'Научным группам',
     text: 'Общие датасеты, версии кода и черновики статей в одном пространстве. Правки и рецензии видит вся группа, а вклад каждого остаётся в истории проекта',
-    image: '/images/juce/researchers-2.png',
+    image: '/images/wang/listen.png',
     cta: 'Подробнее',
     href: '#/researchers',
   },
@@ -28,7 +28,7 @@ export const researcherDirections = [
     id: 'labs',
     title: 'Лабораториям',
     text: 'Каталог экспериментов, оборудования и публикаций. Руководитель видит, кто над чем работает, а аспиранты — что уже проверено и какие вопросы остались открытыми',
-    image: '/images/juce/researchers-3.png',
+    image: '/images/wang/explain.jpeg',
     cta: 'Подробнее',
     href: '#/researchers',
   },
@@ -39,7 +39,7 @@ export const researcherValues = [
     id: 'open-data',
     title: 'Открываем данные',
     text: 'Выкладываем датасеты и препринты в открытый доступ, если это не нарушает приватность участников исследования. Чем больше данных видят коллеги, тем меньше повторных экспериментов и больше проверенных гипотез',
-    image: '/images/juce/researchers-4.png',
+    image: '/images/wang/laugh.jpeg',
     wide: true,
   },
   {
@@ -51,7 +51,7 @@ export const researcherValues = [
     id: 'attribution',
     title: 'Указываем вклад каждого',
     text: 'Авторы, рецензенты и те, кто готовил данные, указаны в карточке публикации. Джупсик проверяет оформление ссылок и помогает не потерять соавтора',
-    image: '/images/juce/researchers-1.png',
+    image: '/images/wang/conversation.jpeg',
     wide: true,
   },
 ];
@@ -77,7 +77,6 @@ export const researcherAwards = [
 export const researcherLearning = [
   {
     id: 'lab-internship',
-    icon: 'user' as const,
     title: 'Стажировка в лаборатории',
     text: 'Три месяца работы с настоящими данными под руководством научного сотрудника. В конце — отчёт и совместный препринт',
     cta: 'Подать заявку',
@@ -86,7 +85,6 @@ export const researcherLearning = [
   },
   {
     id: 'methods-school',
-    icon: 'code' as const,
     title: 'Школа методов',
     text: 'Короткие курсы по статистике, воспроизводимым вычислениям и работе с научными данными. Материалы и записи остаются открытыми',
     cta: 'Смотреть программу',
@@ -95,7 +93,6 @@ export const researcherLearning = [
   },
   {
     id: 'grants-workshop',
-    icon: 'doc' as const,
     title: 'Грантовая мастерская',
     text: 'Разбираем заявки вместе с опытными руководителями: формулировка гипотезы, смета, план работ и отчётность по гранту',
     cta: 'Присоединиться',
@@ -107,7 +104,6 @@ export const researcherLearning = [
 export const researcherVacancies = [
   {
     id: 'researcher',
-    icon: 'user' as const,
     title: 'Научный сотрудник',
     meta: 'Биоинформатика · полная занятость',
     text: 'Ведёт исследование от гипотезы до публикации, готовит препринты и заявки на гранты, работает с аспирантами',
@@ -116,7 +112,6 @@ export const researcherVacancies = [
   },
   {
     id: 'data-engineer',
-    icon: 'code' as const,
     title: 'Инженер данных',
     meta: 'Научные данные · полная занятость',
     text: 'Поддерживает каталог датасетов и конвейеры обработки: следит, чтобы эксперименты воспроизводились с первой попытки',
@@ -125,7 +120,6 @@ export const researcherVacancies = [
   },
   {
     id: 'phd-student',
-    icon: 'doc' as const,
     title: 'Аспирант',
     meta: 'Аспирантура · три года',
     text: 'Своя тема, научный руководитель и доступ к лабораторным данным. Джупсик помогает с обзором литературы и оформлением',

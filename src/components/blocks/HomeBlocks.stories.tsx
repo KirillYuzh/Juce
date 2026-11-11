@@ -52,14 +52,14 @@ export const PromoCards: Story = {
       <PromoCard
         title="Обзор за вечер"
         text="Черновик обзора по вашей теме с ссылками на каждый тезис"
-        image="/images/juce/promo-1.png"
+        image="/images/wang/roof.png"
         cta="Попробовать"
         href="#/assistant"
       />
       <PromoCard
         title="Граф связей между статьями"
         text="Показывает, кто на кого ссылается и где выводы расходятся"
-        image="/images/juce/promo-2.png"
+        image="/images/wang/smile.png"
         cta="Посмотреть"
         href="#/assistant"
         tone="dark"
@@ -74,7 +74,6 @@ export const TextCards: Story = {
       {services.map((service) => (
         <TextCard
           key={service.id}
-          icon={service.icon}
           title={service.title}
           text={service.text}
           linkLabel={service.link.label}
@@ -92,7 +91,7 @@ export const StatPanelStory: Story = {
       <StatPanel
         title="Джупсик в браузере"
         text="Откройте ассистента без установки: поиск, обзоры и ссылки работают прямо в браузере"
-        image="/images/juce/app.png"
+        image="/images/wang/listen.png"
         links={[
           { label: 'Открыть чат', href: '#/assistant', icon: 'globe' },
           { label: 'Документация', href: '#', icon: 'code' },
@@ -109,7 +108,7 @@ export const WideBannerStory: Story = {
       <WideBanner
         title="Как собрать обзор литературы за вечер"
         source="Блог Джус"
-        image="/images/juce/banner.png"
+        image="/images/wang/listen.png"
         cta="Читать"
         href="#"
       />

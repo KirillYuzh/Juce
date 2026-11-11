@@ -1,7 +1,5 @@
-// ponytail: CSS-модуль остаётся под прежним именем — стили ведёт другой человек.
 import styles from './ResearcherBlocks.module.css';
 import { Button } from '../ui/Button';
-import { Icon, type IconName } from '../ui/Icon';
 
 const cx = (...values: Array<string | false | null | undefined>) =>
   values.filter(Boolean).join(' ');
@@ -29,7 +27,7 @@ export function DirectionCard({ direction }: { direction: Direction }) {
       <p className={styles.directionText}>{direction.text}</p>
       <img className={styles.directionMedia} src={direction.image} alt="" loading="lazy" />
       <span className={styles.directionCta}>
-        <Button variant="white" size="m" href={direction.href}>
+        <Button variant="primary" size="m" href={direction.href}>
           {direction.cta}
         </Button>
       </span>
@@ -106,7 +104,6 @@ export function Recognition({
 
 export interface ResearchTrack {
   id: string;
-  icon: IconName;
   title: string;
   text: string;
   cta: string;
@@ -125,11 +122,14 @@ export function StartCards({ cards }: { cards: ResearchTrack[] }) {
             card.tone === 'accent' ? styles.trackAccent : styles.trackGray
           )}
         >
-          <Icon name={card.icon} size={32} style={{ marginBottom: 32 }} />
           <h3 className={styles.trackTitle}>{card.title}</h3>
           <p className={styles.trackText}>{card.text}</p>
           <span className={styles.trackCta}>
-            <Button variant="white" size="m" href={card.href}>
+            <Button
+              variant={card.tone === 'accent' ? 'white' : 'primary'}
+              size="m"
+              href={card.href}
+            >
               {card.cta}
             </Button>
           </span>
@@ -141,7 +141,6 @@ export function StartCards({ cards }: { cards: ResearchTrack[] }) {
 
 export interface Vacancy {
   id: string;
-  icon: IconName;
   title: string;
   meta: string;
   text: string;
@@ -154,7 +153,6 @@ export function VacancyCards({ vacancies }: { vacancies: Vacancy[] }) {
     <div style={rowOfCards}>
       {vacancies.map((vacancy) => (
         <article key={vacancy.id} className={cx(styles.track, styles.trackGray)}>
-          <Icon name={vacancy.icon} size={32} style={{ marginBottom: 32 }} />
           <h3 className={styles.trackTitle}>{vacancy.title}</h3>
           <p
             className={styles.trackText}
@@ -168,7 +166,7 @@ export function VacancyCards({ vacancies }: { vacancies: Vacancy[] }) {
           </p>
           <p className={styles.trackText}>{vacancy.text}</p>
           <span className={styles.trackCta}>
-            <Button variant="white" size="m" href={vacancy.href} iconRight="arrowRight">
+            <Button variant="primary" size="m" href={vacancy.href} iconRight="arrowRight">
               {vacancy.cta}
             </Button>
           </span>

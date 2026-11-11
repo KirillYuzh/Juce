@@ -54,17 +54,17 @@
 }
 
 .white {
-  background: var(--tb-white);
-  color: var(--tb-text-primary);
+  background: var(--tb-secondary);
+  color: var(--tb-primary);
 }
 
 .white:hover {
-  background: var(--tb-gray-100);
+  background: var(--tb-secondary-hover);
 }
 
 .outline {
   background: transparent;
-  color: var(--tb-text-link);
+  color: var(--tb-primary);
   box-shadow: inset 0 0 0 1px var(--tb-border-strong);
 }
 
@@ -74,7 +74,7 @@
 
 .ghost {
   background: transparent;
-  color: var(--tb-text-link);
+  color: var(--tb-primary);
 }
 
 .ghost:hover {
@@ -82,12 +82,12 @@
 }
 
 .dark {
-  background: #000;
-  color: #fff;
+  background: var(--tb-accent);
+  color: var(--tb-primary);
 }
 
 .dark:hover {
-  background: #262626;
+  background: var(--tb-accent-hover);
 }
 
 .fullWidth {

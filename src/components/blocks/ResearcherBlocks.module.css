@@ -7,7 +7,7 @@
   padding: 32px;
   overflow: hidden;
   border-radius: var(--tb-radius-l);
-  background: linear-gradient(180deg, #f5f5f6 0%, #e9e9ea 100%);
+  background: var(--tb-secondary);
   text-align: center;
 }
 
@@ -135,7 +135,7 @@
   height: 176px;
   overflow: hidden;
   border-radius: var(--tb-radius-l);
-  background: var(--tb-accent-soft);
+  background: var(--tb-secondary);
 }
 
 .awardBanner img {
@@ -174,11 +174,16 @@
 }
 
 .trackGray {
-  background: var(--tb-gray-250);
+  background: var(--tb-secondary);
 }
 
 .trackAccent {
-  background: linear-gradient(92deg, var(--tb-accent) 0%, #ff8a95 100%);
+  background: var(--tb-accent);
+  color: var(--tb-primary);
+}
+
+.trackAccent .trackText {
+  color: var(--tb-primary);
 }
 
 .trackIcon {

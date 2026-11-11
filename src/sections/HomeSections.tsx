@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import styles from './Sections.module.css';
 import { Button } from '../components/ui/Button';
+import { Tabs } from '../components/ui/Navigation';
+import { ProductShowcase, type ProjectTemplate } from '../components/blocks/ProductShowcase';
 import {
   ProductCard,
   PromoCard,
@@ -12,7 +14,6 @@ import {
   type PromoCardProps,
   type StatPanelLink,
 } from '../components/blocks/HomeBlocks';
-import type { IconName } from '../components/ui/icons';
 import type { Product } from '../data/home';
 
 const cx = (...values: Array<string | false | null | undefined>) =>
@@ -108,6 +109,39 @@ export function ProductsSection({
   );
 }
 
+export interface ShowcaseTab {
+  id: string;
+  label: string;
+  title: string;
+  designs: ProjectTemplate[];
+  options: Array<{ value: string; label: string }>;
+}
+
+export function ShowcaseSection({ title, tabs }: { title: string; tabs: ShowcaseTab[] }) {
+  const [activeTab, setActiveTab] = useState(tabs[0]?.id);
+  const active = tabs.find((tab) => tab.id === activeTab) ?? tabs[0];
+  if (!active) return null;
+
+  return (
+    <Section title={title}>
+      <div className={styles.productsTabs}>
+        <Tabs
+          items={tabs.map((tab) => ({ id: tab.id, label: tab.label }))}
+          value={active.id}
+          onChange={setActiveTab}
+          label="Тип проекта"
+        />
+      </div>
+      <ProductShowcase
+        key={active.id}
+        title={active.title}
+        designs={active.designs}
+        options={active.options}
+      />
+    </Section>
+  );
+}
+
 export function StatsSection({
   title,
   panel,
@@ -135,7 +169,6 @@ export function ServicesSection({
   title: string;
   cards: Array<{
     id: string;
-    icon: IconName;
     title: string;
     text: string;
     link: { label: string; href: string };
@@ -148,7 +181,6 @@ export function ServicesSection({
         {cards.map((card) => (
           <TextCard
             key={card.id}
-            icon={card.icon}
             title={card.title}
             text={card.text}
             linkLabel={card.link.label}
@@ -257,7 +289,6 @@ export function MoreSection({
   title: string;
   items: Array<{
     id: string;
-    icon: IconName;
     title: string;
     text: string;
     link: { label: string; href: string };
@@ -269,7 +300,6 @@ export function MoreSection({
         {items.map((item) => (
           <TextCard
             key={item.id}
-            icon={item.icon}
             title={item.title}
             text={item.text}
             linkLabel={item.link.label}

@@ -12,7 +12,7 @@
   flex-direction: column;
   gap: 24px;
   padding: 40px 32px;
-  background: #f0f0f0;
+  background: var(--tb-bg-secondary);
 }
 
 .previewTitle {
