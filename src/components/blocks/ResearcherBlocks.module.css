@@ -34,7 +34,6 @@
   height: 300px;
   object-fit: cover;
   object-position: center bottom;
-  filter: hue-rotate(345deg) saturate(0.95);
 }
 
 .directionCta {
@@ -96,7 +95,6 @@
   object-fit: cover;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 24%);
   mask-image: linear-gradient(90deg, transparent 0%, #000 24%);
-  filter: hue-rotate(325deg) saturate(1.05);
 }
 
 .awards {

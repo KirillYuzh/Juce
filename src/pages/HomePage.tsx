@@ -7,11 +7,9 @@ import {
   JournalBanner,
   MoreSection,
   ProductsSection,
-  QuickLinksSection,
   ResearchPromoSection,
   ServicesSection,
   ShowcaseSection,
-  StatsSection,
 } from '../sections/HomeSections';
 import {
   articles,
@@ -19,7 +17,6 @@ import {
   moreLinks,
   products,
   projectTemplates,
-  quickLinks,
   researchPromos,
   reviewFormats,
   services,
@@ -52,8 +49,6 @@ export function HomePage() {
           imageAlt="Исследовательская группа за работой"
         />
 
-        <QuickLinksSection items={quickLinks} />
-
         <ShowcaseSection
           title="Соберите проект под свою задачу"
           tabs={[
@@ -84,19 +79,6 @@ export function HomePage() {
         <ProductsSection
           title="Кому помогает Джупсик"
           groups={[products.slice(0, 2), products.slice(2)]}
-        />
-
-        <StatsSection
-          title="12 400 исследователей уже работают в Джус"
-          panel={{
-            title: 'Джупсик в браузере',
-            text: 'Откройте ассистента без установки: поиск, обзоры и ссылки работают прямо в браузере',
-            image: '/images/wang/listen.png',
-            links: [
-              { label: 'Открыть чат', href: '#/assistant', icon: 'globe' },
-              { label: 'Документация', href: '#', icon: 'code' },
-            ],
-          }}
         />
 
         <ServicesSection
