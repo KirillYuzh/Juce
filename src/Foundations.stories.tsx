@@ -11,16 +11,19 @@ export default meta;
 type Story = StoryObj;
 
 const colors = [
-  ['--tb-yellow', 'Primary'],
-  ['--tb-yellow-hover', 'Primary hover'],
-  ['--tb-yellow-active', 'Primary active'],
+  ['--tb-primary', 'Primary'],
+  ['--tb-primary-hover', 'Primary hover'],
+  ['--tb-primary-active', 'Primary active'],
+  ['--tb-secondary', 'Secondary'],
+  ['--tb-secondary-soft', 'Secondary soft'],
+  ['--tb-accent', 'Accent'],
+  ['--tb-accent-soft', 'Accent soft'],
+  ['--tb-accent-text', 'Accent text'],
   ['--tb-text-primary', 'Text primary'],
   ['--tb-text-secondary', 'Text secondary'],
   ['--tb-text-tertiary', 'Text tertiary'],
-  ['--tb-text-link', 'Link'],
   ['--tb-bg-secondary', 'Background secondary'],
   ['--tb-bg-tertiary', 'Background tertiary'],
-  ['--tb-gray-250', 'Gray blue'],
   ['--tb-dark', 'Dark'],
   ['--tb-success', 'Success'],
   ['--tb-error', 'Error'],
@@ -78,7 +81,13 @@ export const Colors: Story = {
       <h2 className="tb-h2" style={{ marginBottom: 24 }}>
         Цвета
       </h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 16 }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+          gap: 16,
+        }}
+      >
         {colors.map(([token, label]) => (
           <div key={token}>
             <div
@@ -90,7 +99,9 @@ export const Colors: Story = {
               }}
             />
             <div style={{ marginTop: 8, font: '500 13px/18px var(--tb-font-text)' }}>{label}</div>
-            <code style={{ font: '400 11px/16px monospace', color: 'var(--tb-text-secondary)' }}>{token}</code>
+            <code style={{ font: '400 11px/16px monospace', color: 'var(--tb-text-secondary)' }}>
+              {token}
+            </code>
           </div>
         ))}
       </div>
@@ -117,7 +128,9 @@ export const Typography: Story = {
           }}
         >
           <span className={className}>{sample}</span>
-          <code style={{ font: '400 12px/18px monospace', color: 'var(--tb-text-secondary)' }}>{note}</code>
+          <code style={{ font: '400 12px/18px monospace', color: 'var(--tb-text-secondary)' }}>
+            {note}
+          </code>
         </div>
       ))}
     </div>
@@ -131,8 +144,18 @@ export const Spacing: Story = {
         Отступы
       </h2>
       {spacing.map(([label, token]) => (
-        <div key={token} style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '8px 0' }}>
-          <div style={{ width: `var(${token})`, height: 24, background: 'var(--tb-yellow)', borderRadius: 4 }} />
+        <div
+          key={token}
+          style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '8px 0' }}
+        >
+          <div
+            style={{
+              width: `var(${token})`,
+              height: 24,
+              background: 'var(--tb-primary)',
+              borderRadius: 4,
+            }}
+          />
           <code style={{ font: '400 13px/20px monospace' }}>{token}</code>
           <span className="tb-text-s" style={{ color: 'var(--tb-text-secondary)' }}>
             {label}px
@@ -149,7 +172,13 @@ export const Icons: Story = {
       <h2 className="tb-h2" style={{ marginBottom: 24 }}>
         Иконки
       </h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 16 }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+          gap: 16,
+        }}
+      >
         {iconNames.map((name) => (
           <div
             key={name}
@@ -164,7 +193,9 @@ export const Icons: Story = {
             }}
           >
             <Icon name={name} size={28} />
-            <code style={{ font: '400 11px/14px monospace', color: 'var(--tb-text-secondary)' }}>{name}</code>
+            <code style={{ font: '400 11px/14px monospace', color: 'var(--tb-text-secondary)' }}>
+              {name}
+            </code>
           </div>
         ))}
       </div>

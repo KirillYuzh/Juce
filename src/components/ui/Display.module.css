@@ -14,7 +14,7 @@
 }
 
 .badgeAccent {
-  background: var(--tb-yellow);
+  background: var(--tb-accent);
   color: var(--tb-text-primary);
 }
 
@@ -29,8 +29,8 @@
 }
 
 .badgeWarning {
-  background: var(--tb-yellow-soft);
-  color: #7a6100;
+  background: var(--tb-accent-soft);
+  color: var(--tb-accent-text);
 }
 
 .chip {
@@ -116,12 +116,12 @@
 .progressBar {
   height: 100%;
   border-radius: inherit;
-  background: var(--tb-text-link);
+  background: var(--tb-accent-hover);
   transition: width 0.3s ease;
 }
 
 .progressAccent .progressBar {
-  background: var(--tb-yellow);
+  background: var(--tb-primary);
 }
 
 .spinner {

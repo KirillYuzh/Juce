@@ -50,28 +50,28 @@
 }
 
 .productSteel {
-  background: #767b8f;
+  background: var(--tb-primary);
   color: #fff;
 }
 
 .productIce {
-  background: #e3e9f0;
+  background: var(--tb-secondary-soft);
 }
 
 .productLavender {
-  background: #efe9f7;
+  background: var(--tb-accent-soft);
 }
 
 .productMint {
-  background: #d8f2ec;
+  background: var(--tb-secondary);
 }
 
 .productSand {
-  background: #f1e7d8;
+  background: var(--tb-secondary-soft);
 }
 
 .productDark {
-  background: #1f1f21;
+  background: var(--tb-primary);
   color: #fff;
 }
 
@@ -124,7 +124,7 @@
 }
 
 .promoDark {
-  background: #1f1f21;
+  background: var(--tb-primary);
   color: #fff;
 }
 
@@ -197,7 +197,7 @@
   padding: 40px 40px 0;
   overflow: hidden;
   border-radius: var(--tb-radius-l);
-  background: #e6ecf2;
+  background: var(--tb-secondary-soft);
 }
 
 .statContent {
@@ -273,7 +273,7 @@
   padding: 40px;
   overflow: hidden;
   border-radius: var(--tb-radius-l);
-  background: #767b8f;
+  background: var(--tb-primary);
   color: #fff;
 }
 
@@ -321,7 +321,7 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 16px 20px;
-    background: #efe3cf;
+    background: var(--tb-secondary);
     color: var(--tb-text-primary);
   }
 

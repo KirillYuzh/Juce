@@ -34,6 +34,7 @@
   height: 300px;
   object-fit: cover;
   object-position: center bottom;
+  filter: hue-rotate(345deg) saturate(0.95);
 }
 
 .directionCta {
@@ -95,6 +96,7 @@
   object-fit: cover;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 24%);
   mask-image: linear-gradient(90deg, transparent 0%, #000 24%);
+  filter: hue-rotate(325deg) saturate(1.05);
 }
 
 .awards {
@@ -133,7 +135,7 @@
   height: 176px;
   overflow: hidden;
   border-radius: var(--tb-radius-l);
-  background: #ffc800;
+  background: var(--tb-accent-soft);
 }
 
 .awardBanner img {
@@ -142,6 +144,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+  filter: grayscale(1) contrast(1.1);
 }
 
 .awardBannerTitle {
@@ -151,7 +156,7 @@
   font-size: 44px;
   font-weight: 700;
   letter-spacing: -1px;
-  color: #1a1a1a;
+  color: var(--tb-primary);
 }
 
 .tracks {
@@ -172,8 +177,8 @@
   background: var(--tb-gray-250);
 }
 
-.trackYellow {
-  background: linear-gradient(92deg, #ffe04a 0%, #ffb800 100%);
+.trackAccent {
+  background: linear-gradient(92deg, var(--tb-accent) 0%, #ff8a95 100%);
 }
 
 .trackIcon {

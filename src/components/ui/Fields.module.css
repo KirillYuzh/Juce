@@ -161,7 +161,15 @@
 
 .choice input:checked + .box,
 .choice input:checked + .radioCircle {
-  background: var(--tb-yellow);
+  background: var(--tb-primary);
+}
+
+.choice input:checked + .box::after {
+  border-color: var(--tb-on-primary);
+}
+
+.choice input:checked + .radioCircle::after {
+  background: var(--tb-on-primary);
 }
 
 .choice input:checked + .box::after,
@@ -222,7 +230,7 @@
 }
 
 .switch input:checked + .switchTrack {
-  background: var(--tb-yellow);
+  background: var(--tb-primary);
 }
 
 .switch input:checked + .switchTrack::after {

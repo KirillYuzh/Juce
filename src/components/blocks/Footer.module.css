@@ -174,7 +174,7 @@
 }
 
 .socials a:hover {
-  color: var(--tb-yellow);
+  color: var(--tb-accent);
 }
 
 @media (max-width: 1023px) {

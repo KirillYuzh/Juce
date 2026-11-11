@@ -105,7 +105,7 @@ export interface CareerStartCard {
   text: string;
   cta: string;
   href: string;
-  tone: 'gray' | 'yellow';
+  tone: 'gray' | 'accent';
 }
 
 export function StartCards({ cards }: { cards: CareerStartCard[] }) {
@@ -116,7 +116,7 @@ export function StartCards({ cards }: { cards: CareerStartCard[] }) {
           key={card.id}
           className={cx(
             styles.track,
-            card.tone === 'yellow' ? styles.trackYellow : styles.trackGray
+            card.tone === 'accent' ? styles.trackAccent : styles.trackGray
           )}
         >
           <img className={styles.trackIcon} src={card.icon} alt="" loading="lazy" />

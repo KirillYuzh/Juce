@@ -119,7 +119,7 @@ export function ProductShowcase({
         <label className={styles.legal} style={{ display: 'flex', gap: 12 }}>
           <input
             type="checkbox"
-            style={{ width: 24, height: 24, accentColor: 'var(--tb-yellow)' }}
+            style={{ width: 24, height: 24, accentColor: 'var(--tb-primary)' }}
           />
           <span>
             Соглашаюсь получать рекламу про кэшбэк, повышенный процент и выгодные предложения

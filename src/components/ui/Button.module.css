@@ -32,25 +32,25 @@
 }
 
 .primary {
-  background: var(--tb-yellow);
-  color: var(--tb-text-primary);
+  background: var(--tb-primary);
+  color: var(--tb-on-primary);
 }
 
 .primary:hover {
-  background: var(--tb-yellow-hover);
+  background: var(--tb-primary-hover);
 }
 
 .primary:active {
-  background: var(--tb-yellow-active);
+  background: var(--tb-primary-active);
 }
 
 .secondary {
-  background: var(--tb-bg-tertiary);
-  color: var(--tb-text-link);
+  background: var(--tb-secondary);
+  color: var(--tb-text-primary);
 }
 
 .secondary:hover {
-  background: var(--tb-field-hover);
+  background: var(--tb-secondary-hover);
 }
 
 .white {

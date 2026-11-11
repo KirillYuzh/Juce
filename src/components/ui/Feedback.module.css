@@ -11,12 +11,12 @@
 
 .alertIcon {
   flex: none;
-  color: #428bf9;
+  color: var(--tb-primary);
   margin-top: 1px;
 }
 
 .alertWarning .alertIcon {
-  color: #d99a00;
+  color: #9a6b00;
 }
 
 .alertError .alertIcon {

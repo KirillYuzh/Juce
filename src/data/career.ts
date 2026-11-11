@@ -105,7 +105,7 @@ export const careerStart = [
     text: 'На старте познакомитесь с продуктами, а команда поможет освоиться',
     cta: 'Подробнее',
     href: 'https://www.tbank.ru/career/vacancies/no-experience/',
-    tone: 'yellow' as const,
+    tone: 'accent' as const,
   },
 ];
 
