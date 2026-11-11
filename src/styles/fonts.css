@@ -1,7 +1,7 @@
 /* Manrope — база интерфейса. Variable 200–800, кириллица + латиница. */
 @font-face {
   font-family: 'Manrope';
-  src: url('/fonts/Manrope-Cyrillic.woff2') format('woff2');
+  src: url('../assets/fonts/Manrope-Cyrillic.woff2') format('woff2');
   font-weight: 200 800;
   font-style: normal;
   font-display: swap;
@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: 'Manrope';
-  src: url('/fonts/Manrope-LatinExt.woff2') format('woff2');
+  src: url('../assets/fonts/Manrope-LatinExt.woff2') format('woff2');
   font-weight: 200 800;
   font-style: normal;
   font-display: swap;
@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: 'Manrope';
-  src: url('/fonts/Manrope-Latin.woff2') format('woff2');
+  src: url('../assets/fonts/Manrope-Latin.woff2') format('woff2');
   font-weight: 200 800;
   font-style: normal;
   font-display: swap;
@@ -34,7 +34,7 @@
 /* Linux Libertine — цитаты, сноски, длинный научный текст. */
 @font-face {
   font-family: 'Linux Libertine';
-  src: url('/fonts/LinuxLibertine-Regular.woff2') format('woff2');
+  src: url('../assets/fonts/LinuxLibertine-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -42,7 +42,7 @@
 
 @font-face {
   font-family: 'Linux Libertine';
-  src: url('/fonts/LinuxLibertine-Italic.woff2') format('woff2');
+  src: url('../assets/fonts/LinuxLibertine-Italic.woff2') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -50,7 +50,7 @@
 
 @font-face {
   font-family: 'Linux Libertine';
-  src: url('/fonts/LinuxLibertine-Bold.woff2') format('woff2');
+  src: url('../assets/fonts/LinuxLibertine-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -58,7 +58,7 @@
 
 @font-face {
   font-family: 'Linux Libertine';
-  src: url('/fonts/LinuxLibertine-BoldItalic.woff2') format('woff2');
+  src: url('../assets/fonts/LinuxLibertine-BoldItalic.woff2') format('woff2');
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -67,7 +67,7 @@
 /* JetBrains Mono — код, стек-трейсы, номера строк. */
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-Cyrillic.woff2') format('woff2');
+  src: url('../assets/fonts/JetBrainsMono-Cyrillic.woff2') format('woff2');
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
@@ -76,7 +76,7 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-LatinExt.woff2') format('woff2');
+  src: url('../assets/fonts/JetBrainsMono-LatinExt.woff2') format('woff2');
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
@@ -88,7 +88,7 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-Latin.woff2') format('woff2');
+  src: url('../assets/fonts/JetBrainsMono-Latin.woff2') format('woff2');
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
