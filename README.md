@@ -35,7 +35,7 @@ export function App() {
 
 `Foundations/Tokens`: цвета, типографика, отступы, иконки.
 
-`Primitives`: Button, IconButton, TextLink, Input, Textarea, Select, Checkbox, Radio, Switch, Badge, Chip, Avatar, Progress, Spinner, Skeleton, Divider, Logo, Icon, Alert, Tooltip, CookieNotice, Tabs, Accordion, Collapsible, Hover card, Date picker, Code block, Carousel, Questionnaire.
+`Primitives`: Button, IconButton, TextLink, Input, Textarea, Select, Checkbox, Radio, Switch, Badge, Chip, Avatar, Progress, Spinner, Skeleton, Divider, Logo, Icon, Alert, Tooltip, CookieNotice, Tabs, Accordion, Collapsible, Hover card, Date picker, Code block, Carousel, Questionnaire, Sidebar, Resizable.
 
 `Utilities`: scroll-fade и shimmer, чистый CSS без JS.
 
