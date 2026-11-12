@@ -14,6 +14,10 @@ export interface HeaderProps {
   loginLabel?: string;
   loginHref?: string;
   homeHref?: string;
+  /** Название в логотипе: шаблон подставляется в любой продукт. */
+  brand?: string;
+  /** Кнопка поиска появляется только когда есть куда вести. */
+  onSearch?: () => void;
   className?: string;
 }
 
@@ -23,6 +27,8 @@ export function Header({
   loginLabel,
   loginHref = '#',
   homeHref = '#',
+  brand = 'Джус',
+  onSearch,
   className,
 }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
@@ -52,9 +58,9 @@ export function Header({
         <a
           className={styles.logo}
           href={variant === 'researchers' ? '#/researchers' : homeHref}
-          aria-label="Джус"
+          aria-label={brand}
         >
-          <Logo />
+          <Logo label={brand} />
         </a>
 
         <nav className={styles.nav} aria-label="Основное меню">
@@ -84,7 +90,9 @@ export function Header({
               </Button>
             ) : (
               <>
-                <IconButton icon="search" label="Поиск" variant="plain" />
+                {onSearch && (
+                  <IconButton icon="search" label="Поиск" variant="plain" onClick={onSearch} />
+                )}
                 <a className={styles.login} href={loginHref}>
                   <Icon name="user" size={24} />
                   {label}
@@ -97,7 +105,7 @@ export function Header({
             <Button variant="secondary" size="m" href={loginHref}>
               {label}
             </Button>
-            {variant === 'home' && <IconButton icon="search" label="Поиск" size="s" />}
+            {onSearch && <IconButton icon="search" label="Поиск" size="s" onClick={onSearch} />}
             <IconButton
               icon={menuOpen ? 'close' : 'menu'}
               label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}

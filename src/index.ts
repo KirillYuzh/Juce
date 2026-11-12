@@ -58,6 +58,36 @@ export { Suggestion, Suggestions } from './components/ai/Suggestion';
 export { Task, TaskItem, TaskItemFile } from './components/ai/Task';
 export type { TaskStep } from './components/ai/Task';
 export { Trace, TraceDescription, TraceIcon, TraceLine, TraceTitle } from './components/ai/Trace';
+export {
+  Carousel,
+  CarouselContent,
+  CarouselDots,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from './components/ui/Carousel';
+export type { CarouselApi, CarouselOptions, CarouselOrientation } from './components/ui/Carousel';
+export {
+  Questionnaire,
+  QuestionnaireActions,
+  QuestionnaireChoice,
+  QuestionnaireChoices,
+  QuestionnaireDescription,
+  QuestionnaireError,
+  QuestionnaireInput,
+  QuestionnaireItem,
+  QuestionnaireNext,
+  QuestionnairePrevious,
+  QuestionnaireProgress,
+  QuestionnaireSkip,
+  QuestionnaireSubmit,
+  QuestionnaireTitle,
+} from './components/ui/Questionnaire';
+export type {
+  QuestionnaireAnswers,
+  QuestionnaireChoiceConfig,
+  QuestionnaireItemConfig,
+} from './components/ui/Questionnaire';
 export { Markdown } from './components/ai/Markdown';
 export type { MarkdownProps } from './components/ai/Markdown';
 export { Chat } from './components/ai/Chat';
@@ -65,6 +95,8 @@ export type { ChatMessage, ChatProps } from './components/ai/Chat';
 
 export { Header } from './components/blocks/Header';
 export { Footer } from './components/blocks/Footer';
+export type { FooterSection, FooterGroup } from './data/footer';
+export type { NavItem } from './data/home';
 export {
   ProductCard,
   PromoCard,

@@ -1,6 +1,7 @@
 export interface FooterGroup {
   title: string;
-  links: string[];
+  /** Строка — декоративная ссылка шаблона, объект — реальный маршрут. */
+  links: Array<string | { title: string; href: string }>;
 }
 
 export interface FooterSection {

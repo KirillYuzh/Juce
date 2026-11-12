@@ -1,0 +1,126 @@
+.root {
+  position: relative;
+}
+
+.viewport {
+  overflow: hidden;
+  border-radius: inherit;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  outline: none;
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.viewport:focus-visible {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 4px;
+}
+
+.track {
+  position: relative;
+  display: flex;
+  gap: 16px;
+}
+
+.item {
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.root[data-orientation='vertical'] .viewport {
+  height: 100%;
+  scroll-snap-type: y mandatory;
+}
+
+.root[data-orientation='vertical'] .track {
+  flex-direction: column;
+}
+
+/* Overlay arrows: white circles on any background. */
+.nav.nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  background: var(--tb-white);
+  box-shadow:
+    var(--tb-shadow-control),
+    inset 0 0 0 1px var(--tb-border);
+  transform: translateY(-50%);
+}
+
+.nav.nav:hover:not(:disabled) {
+  background: var(--tb-white);
+  box-shadow:
+    0 4px 12px rgb(0 0 0 / 0.14),
+    inset 0 0 0 1px var(--tb-border-strong);
+}
+
+.nav.nav:disabled {
+  opacity: 0.4;
+}
+
+.prev {
+  left: 8px;
+}
+
+.next {
+  right: 8px;
+}
+
+.nav[data-orientation='vertical'] svg {
+  transform: rotate(90deg);
+}
+
+.nav[data-orientation='vertical'].prev {
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav[data-orientation='vertical'].next {
+  top: auto;
+  right: auto;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--tb-gray-300);
+  cursor: pointer;
+  transition:
+    width 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.dot:hover {
+  background: var(--tb-gray-500);
+}
+
+.dotActive,
+.dotActive:hover {
+  width: 18px;
+  border-radius: 3px;
+  background: var(--tb-primary);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+}

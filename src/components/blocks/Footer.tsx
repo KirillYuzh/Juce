@@ -1,4 +1,5 @@
 import styles from './Footer.module.css';
+import type { ReactNode } from 'react';
 import { footerSections, type FooterSection } from '../../data/footer';
 import { researcherFooterLinks } from '../../data/researchers';
 import { Chip } from '../ui/Display';
@@ -12,6 +13,12 @@ export interface FooterProps {
   sections?: FooterSection[];
   chips?: string[];
   className?: string;
+  /** Название продукта в нижней строке. */
+  brand?: string;
+  /** Почта поддержки; пустая строка скрывает блок с контактами. */
+  email?: string;
+  legal?: ReactNode;
+  copyright?: string;
 }
 
 export function Footer({
@@ -19,6 +26,10 @@ export function Footer({
   sections = footerSections,
   chips = researcherFooterLinks,
   className,
+  brand = 'Джус',
+  email = 'support@juce.edu',
+  legal,
+  copyright = `© 2026, ${brand}`,
 }: FooterProps) {
   if (variant === 'dark') {
     return (
@@ -87,11 +98,19 @@ export function Footer({
                     {column.map((group) => (
                       <div className={styles.group} key={group.title}>
                         <span className={styles.groupTitle}>{group.title}</span>
-                        {group.links.map((link) => (
-                          <a className={styles.link} key={`${group.title}-${link}`} href="#">
-                            {link}
-                          </a>
-                        ))}
+                        {group.links.map((link) => {
+                          const title = typeof link === 'string' ? link : link.title;
+                          const linkHref = typeof link === 'string' ? '#' : link.href;
+                          return (
+                            <a
+                              className={styles.link}
+                              key={`${group.title}-${title}`}
+                              href={linkHref}
+                            >
+                              {title}
+                            </a>
+                          );
+                        })}
                       </div>
                     ))}
                   </div>
@@ -102,19 +121,21 @@ export function Footer({
         </div>
 
         <div className={styles.bottom}>
-          <div className={styles.phoneBlock}>
-            <a className={styles.phone} href="mailto:support@juce.edu">
-              support@juce.edu
-            </a>
-            <span>Ответим в течение рабочего дня</span>
-            <span>Пн–Пт, 9:00–19:00</span>
-          </div>
+          {email ? (
+            <div className={styles.phoneBlock}>
+              <a className={styles.phone} href={`mailto:${email}`}>
+                {email}
+              </a>
+              <span>Ответим в течение рабочего дня</span>
+              <span>Пн–Пт, 9:00–19:00</span>
+            </div>
+          ) : null}
           <div className={styles.legal}>
             <p>
-              Джус помогает разбирать код и задачи, но не принимает решений за разработчика.
-              Проверяйте примеры и выкладки перед публикацией.
+              {legal ??
+                `${brand} помогает разбирать код и задачи, но не принимает решений за разработчика. Проверяйте примеры и выкладки перед публикацией.`}
             </p>
-            <span className={styles.copyright}>© 2026, Джус — платформа для разработчиков</span>
+            <span className={styles.copyright}>{copyright}</span>
           </div>
         </div>
       </div>
