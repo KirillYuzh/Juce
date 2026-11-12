@@ -1,4 +1,4 @@
-# Джус — UI-кит платформы научных исследований
+# juce-ui — UI-кит «Джус»
 
 React-библиотека компонентов и шаблонов «Джус» и её ИИ-ассистента Джупсика. Всё живёт в Storybook: токены, примитивы, AI-элементы, блоки, секции и три готовые страницы.
 
@@ -7,7 +7,7 @@ React-библиотека компонентов и шаблонов «Джус
 ```bash
 npm install
 npm run storybook        # Storybook на http://localhost:6006
-npm run dev              # демо: /#/researchers и /#/assistant
+npm run dev              # демо: главная и /#/assistant
 npm run build            # проверка типов + production-сборка демо
 npm run build:lib        # сборка npm-пакета в dist/
 npm run build-storybook
@@ -16,7 +16,8 @@ npm run build-storybook
 ## Установка как пакета
 
 ```bash
-npm i github:KirillYuzh/Juce#develop
+npm i juce-ui                 # из реестра (после публикации)
+npm i github:KirillYuzh/Juce#develop   # напрямую из ветки
 ```
 
 ```tsx
@@ -24,7 +25,7 @@ import { Button, Chat, PromptInput } from 'juce-ui';
 import 'juce-ui/styles.css';
 
 export function App() {
-  return <Button>Начать исследование</Button>;
+  return <Button>Начать разбор</Button>;
 }
 ```
 

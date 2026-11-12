@@ -1,9 +1,19 @@
 {
   "name": "juce-ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": false,
-  "description": "React UI kit: components, blocks and AI patterns for Juce interfaces",
+  "description": "React UI kit for Juce: primitives, AI patterns, blocks and pages",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "react",
+    "ui-kit",
+    "storybook",
+    "design-system",
+    "ai-elements"
+  ],
   "type": "module",
   "repository": {
     "type": "git",
