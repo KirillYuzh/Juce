@@ -44,7 +44,7 @@
   height: 40px;
   border-radius: 50%;
   transform: translateX(-50%);
-  background: var(--tb-white);
+  background: var(--tb-surface);
   color: var(--tb-text-primary);
   box-shadow: var(--tb-shadow-popover);
   transition:

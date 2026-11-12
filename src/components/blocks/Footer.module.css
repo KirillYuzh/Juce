@@ -145,11 +145,11 @@
   margin-top: 24px;
   max-width: 1000px;
   font: 400 11px/16px var(--tb-font-text);
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--tb-text-inverse-tertiary);
 }
 
 .darkLegal a {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--tb-text-inverse-link);
   text-decoration: underline;
 }
 
@@ -161,7 +161,7 @@
   gap: 16px;
   margin-top: 32px;
   padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--tb-border-inverse);
   font: 400 11px/16px var(--tb-font-text);
   color: var(--tb-text-inverse-secondary);
 }
@@ -174,7 +174,7 @@
 }
 
 .socials a:hover {
-  color: var(--tb-accent);
+  color: var(--tb-accent-on-inverse);
 }
 
 @media (max-width: 1023px) {

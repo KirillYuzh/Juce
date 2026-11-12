@@ -31,11 +31,97 @@ export function App() {
 
 Пакет собирается при установке (`prepare` → `build:lib`), поэтому из git ставится из ветки `develop`. React и React DOM — peer-зависимости (`>=18`), в бандл не попадают. Стили, шрифты и CSS Modules приезжают одним файлом `styles.css`, ассеты шрифтов лежат рядом в `dist/assets`.
 
+## Темы
+
+В пакете две готовые темы: светлая (по умолчанию) и тёмная. Переключаются атрибутом
+`data-theme` на любом контейнере (обычно `<html>`) или классом `.dark`:
+
+```ts
+document.documentElement.dataset.theme = 'dark'; // 'light' — обратно
+```
+
+`data-theme="light"` на вложенном контейнере возвращает светлую тему внутри тёмной.
+Имена токенов в обеих темах одинаковые, компоненты менять не нужно.
+
+Системная тема (пакет сам её не навязывает):
+
+```ts
+const mq = matchMedia('(prefers-color-scheme: dark)');
+const apply = () => {
+  document.documentElement.dataset.theme = mq.matches ? 'dark' : 'light';
+};
+mq.addEventListener('change', apply);
+apply();
+```
+
+### Свои цвета
+
+Публичный контракт — переменные `--tb-*`. Палитра (`--ink`, `--mist`, `--coral`,
+`--bg`, `--gray-*`) внутренняя: переопределяйте роли, а не её.
+
+```css
+@import 'juce-ui/styles.css';
+
+:root {
+  --tb-primary: #0f4c81;
+  --tb-primary-hover: #0c3f6c;
+  --tb-on-primary: #ffffff;
+  --tb-accent: #ff8a3d;
+  --tb-accent-text: #b34700;
+  --tb-on-accent: #222526;
+  --tb-text-link: #0f4c81;
+}
+
+/* тёмная тема — те же роли, свои значения */
+[data-theme='dark'] {
+  --tb-primary: #cfe3f5;
+  --tb-primary-hover: #b9d5ee;
+  --tb-on-primary: #0b1a26;
+  --tb-accent: #ffb27a;
+  --tb-accent-text: #ffc39a;
+  --tb-on-accent: #0b1a26;
+  --tb-text-link: #8cc0ff;
+}
+```
+
+Правило простое: `--tb-primary` — сильная нейтральная заливка, `--tb-on-primary` —
+подпись на ней; `--tb-accent` — коралловая заливка, `--tb-accent-text` — тот же
+акцент как текст. В тёмной теме заливки светлее, подписи темнее.
+
+### Своя тема
+
+Скопируйте блок токенов из `src/styles/tokens.css` (`:root` — светлая тема,
+`[data-theme='dark']` — тёмная), поменяйте значения и дайте теме имя:
+
+```css
+[data-theme='ocean'] {
+  --tb-bg: #0b1a26;
+  --tb-surface: #102431;
+  --tb-text-primary: #e6f1f8;
+  /* ...остальные --tb-* роли */
+}
+```
+
+```ts
+document.documentElement.dataset.theme = 'ocean';
+```
+
+Минимум, который стоит задать: `--tb-bg`, `--tb-surface`, `--tb-bg-secondary`,
+`--tb-bg-tertiary`, `--tb-text-primary/secondary/tertiary`, `--tb-primary` (+ hover,
+active, on-primary), `--tb-secondary` (+ hover), `--tb-accent` (+ hover, soft, text,
+on-accent), `--tb-success/error/warning` (+ text и soft), `--tb-border`,
+`--tb-border-strong`, `--tb-field`, `--tb-shadow-*`.
+
+Проверка контраста: пары «текст × реальная поверхность» должны проходить WCAG AA
+(4.5:1 для текста, 3:1 для границ) и APCA Lc ≥ 60 для основного текста. В тёмной
+теме не берите чистый чёрный фон и чистый белый текст — берите подтон нейтрали
+светлой темы и ≈ 91 % белого для основного текста.
+
 ## Структура Storybook
 
 `Foundations/Tokens`: цвета, типографика, отступы, иконки.
 
-`Primitives`: Button, IconButton, TextLink, Input, Textarea, Select, Checkbox, Radio, Switch, Badge, Chip, Avatar, Progress, Spinner, Skeleton, Divider, Logo, Icon, Alert, Tooltip, CookieNotice, Tabs, Accordion, Collapsible, Hover card, Date picker, Code block.
+`Primitives`: Button, IconButton, TextLink, Input, Textarea, Select, Checkbox, Radio, Switch, Badge, Chip, Avatar, Progress, Spinner, Skeleton, Divider, Logo, Icon, Alert, Tooltip, CookieNotice, Tabs, Accordion, Collapsible, Hover card, Date picker, Code block, Carousel, Questionnaire, Sidebar, Resizable.
 
 `Utilities`: scroll-fade и shimmer, чистый CSS без JS.
 
@@ -63,7 +149,7 @@ src/
   data/          тексты и ссылки страниц
 ```
 
-Все стили на CSS Modules и переменных из `src/styles/tokens.css`. Палитра: графитовый primary `#222526`, secondary `#ccdcef`, коралловый accent `#ff6574`. Текст `rgba(0,0,0,.8)`, радиус карточек 24px, кнопок 12px, контейнер 1152px с полями 24px, хедер 64px.
+Все стили на CSS Modules и переменных из `src/styles/tokens.css`. Две темы — светлая и тёмная — на одних и тех же токенах `--tb-*`. Светлая палитра: графитовый primary `#222526`, secondary `#ccdcef`, коралловый accent `#ff6574`. Текст `rgba(0,0,0,.8)`, радиус карточек 24px, кнопок 12px, контейнер 1152px с полями 24px, хедер 64px.
 
 ## Шрифты
 

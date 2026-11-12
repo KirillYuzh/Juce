@@ -1,3 +1,6 @@
+import './styles/tokens.css';
+import './styles/utilities.css';
+
 export { Button, IconButton, TextLink } from './components/ui/Button';
 export { Icon } from './components/ui/Icon';
 export type { IconName } from './components/ui/Icon';
@@ -58,6 +61,71 @@ export { Suggestion, Suggestions } from './components/ai/Suggestion';
 export { Task, TaskItem, TaskItemFile } from './components/ai/Task';
 export type { TaskStep } from './components/ai/Task';
 export { Trace, TraceDescription, TraceIcon, TraceLine, TraceTitle } from './components/ai/Trace';
+export {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from './components/ui/Resizable';
+export type { ResizableOrientation } from './components/ui/Resizable';
+export {
+  SIDEBAR_WIDTH,
+  SIDEBAR_WIDTH_ICON,
+  SIDEBAR_WIDTH_MOBILE,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+} from './components/ui/Sidebar';
+export type { SidebarProps, SidebarProviderProps } from './components/ui/Sidebar';
+export {
+  Carousel,
+  CarouselContent,
+  CarouselDots,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from './components/ui/Carousel';
+export type { CarouselApi, CarouselOptions, CarouselOrientation } from './components/ui/Carousel';
+export {
+  Questionnaire,
+  QuestionnaireActions,
+  QuestionnaireChoice,
+  QuestionnaireChoices,
+  QuestionnaireDescription,
+  QuestionnaireError,
+  QuestionnaireInput,
+  QuestionnaireItem,
+  QuestionnaireNext,
+  QuestionnairePrevious,
+  QuestionnaireProgress,
+  QuestionnaireSkip,
+  QuestionnaireSubmit,
+  QuestionnaireTitle,
+} from './components/ui/Questionnaire';
+export type {
+  QuestionnaireAnswers,
+  QuestionnaireChoiceConfig,
+  QuestionnaireItemConfig,
+} from './components/ui/Questionnaire';
 export { Markdown } from './components/ai/Markdown';
 export type { MarkdownProps } from './components/ai/Markdown';
 export { Chat } from './components/ai/Chat';
@@ -65,6 +133,8 @@ export type { ChatMessage, ChatProps } from './components/ai/Chat';
 
 export { Header } from './components/blocks/Header';
 export { Footer } from './components/blocks/Footer';
+export type { FooterSection, FooterGroup } from './data/footer';
+export type { NavItem } from './data/home';
 export {
   ProductCard,
   PromoCard,

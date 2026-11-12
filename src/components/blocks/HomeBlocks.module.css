@@ -25,7 +25,7 @@
 
 .productSteel {
   background: var(--tb-primary);
-  color: #fff;
+  color: var(--tb-on-primary);
 }
 
 .productIce,
@@ -37,7 +37,7 @@
 
 .productDark {
   background: var(--tb-primary);
-  color: #fff;
+  color: var(--tb-on-primary);
 }
 
 .productTitle {
@@ -96,7 +96,7 @@
 
 .promoDark {
   background: var(--tb-primary);
-  color: #fff;
+  color: var(--tb-on-primary);
 }
 
 .promoTitle {
@@ -242,7 +242,7 @@
   overflow: hidden;
   border-radius: var(--tb-radius-l);
   background: var(--tb-primary);
-  color: #fff;
+  color: var(--tb-on-primary);
 }
 
 .bannerMedia {
@@ -269,7 +269,7 @@
 }
 
 .bannerSource {
-  color: rgba(255, 255, 255, 0.64);
+  color: var(--tb-text-inverse-secondary);
   font: 400 15px/24px var(--tb-font-text);
 }
 

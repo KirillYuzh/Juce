@@ -83,7 +83,7 @@
 
 .dark {
   background: var(--tb-accent);
-  color: var(--tb-primary);
+  color: var(--tb-on-accent);
 }
 
 .dark:hover {

@@ -112,10 +112,10 @@ export function Divider({ className }: { className?: string }) {
   return <hr className={cx(styles.divider, className)} />;
 }
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({ className, label = 'Джус' }: { className?: string; label?: string }) {
   return (
     <span className={cx(styles.logo, className)}>
-      <span className={styles.logoWord}>Джус</span>
+      <span className={styles.logoWord}>{label}</span>
     </span>
   );
 }

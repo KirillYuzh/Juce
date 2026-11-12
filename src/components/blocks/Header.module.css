@@ -70,7 +70,7 @@
   min-width: 420px;
   padding: 16px;
   border-radius: var(--tb-radius-l);
-  background: var(--tb-white);
+  background: var(--tb-surface);
   box-shadow: var(--tb-shadow-popover);
 }
 

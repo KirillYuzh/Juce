@@ -221,35 +221,39 @@ export function Select({
         </button>
 
         {open && (
-          <ul
-            ref={listRef}
-            id={listId}
-            role="listbox"
-            tabIndex={-1}
-            aria-labelledby={triggerId}
-            aria-activedescendant={options[activeIndex] ? `${triggerId}-${activeIndex}` : undefined}
-            className={styles.selectMenu}
-            onKeyDown={onListKeyDown}
-          >
-            {options.map((option, index) => (
-              <li
-                key={option.value}
-                id={`${triggerId}-${index}`}
-                role="option"
-                aria-selected={index === selectedIndex}
-                className={cx(
-                  styles.selectOption,
-                  index === activeIndex && styles.selectOptionActive,
-                  index === selectedIndex && styles.selectOptionSelected
-                )}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => choose(index)}
-              >
-                {option.label}
-                {index === selectedIndex && <Icon name="check" size={20} />}
-              </li>
-            ))}
-          </ul>
+          <div className={styles.selectMenu}>
+            <ul
+              ref={listRef}
+              id={listId}
+              role="listbox"
+              tabIndex={-1}
+              aria-labelledby={triggerId}
+              aria-activedescendant={
+                options[activeIndex] ? `${triggerId}-${activeIndex}` : undefined
+              }
+              className={cx(styles.selectList, 'tb-scroll-fade-y')}
+              onKeyDown={onListKeyDown}
+            >
+              {options.map((option, index) => (
+                <li
+                  key={option.value}
+                  id={`${triggerId}-${index}`}
+                  role="option"
+                  aria-selected={index === selectedIndex}
+                  className={cx(
+                    styles.selectOption,
+                    index === activeIndex && styles.selectOptionActive,
+                    index === selectedIndex && styles.selectOptionSelected
+                  )}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onClick={() => choose(index)}
+                >
+                  {option.label}
+                  {index === selectedIndex && <Icon name="check" size={20} />}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </FieldShell>

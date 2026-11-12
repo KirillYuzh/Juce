@@ -1,7 +1,7 @@
 .surface {
   --cb-font: var(--tb-font-mono);
   --cb-bg: var(--tb-gray-150);
-  --cb-chrome: var(--tb-white);
+  --cb-chrome: var(--tb-surface);
   --cb-border: var(--tb-border);
   --cb-title: var(--tb-text-secondary);
 
@@ -22,7 +22,7 @@
 }
 
 .destructive {
-  --cb-bg: color-mix(in srgb, var(--tb-accent-soft) 55%, var(--tb-white));
+  --cb-bg: color-mix(in srgb, var(--tb-accent-soft) 55%, var(--tb-surface));
   --cb-chrome: var(--tb-accent-soft);
   --cb-border: color-mix(in srgb, var(--tb-accent) 42%, var(--tb-border));
   --cb-title: var(--tb-accent-text);
@@ -193,11 +193,11 @@
 }
 
 .lineAdded {
-  background: #e8f6ea;
+  background: var(--tb-success-soft);
 }
 
 .lineRemoved {
-  background: #fdeae9;
+  background: var(--tb-error-soft);
 }
 
 .lineHighlighted {
@@ -230,7 +230,7 @@
 .tkProperty,
 .tkAttr,
 .tkKey {
-  color: #476b8f;
+  color: var(--tb-syntax-property);
 }
 
 .footer {

@@ -20,12 +20,12 @@
 }
 
 .tab:hover {
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--tb-option-hover);
 }
 
 .tabActive,
 .tabActive:hover {
-  background: var(--tb-white);
+  background: var(--tb-option-selected);
   box-shadow: var(--tb-shadow-control);
 }
 

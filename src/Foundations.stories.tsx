@@ -55,6 +55,19 @@ const spacing = [
 
 const iconNames = [...Object.keys(antdIcons), 'vk', 'ok'] as IconName[];
 
+const themeRoles = [
+  ['--tb-bg', 'Page'],
+  ['--tb-bg-secondary', 'Panel'],
+  ['--tb-surface', 'Card'],
+  ['--tb-bg-tertiary', 'Hover'],
+  ['--tb-primary', 'Primary'],
+  ['--tb-secondary', 'Secondary'],
+  ['--tb-accent', 'Accent'],
+  ['--tb-accent-text', 'Accent text'],
+  ['--tb-text-primary', 'Text'],
+  ['--tb-border', 'Border'],
+] as const;
+
 export const Colors: Story = {
   render: () => (
     <div className="tb-container" style={{ paddingBlock: 32 }}>
@@ -87,6 +100,108 @@ export const Colors: Story = {
             >
               {token}
             </code>
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+};
+
+export const Themes: Story = {
+  render: () => (
+    <div className="tb-container" style={{ paddingBlock: 32 }}>
+      <h2 className="tb-h2" style={{ marginBottom: 8 }}>
+        Темы
+      </h2>
+      <p className="tb-text-m" style={{ color: 'var(--tb-text-secondary)', marginBottom: 24 }}>
+        <code>data-theme="dark"</code> на любом контейнере переключает палитру. Имена токенов не
+        меняются.
+      </p>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gap: 16,
+        }}
+      >
+        {(['light', 'dark'] as const).map((theme) => (
+          <div
+            key={theme}
+            data-theme={theme}
+            style={{
+              padding: 20,
+              borderRadius: 24,
+              background: 'var(--tb-bg)',
+              color: 'var(--tb-text-primary)',
+              boxShadow: 'inset 0 0 0 1px var(--tb-border)',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+              <span style={{ font: '500 15px/24px var(--tb-font-text)' }}>
+                {theme === 'dark' ? 'Тёмная' : 'Светлая'}
+              </span>
+              <code
+                style={{
+                  font: '400 12px/18px var(--tb-font-mono)',
+                  color: 'var(--tb-text-secondary)',
+                }}
+              >
+                {`data-theme="${theme}"`}
+              </code>
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(5, 1fr)',
+                gap: 8,
+                marginBottom: 16,
+              }}
+            >
+              {themeRoles.map(([token, label]) => (
+                <div
+                  key={token}
+                  title={`${label} · ${token}`}
+                  style={{
+                    height: 40,
+                    borderRadius: 10,
+                    background: `var(${token})`,
+                    boxShadow: 'inset 0 0 0 1px var(--tb-border)',
+                  }}
+                />
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+              <span
+                style={{
+                  background: 'var(--tb-accent)',
+                  color: 'var(--tb-on-accent)',
+                  borderRadius: 8,
+                  padding: '2px 8px',
+                  font: '500 13px/18px var(--tb-font-text)',
+                }}
+              >
+                Badge
+              </span>
+              <span
+                style={{
+                  background: 'var(--tb-primary)',
+                  color: 'var(--tb-on-primary)',
+                  borderRadius: 8,
+                  padding: '6px 12px',
+                  font: '500 13px/18px var(--tb-font-text)',
+                }}
+              >
+                Button
+              </span>
+              <span
+                style={{
+                  color: 'var(--tb-text-secondary)',
+                  font: '400 13px/18px var(--tb-font-text)',
+                }}
+              >
+                Secondary text
+              </span>
+            </div>
           </div>
         ))}
       </div>
@@ -129,8 +244,8 @@ export const Typography: Story = {
             --tb-font-quote · Linux Libertine
           </code>
           <blockquote style={{ margin: '8px 0 0', font: '400 21px/32px var(--tb-font-quote)' }}>
-            «Доказательство — это не магия, а цепочка шагов. Мы делаем так, чтобы каждый шаг
-            было видно».
+            «Доказательство — это не магия, а цепочка шагов. Мы делаем так, чтобы каждый шаг было
+            видно».
           </blockquote>
         </div>
         <div>
