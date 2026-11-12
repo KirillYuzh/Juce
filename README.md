@@ -66,8 +66,6 @@ src/
 
 Manrope — база интерфейса и заголовков, Linux Libertine — цитаты и длинный научный текст, JetBrains Mono — код, стек-трейсы и номера строк. Токены: `--tb-font-text`, `--tb-font-heading`, `--tb-font-quote`, `--tb-font-mono`. Файлы лежат в `src/assets/fonts` и собираются в `dist/assets`, поэтому работают и в демо, и в пакете.
 
-Manrope и JetBrains Mono распространяются под OFL, взяты subset-файлами с Google Fonts. Linux Libertine — GPL-2.0 с font exception, дополнительно OFL; OTF с CTAN сжат в woff2.
-
 ## Иконки
 
 Ant Design Icons (MIT). Данные лежат снапшотом в `src/components/ui/icons.ts`, runtime-зависимости нет: чтобы добавить иконку, допишите пару `имя: [путь]` из `@ant-design/icons-svg` или [shadcn.io/icons](https://www.shadcn.io/icons/ant-design). VK и Odnoklassniki в Ant Design отсутствуют и остались собственными путями.
@@ -87,4 +85,8 @@ npm run build-storybook
 
 ## Лицензии
 
-Код — MIT. Иконки — Ant Design Icons (MIT). Шрифты — по лицензиям выше.
+Код — MIT.
+Ant Design Icons — MIT.
+Manrope — OFL.
+JetBrains Mono — OFL.
+Linux Libertine — GPL-2.0 с font exception, дополнительно OFL.
