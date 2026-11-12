@@ -1,8 +1,14 @@
 /*
  * Design tokens: T-Bank component structure, Juce palette.
  * Only the key variables below are swapped — every component still reads --tb-*.
+ *
+ * Theming contract:
+ *   :root / [data-theme='light']  — light theme (default)
+ *   [data-theme='dark'] / .dark   — dark theme
+ * Override --tb-* in your own CSS to rebrand; see README → «Темы».
  */
-:root {
+:root,
+[data-theme='light'] {
   color-scheme: light;
 
   /* Palette: #222526 (ink), #ccdcef (mist), #ff6574 (coral) */
@@ -58,6 +64,7 @@
   --tb-accent-soft: #ffdfe3;
   --tb-accent-text: #c03445;
   --tb-accent-text-hover: #a52435;
+  --tb-accent-on-inverse: var(--coral);
 
   /* Neutrals */
   --tb-white: #ffffff;
@@ -79,27 +86,43 @@
   --tb-text-tertiary: var(--label-3);
   --tb-text-inverse: rgb(255 255 255 / 0.9);
   --tb-text-inverse-secondary: rgb(255 255 255 / 0.64);
+  --tb-text-inverse-tertiary: rgb(255 255 255 / 0.5);
+  --tb-text-inverse-link: rgb(255 255 255 / 0.8);
   --tb-text-link: var(--link);
   --tb-text-link-hover: var(--link-hover);
 
   /* Surfaces */
   --tb-bg: #ffffff;
+  --tb-surface: #ffffff;
   --tb-bg-secondary: var(--bg);
   --tb-bg-tertiary: var(--bg-3);
   --tb-bg-hover: var(--gray-6);
   --tb-field: var(--gray-5);
   --tb-field-hover: #d6e0ec;
+  --tb-option-hover: rgb(255 255 255 / 0.6);
+  --tb-option-selected: #ffffff;
 
   /* Status */
   --tb-success: var(--green);
   --tb-success-text: #168821;
+  --tb-success-soft: #e8f6ea;
   --tb-error: #e01f19;
   --tb-error-text: #c40b08;
+  --tb-error-soft: #fdeae9;
   --tb-warning: var(--yellow);
+  --tb-warning-text: #9a6b00;
 
   /* Lines */
   --tb-border: #e7e8ea;
   --tb-border-strong: var(--gray-3);
+  --tb-border-inverse: rgb(255 255 255 / 0.12);
+  --tb-border-on-primary: rgb(255 255 255 / 0.32);
+  --tb-overlay: rgb(34 37 38 / 0.4);
+
+  /* Effects */
+  --tb-skeleton: #f0f1f2;
+  --tb-skeleton-highlight: #e7e8ea;
+  --tb-syntax-property: #476b8f;
 
   /* Radii */
   --tb-radius-xs: 8px;
@@ -157,6 +180,113 @@
     --tb-accent-text: #a02030;
     --tb-border: var(--gray-4);
     --tb-border-strong: var(--gray-2);
+  }
+}
+
+/*
+ * Dark theme — the second built-in palette.
+ *
+ * Enable with <html data-theme="dark"> or class="dark".
+ * Values are a second render of the light roles, not an inversion: the cool
+ * neutral hue is kept, surfaces rise in lightness (page < panel < card < hover),
+ * text stops at 91% white, accent/status hues stay put while chroma is reduced.
+ * Pairs are checked with APCA + WCAG against the real surfaces.
+ */
+[data-theme='dark'],
+.dark {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --tb-bg: #171c21;
+  --tb-surface: #232a30;
+  --tb-bg-secondary: #1e2429;
+  --tb-bg-tertiary: #2a3138;
+  --tb-bg-hover: #262d33;
+  --tb-field: #1a2025;
+  --tb-field-hover: #20262c;
+  --tb-option-hover: rgb(255 255 255 / 0.07);
+  --tb-option-selected: #2f373f;
+
+  /* Text */
+  --tb-text-primary: #e9eff6;
+  --tb-text-secondary: rgb(233 239 246 / 0.74);
+  --tb-text-tertiary: rgb(233 239 246 / 0.6);
+  --tb-text-inverse: rgb(255 255 255 / 0.92);
+  --tb-text-inverse-secondary: rgb(255 255 255 / 0.68);
+  --tb-text-inverse-tertiary: rgb(255 255 255 / 0.58);
+  --tb-text-link: #8cc0ff;
+  --tb-text-link-hover: #b0d4ff;
+
+  /* Primary action: light fill, dark label */
+  --tb-primary: #e3ebf3;
+  --tb-primary-hover: #d3dee9;
+  --tb-primary-active: #c4d1de;
+  --tb-on-primary: #151a1f;
+
+  /* Secondary action */
+  --tb-secondary: #303941;
+  --tb-secondary-hover: #3b454e;
+  --tb-secondary-soft: #303941;
+
+  /* Inverse surface: footer, tooltip, selected chip */
+  --tb-dark: #2b3238;
+  --tb-dark-soft: #39424a;
+
+  /* Accent */
+  --tb-accent: #ff979c;
+  --tb-accent-hover: #ffb1b5;
+  --tb-accent-soft: #3b2929;
+  --tb-accent-text: #ffa7aa;
+  --tb-accent-text-hover: #ffc0c2;
+  --tb-accent-on-inverse: #ffa7aa;
+  --tb-on-accent: #151a1f;
+
+  /* Status */
+  --tb-success: #61ca84;
+  --tb-success-text: #8ad9a2;
+  --tb-success-soft: #233628;
+  --tb-error: #ff8a75;
+  --tb-error-text: #ffb3a7;
+  --tb-error-soft: #3a2521;
+  --tb-warning: #f6d15c;
+  --tb-warning-text: #f6d15c;
+
+  /* Lines */
+  --tb-border: rgb(255 255 255 / 0.12);
+  --tb-border-strong: #6d7b88;
+  --tb-border-inverse: rgb(255 255 255 / 0.12);
+  --tb-border-on-primary: rgb(21 26 31 / 0.32);
+  --tb-overlay: rgb(0 0 0 / 0.6);
+
+  /* Neutrals used as recessed fills and tracks */
+  --tb-gray-100: #262d33;
+  --tb-gray-150: #1b2026;
+  --tb-gray-200: #2f373f;
+  --tb-gray-250: #384049;
+  --tb-gray-300: #46515b;
+  --tb-gray-400: #6b7783;
+  --tb-gray-500: #9aa7b3;
+  --tb-gray-600: #b9c5d0;
+
+  /* Effects */
+  --tb-skeleton: #252c33;
+  --tb-skeleton-highlight: #2f373f;
+  --tb-syntax-property: #9dc0e0;
+  --tb-shadow-popover:
+    0 25px 15px rgba(0, 0, 0, 0.3), 0 11px 11px rgba(0, 0, 0, 0.35), 0 3px 6px rgba(0, 0, 0, 0.4);
+  --tb-shadow-modal: 0 18px 30px rgba(0, 0, 0, 0.6);
+  --tb-shadow-control: 0 1px 4px rgba(0, 0, 0, 0.4);
+  --tb-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Increased contrast, dark */
+@media (prefers-contrast: more) {
+  [data-theme='dark'],
+  .dark {
+    --tb-text-secondary: rgb(233 239 246 / 0.86);
+    --tb-text-tertiary: rgb(233 239 246 / 0.72);
+    --tb-border: rgb(255 255 255 / 0.24);
+    --tb-border-strong: #8b98a4;
   }
 }
 

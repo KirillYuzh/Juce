@@ -7,7 +7,7 @@
   flex-direction: column;
   overflow: hidden;
   border-radius: 16px;
-  background: var(--tb-white);
+  background: var(--tb-surface);
   box-shadow: inset 0 0 0 1px var(--tb-border);
   transition: box-shadow 0.15s ease;
 }

@@ -1,0 +1,11 @@
+/* Storybook docs paints the story canvas from its own light theme, which hides
+   the dark palette. Let the canvas follow the app tokens instead. */
+html .sbdocs-preview,
+html .docs-story {
+  background: var(--tb-bg);
+}
+
+html .sbdocs-preview [role='toolbar'] {
+  background: var(--tb-bg);
+  color: var(--tb-text-secondary);
+}

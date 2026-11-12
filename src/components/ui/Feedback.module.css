@@ -16,7 +16,7 @@
 }
 
 .alertWarning .alertIcon {
-  color: #9a6b00;
+  color: var(--tb-warning-text);
 }
 
 .alertError .alertIcon {
@@ -59,7 +59,7 @@
   padding: 8px 12px;
   border-radius: 8px;
   background: var(--tb-dark);
-  color: #fff;
+  color: var(--tb-white);
   font: 400 13px/18px var(--tb-font-text);
   white-space: nowrap;
   opacity: 0;
@@ -83,7 +83,7 @@
   width: 320px;
   padding: 20px;
   border-radius: 24px;
-  background: var(--tb-white);
+  background: var(--tb-surface);
   box-shadow: var(--tb-shadow-modal);
   font: 400 13px/18px var(--tb-font-text);
 }

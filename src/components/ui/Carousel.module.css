@@ -45,7 +45,7 @@
   position: absolute;
   top: 50%;
   z-index: 2;
-  background: var(--tb-white);
+  background: var(--tb-surface);
   box-shadow:
     var(--tb-shadow-control),
     inset 0 0 0 1px var(--tb-border);
@@ -53,7 +53,7 @@
 }
 
 .nav.nav:hover:not(:disabled) {
-  background: var(--tb-white);
+  background: var(--tb-surface);
   box-shadow:
     0 4px 12px rgb(0 0 0 / 0.14),
     inset 0 0 0 1px var(--tb-border-strong);
