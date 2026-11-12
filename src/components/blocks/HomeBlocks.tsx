@@ -28,11 +28,7 @@ export function ProductCard({ product }: { product: Product }) {
       {product.description && <p className={styles.productDescription}>{product.description}</p>}
       <img className={styles.productMedia} src={product.image} alt="" loading="lazy" />
       <span className={styles.productCta}>
-        <Button
-          variant={product.tone === 'steel' || product.tone === 'dark' ? 'white' : 'primary'}
-          size="m"
-          href={product.href}
-        >
+        <Button variant="primary" size="m" href={product.href}>
           {product.cta}
         </Button>
       </span>
@@ -56,7 +52,7 @@ export function PromoCard({ title, text, image, cta, href, tone = 'light' }: Pro
       <p className={styles.promoText}>{text}</p>
       <img className={styles.promoMedia} src={image} alt="" loading="lazy" />
       <span className={styles.promoCta}>
-        <Button variant={tone === 'dark' ? 'white' : 'primary'} size="m" href={href}>
+        <Button variant="primary" size="m" href={href}>
           {cta}
         </Button>
       </span>

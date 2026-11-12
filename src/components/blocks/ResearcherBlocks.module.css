@@ -202,6 +202,11 @@
   margin-top: auto;
 }
 
+/* A graphite button on the graphite track still needs an edge. */
+.trackAccent .trackCta > * {
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.32);
+}
+
 @media (max-width: 899px) {
   .values {
     grid-template-columns: minmax(0, 1fr);

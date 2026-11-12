@@ -125,11 +125,7 @@ export function StartCards({ cards }: { cards: ResearchTrack[] }) {
           <h3 className={styles.trackTitle}>{card.title}</h3>
           <p className={styles.trackText}>{card.text}</p>
           <span className={styles.trackCta}>
-            <Button
-              variant={card.tone === 'accent' ? 'white' : 'primary'}
-              size="m"
-              href={card.href}
-            >
+            <Button variant="primary" size="m" href={card.href}>
               {card.cta}
             </Button>
           </span>
