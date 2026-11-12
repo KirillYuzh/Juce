@@ -1,0 +1,80 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trigger {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
+
+.copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--tb-text-secondary);
+}
+
+.copy:hover {
+  background: var(--tb-gray-100);
+  color: var(--tb-text-primary);
+}
+
+.copy:focus-visible {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  padding: 12px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--tb-bg-secondary);
+  font: 400 12px/18px var(--tb-font-mono);
+}
+
+.error {
+  margin: 0;
+  color: var(--tb-accent-text);
+  overflow-wrap: anywhere;
+}
+
+.frames {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.frame {
+  color: var(--tb-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.frameInternal {
+  color: var(--tb-text-tertiary);
+}
+
+.frameButton {
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+}
+
+.frameButton:hover {
+  color: var(--tb-text-link);
+  text-decoration: underline;
+}

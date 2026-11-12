@@ -1,0 +1,77 @@
+.citation {
+  display: inline;
+}
+
+.text {
+  display: inline;
+  margin: 0;
+}
+
+.cardTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 22px;
+  margin: 0 2px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--tb-secondary-soft);
+  color: var(--tb-text-link);
+  font: 500 11px/14px var(--tb-font-text);
+  vertical-align: baseline;
+  transition: background-color 0.15s ease;
+}
+
+.cardTrigger:hover {
+  background: var(--tb-secondary);
+}
+
+.cardTrigger:focus-visible {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+}
+
+.cardTriggerCount {
+  color: var(--tb-text-tertiary);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.source {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--tb-bg-secondary);
+}
+
+.sourceLink {
+  font: 500 13px/20px var(--tb-font-text);
+  color: var(--tb-text-link);
+  overflow-wrap: anywhere;
+}
+
+.sourceLink:hover {
+  text-decoration: underline;
+}
+
+.sourceHost {
+  font: 400 11px/14px var(--tb-font-text);
+  color: var(--tb-text-tertiary);
+}
+
+.quote {
+  display: block;
+  margin: 0;
+  padding: 10px 14px;
+  border-left: 2px solid var(--tb-accent);
+  border-radius: 0 8px 8px 0;
+  background: var(--tb-accent-soft);
+  font: 400 17px/26px var(--tb-font-quote);
+  color: var(--tb-text-secondary);
+}

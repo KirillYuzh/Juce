@@ -1,0 +1,29 @@
+.task {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepLink {
+  color: inherit;
+}
+
+.stepLink:hover .title {
+  color: var(--tb-text-link);
+}
+
+.pending .icon {
+  color: var(--tb-text-tertiary);
+}
+
+.file {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--tb-secondary-soft);
+  font: 400 11px/16px var(--tb-font-text);
+  color: var(--tb-text-secondary);
+}

@@ -1,0 +1,328 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.label {
+  font: 500 13px/18px var(--tb-font-text);
+  color: var(--tb-text-secondary);
+}
+
+.control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  min-height: 56px;
+  padding: 16px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--tb-field);
+  color: var(--tb-text-primary);
+  font: 400 15px/24px var(--tb-font-text);
+  outline: none;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--tb-text-tertiary);
+}
+
+.input:hover,
+.textarea:hover {
+  background: var(--tb-field-hover);
+}
+
+.input:focus,
+.textarea:focus {
+  background: var(--tb-white);
+  box-shadow: inset 0 0 0 2px var(--tb-primary);
+}
+
+.textarea {
+  min-height: 120px;
+  padding: 16px;
+  resize: vertical;
+}
+
+.selectWrap {
+  position: relative;
+  width: 100%;
+}
+
+/* Trigger and menu share the tabs look: a light track with white pills. */
+.selectTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 12px 4px 4px;
+  border-radius: 16px;
+  background: var(--tb-gray-100);
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.selectTrigger:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.selectTrigger:focus-visible {
+  outline: 2px solid var(--tb-primary);
+  outline-offset: 2px;
+}
+
+.selectValue {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--tb-white);
+  box-shadow: var(--tb-shadow-control);
+  font: 400 15px/24px var(--tb-font-text);
+  color: var(--tb-text-primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selectPlaceholder {
+  color: var(--tb-text-secondary);
+}
+
+.selectChevron {
+  flex: none;
+  display: inline-flex;
+  padding-right: 4px;
+  color: var(--tb-text-primary);
+  transition: transform 0.15s ease;
+}
+
+.selectTrigger[aria-expanded='true'] .selectChevron {
+  transform: rotate(180deg);
+}
+
+.selectMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 288px;
+  padding: 4px;
+  overflow-y: auto;
+  border-radius: 16px;
+  background: var(--tb-gray-100);
+  box-shadow: var(--tb-shadow-popover);
+  outline: none;
+}
+
+.selectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  text-align: left;
+  font: 400 15px/24px var(--tb-font-text);
+  color: var(--tb-text-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.selectOptionActive {
+  background: rgb(255 255 255 / 0.6);
+}
+
+.selectOptionSelected,
+.selectOptionSelected.selectOptionActive {
+  background: var(--tb-white);
+  box-shadow: var(--tb-shadow-control);
+}
+
+.invalid .input,
+.invalid .textarea,
+.invalid .selectTrigger {
+  box-shadow: inset 0 0 0 1px var(--tb-error);
+}
+
+.suffix {
+  position: absolute;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tb-text-tertiary);
+}
+
+.hint {
+  font: 400 13px/18px var(--tb-font-text);
+  color: var(--tb-text-secondary);
+}
+
+.errorText {
+  font: 400 13px/18px var(--tb-font-text);
+  color: var(--tb-error-text);
+}
+
+.choice {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  font: 400 15px/24px var(--tb-font-text);
+  color: var(--tb-text-primary);
+}
+
+.choice input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.box,
+.radioCircle {
+  position: relative;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin-top: 0;
+  background: var(--tb-field);
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.box {
+  border-radius: 8px;
+}
+
+.radioCircle {
+  border-radius: 50%;
+}
+
+.box::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  width: 6px;
+  height: 12px;
+  border: solid var(--tb-text-primary);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.12s ease;
+}
+
+.radioCircle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--tb-text-primary);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.12s ease;
+}
+
+.choice input:checked + .box,
+.choice input:checked + .radioCircle {
+  background: var(--tb-primary);
+}
+
+.choice input:checked + .box::after {
+  border-color: var(--tb-on-primary);
+}
+
+.choice input:checked + .radioCircle::after {
+  background: var(--tb-on-primary);
+}
+
+.choice input:checked + .box::after,
+.choice input:checked + .radioCircle::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.choice input:checked + .radioCircle::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.choice input:focus-visible + .box,
+.choice input:focus-visible + .radioCircle {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+}
+
+.choice input:disabled + .box,
+.choice input:disabled + .radioCircle {
+  opacity: 0.4;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font: 400 15px/24px var(--tb-font-text);
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.switchTrack {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--tb-gray-200);
+  transition: background-color 0.15s ease;
+}
+
+.switchTrack::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.18s ease;
+}
+
+.switch input:checked + .switchTrack {
+  background: var(--tb-primary);
+}
+
+.switch input:checked + .switchTrack::after {
+  transform: translateX(20px);
+}
+
+.switch input:focus-visible + .switchTrack {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+}

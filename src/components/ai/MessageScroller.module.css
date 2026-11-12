@@ -1,0 +1,68 @@
+.root {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.viewport {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+.viewport[data-pending-scroll] {
+  visibility: hidden;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+}
+
+.item {
+  min-width: 0;
+}
+
+.button {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: var(--tb-white);
+  color: var(--tb-text-primary);
+  box-shadow: var(--tb-shadow-popover);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.button:hover {
+  background: var(--tb-gray-100);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+}

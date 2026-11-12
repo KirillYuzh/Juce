@@ -1,0 +1,25 @@
+export {
+  CodeBlock,
+  CodeBlockActions,
+  CodeBlockContent,
+  CodeBlockCopyButton,
+  CodeBlockFooter,
+  CodeBlockHeader,
+  CodeBlockLine,
+  CodeBlockTitle,
+  tokenizeCode,
+  useHighlightedCode,
+} from './CodeBlock';
+export type {
+  CodeBlockContentProps,
+  CodeBlockCopyButtonProps,
+  CodeBlockLineProps,
+  CodeBlockLineVariant,
+  CodeBlockProps,
+  CodeBlockSize,
+  CodeBlockVariant,
+  CodeLanguage,
+  CodeLine,
+  CodeToken,
+  CodeTokenKind,
+} from './CodeBlock';

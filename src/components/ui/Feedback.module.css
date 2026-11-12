@@ -1,0 +1,112 @@
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 24px;
+  background: var(--tb-bg-secondary);
+  font: 400 13px/20px var(--tb-font-text);
+  color: var(--tb-text-primary);
+}
+
+.alertIcon {
+  flex: none;
+  color: var(--tb-primary);
+  margin-top: 1px;
+}
+
+.alertWarning .alertIcon {
+  color: #9a6b00;
+}
+
+.alertError .alertIcon {
+  color: var(--tb-error);
+}
+
+.alertSuccess .alertIcon {
+  color: var(--tb-success);
+}
+
+.alertContent {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  min-width: 0;
+}
+
+.alertText {
+  flex: 1 1 320px;
+}
+
+.alertAction {
+  flex: none;
+}
+
+.tooltipWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 500;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--tb-dark);
+  color: #fff;
+  font: 400 13px/18px var(--tb-font-text);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.tooltipWrap:hover .tooltip,
+.tooltipWrap:focus-within .tooltip {
+  opacity: 1;
+}
+
+.cookie {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 320px;
+  padding: 20px;
+  border-radius: 24px;
+  background: var(--tb-white);
+  box-shadow: var(--tb-shadow-modal);
+  font: 400 13px/18px var(--tb-font-text);
+}
+
+.cookieLink {
+  color: var(--tb-text-link);
+}
+
+.cookieAction {
+  align-self: flex-start;
+}
+
+@media (max-width: 599px) {
+  .cookie {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .cookieText {
+    flex: 1;
+  }
+}

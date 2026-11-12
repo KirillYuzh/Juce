@@ -1,0 +1,17 @@
+.row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.row::-webkit-scrollbar {
+  display: none;
+}
+
+.suggestion {
+  flex: none;
+  white-space: nowrap;
+}
