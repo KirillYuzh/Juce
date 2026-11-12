@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AssistantPage } from './AssistantPage';
 import { HomePage } from './HomePage';
-import { ResearchersPage } from './ResearchersPage';
 
 const meta: Meta = {
   title: 'Templates/Pages',
@@ -16,11 +15,6 @@ type Story = StoryObj;
 
 export const Home: Story = {
   render: () => <HomePage />,
-  parameters: { viewport: { defaultViewport: 'responsive' } },
-};
-
-export const Researchers: Story = {
-  render: () => <ResearchersPage />,
   parameters: { viewport: { defaultViewport: 'responsive' } },
 };
 

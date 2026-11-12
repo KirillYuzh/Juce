@@ -80,5 +80,4 @@ export {
   ValuesGrid,
 } from './components/blocks/ResearcherBlocks';
 export { HomePage } from './pages/HomePage';
-export { ResearchersPage } from './pages/ResearchersPage';
 export { AssistantPage } from './pages/AssistantPage';

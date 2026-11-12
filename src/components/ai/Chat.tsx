@@ -199,7 +199,7 @@ function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?
             onClick={copy}
           />
           <IconButton
-            icon="thumbsUp"
+            icon={vote === 'up' ? 'thumbsUpFilled' : 'thumbsUp'}
             label="Полезный ответ"
             size="xs"
             variant="ghost"
@@ -207,7 +207,7 @@ function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?
             onClick={() => setVote(vote === 'up' ? null : 'up')}
           />
           <IconButton
-            icon="thumbsDown"
+            icon={vote === 'down' ? 'thumbsDownFilled' : 'thumbsDown'}
             label="Неполезный ответ"
             size="xs"
             variant="ghost"

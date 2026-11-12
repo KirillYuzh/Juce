@@ -180,8 +180,8 @@
 
 .iconButtonGhost[aria-pressed='true'],
 .iconButtonGhost[aria-pressed='true']:hover {
-  background: var(--tb-primary);
-  color: var(--tb-on-primary);
+  background: transparent;
+  color: var(--tb-text-primary);
 }
 
 .link {
