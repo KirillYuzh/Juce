@@ -87,29 +87,6 @@
   color: var(--tb-text-secondary);
 }
 
-.messageText {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 100%;
-}
-
-.messageText p {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.cursor {
-  display: inline-block;
-  width: 7px;
-  height: 16px;
-  margin-left: 2px;
-  border-radius: 2px;
-  background: var(--tb-accent);
-  vertical-align: text-bottom;
-  animation: tb-blink 1s steps(2) infinite;
-}
-
 @keyframes tb-blink {
   50% {
     opacity: 0;

@@ -38,7 +38,9 @@ export function App() {
 
 `Utilities`: scroll-fade и shimmer, чистый CSS без JS.
 
-`AI`: Message, Message scroller, Prompt input, Chat, Task, Trace, Sources, Stack trace, Reasoning, Inline citation, Suggestions.
+`AI`: Message, Message scroller, Prompt input, Chat, Markdown, Task, Trace, Sources, Stack trace, Reasoning, Inline citation, Suggestions.
+
+Ответы в `Chat` рендерятся как Markdown (`react-markdown` + `remark-gfm`): заголовки, списки, таблицы, цитаты и блоки кода. Отдельный `<Markdown>` можно использовать где угодно, `streaming` показывает каретку в конце недосказанного ответа.
 
 `Blocks`: Header, Footer, QuickLinks, ProductCard, PromoCard, TextCard, StatPanel, WideBanner, DirectionCard, ValuesGrid, StartCards, VacancyCards.
 

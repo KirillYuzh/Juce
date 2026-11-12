@@ -22,7 +22,7 @@ const startMessages: ChatMessage[] = [
     id: 'a1',
     role: 'assistant',
     content:
-      'Отправка в небуферизованный канал блокирует горутину, пока её никто не прочитает. Если получатель уже вышел, горутина остаётся ждать навсегда.\n\nЛечится тремя способами: буфер, select с ctx.Done() или закрытие канала отправителем.',
+      'Отправка в небуферизованный канал блокирует горутину, пока её никто не прочитает. Если получатель уже вышел, горутина остаётся ждать навсегда.\n\nЛечится тремя способами:\n\n1. Буфер: `make(chan int, 1)`.\n2. `select` вместе с `ctx.Done()`.\n3. Закрытие канала со стороны отправителя.',
     reasoning:
       'Вспоминаю, как устроена очередь при отправке в канал, и какие способы выхода из блокировки есть в стандартной библиотеке.',
     reasoningDuration: 4,
@@ -103,15 +103,31 @@ export const Empty: Story = {
   render: () => (
     <ChatDemo
       initial={[]}
-      suggestions={[
-        'Почему утекает горутина?',
-        'Объясни ранг матрицы',
-        'Что нового в Java 21',
-      ]}
+      suggestions={['Почему утекает горутина?', 'Объясни ранг матрицы', 'Что нового в Java 21']}
     />
   ),
 };
 
 export const WithoutSimulation: Story = {
   render: () => <ChatDemo initial={startMessages} withSimulation={false} />,
+};
+
+const markdownMessages: ChatMessage[] = [
+  {
+    id: 'u1',
+    role: 'user',
+    content: 'Объясни разницу между процессом и потоком и покажи таблицу',
+  },
+  {
+    id: 'a1',
+    role: 'assistant',
+    content:
+      '## Процесс и поток\n\n**Процесс** — своё адресное пространство, **поток** — общая память внутри процесса.\n\n| | Процесс | Поток |\n| --- | --- | --- |\n| Память | своя | общая |\n| Переключение | дороже | дешевле |\n| Падение | изолировано | роняет процесс |\n\nВ Java поток — это `Thread`, в Go — горутина:\n\n```go\ngo func() { fmt.Println(\"привет\") }()\n```\n\n> Горутина дешевле потока ОС примерно на два порядка.',
+    reasoningDuration: 3,
+  },
+];
+
+export const MarkdownAnswer: Story = {
+  name: 'Markdown answer',
+  render: () => <ChatDemo initial={markdownMessages} withSimulation={false} />,
 };

@@ -35,7 +35,7 @@ export default defineConfig({
       cssFileName: 'juce-ui',
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'react-markdown', 'remark-gfm'],
       output: {
         assetFileNames: (asset) =>
           (asset.names ?? []).some((name) => name.endsWith('.css'))

@@ -6,6 +6,7 @@ import { PromptInput, type PromptInputPayload, type PromptInputStatus } from './
 import { Suggestions, Suggestion } from './Suggestion';
 import { Reasoning } from './Reasoning';
 import { Sources, type SourceItem } from './Sources';
+import { Markdown } from './Markdown';
 import { Avatar, Spinner } from '../ui/Display';
 import { IconButton } from '../ui/Button';
 import { Icon } from '../ui/Icon';
@@ -157,7 +158,6 @@ function UserMessage({ message }: { message: ChatMessage }) {
 function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?: () => void }) {
   const [copied, setCopied] = useState(false);
   const [vote, setVote] = useState<'up' | 'down' | null>(null);
-  const paragraphs = message.content.split(/\n{2,}/).filter(Boolean);
 
   const copy = async () => {
     try {
@@ -183,17 +183,8 @@ function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?
             duration={message.reasoningDuration}
           />
         )}
-        {paragraphs.length > 0 && (
-          <div className={styles.messageText}>
-            {paragraphs.map((paragraph, index) => (
-              <p key={index}>
-                {paragraph}
-                {message.streaming && index === paragraphs.length - 1 && (
-                  <span className={styles.cursor} aria-hidden="true" />
-                )}
-              </p>
-            ))}
-          </div>
+        {message.content.trim() && (
+          <Markdown streaming={message.streaming}>{message.content}</Markdown>
         )}
         {message.error && (
           <span className={styles.subtitle}>Не удалось получить ответ. Попробуйте ещё раз.</span>

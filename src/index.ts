@@ -58,6 +58,8 @@ export { Suggestion, Suggestions } from './components/ai/Suggestion';
 export { Task, TaskItem, TaskItemFile } from './components/ai/Task';
 export type { TaskStep } from './components/ai/Task';
 export { Trace, TraceDescription, TraceIcon, TraceLine, TraceTitle } from './components/ai/Trace';
+export { Markdown } from './components/ai/Markdown';
+export type { MarkdownProps } from './components/ai/Markdown';
 export { Chat } from './components/ai/Chat';
 export type { ChatMessage, ChatProps } from './components/ai/Chat';
 
