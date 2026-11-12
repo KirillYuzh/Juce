@@ -117,7 +117,7 @@ export function ShowcaseSection({ title, tabs }: { title: string; tabs: Showcase
           items={tabs.map((tab) => ({ id: tab.id, label: tab.label }))}
           value={active.id}
           onChange={setActiveTab}
-          label="Тип проекта"
+          label="Тип задачи"
         />
       </div>
       <ProductShowcase

@@ -115,14 +115,6 @@ export function Divider({ className }: { className?: string }) {
 export function Logo({ className }: { className?: string }) {
   return (
     <span className={cx(styles.logo, className)}>
-      <svg className={styles.logoMark} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-        <rect width="32" height="32" rx="10" fill="currentColor" />
-        <path
-          d="M16 7.5c3.6 4 5.6 7 5.6 9.6a5.6 5.6 0 1 1-11.2 0c0-2.6 2-5.6 5.6-9.6Z"
-          fill="#ff6574"
-        />
-        <circle cx="16" cy="17.4" r="2.2" fill="#fff" />
-      </svg>
       <span className={styles.logoWord}>Джус</span>
     </span>
   );

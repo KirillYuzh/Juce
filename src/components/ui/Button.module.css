@@ -154,12 +154,34 @@
   height: 36px;
 }
 
+.iconButtonSize-xs {
+  width: 28px;
+  height: 28px;
+}
+
 .iconButtonPlain {
   background: transparent;
 }
 
 .iconButtonPlain:hover {
   background: var(--tb-bg-tertiary);
+}
+
+/* Quiet action: grey until hovered, filled when pressed. */
+.iconButtonGhost {
+  background: transparent;
+  color: var(--tb-text-secondary);
+}
+
+.iconButtonGhost:hover {
+  background: transparent;
+  color: var(--tb-text-primary);
+}
+
+.iconButtonGhost[aria-pressed='true'],
+.iconButtonGhost[aria-pressed='true']:hover {
+  background: var(--tb-primary);
+  color: var(--tb-on-primary);
 }
 
 .link {

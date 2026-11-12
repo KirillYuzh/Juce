@@ -42,16 +42,16 @@ export const PromoCards: Story = {
   render: () => (
     <div className="tb-container" style={{ ...container, ...grid(2) }}>
       <PromoCard
-        title="Обзор за вечер"
-        text="Черновик обзора по вашей теме с ссылками на каждый тезис"
-        image="/images/wang/roof.png"
+        title="Разбор за вечер"
+        text="Объяснение темы с примерами на Java, Go и ссылками на документацию"
+        image="/image.png"
         cta="Попробовать"
         href="#/assistant"
       />
       <PromoCard
-        title="Граф связей между статьями"
-        text="Показывает, кто на кого ссылается и где выводы расходятся"
-        image="/images/wang/smile.png"
+        title="Граф зависимостей в проекте"
+        text="Показывает, какой модуль на кого ссылается и где цикл мешает сборке"
+        image="/image.png"
         cta="Посмотреть"
         href="#/assistant"
         tone="dark"
@@ -82,8 +82,8 @@ export const StatPanelStory: Story = {
     <div className="tb-container" style={container}>
       <StatPanel
         title="Джупсик в браузере"
-        text="Откройте ассистента без установки: поиск, обзоры и ссылки работают прямо в браузере"
-        image="/images/wang/listen.png"
+        text="Откройте ассистента без установки: разбор кода, объяснения и тесты работают прямо в браузере"
+        image="/image.png"
         links={[
           { label: 'Открыть чат', href: '#/assistant', icon: 'globe' },
           { label: 'Документация', href: '#', icon: 'code' },
@@ -98,9 +98,9 @@ export const WideBannerStory: Story = {
   render: () => (
     <div className="tb-container" style={container}>
       <WideBanner
-        title="Как собрать обзор литературы за вечер"
+        title="Как разобрать чужой код за вечер"
         source="Блог Джус"
-        image="/images/wang/listen.png"
+        image="/image.png"
         cta="Читать"
         href="#"
       />

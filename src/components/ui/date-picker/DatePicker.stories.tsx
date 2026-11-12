@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DatePicker, defaultRangePresets, type DateRangePreset } from './DatePicker';
-import { addDays, addMonths, endOfMonth, startOfMonth, today, type DateRange } from '../../../lib/date';
+import {
+  addDays,
+  addMonths,
+  endOfMonth,
+  startOfMonth,
+  today,
+  type DateRange,
+} from '../../../lib/date';
 
 const meta: Meta = {
   title: 'Primitives/Date picker',
@@ -48,6 +55,16 @@ export const RangeWithPresets: Story = {
   render: () => <RangePicker />,
 };
 
+function InlinePicker() {
+  const [value, setValue] = useState<Date | null>(today());
+  return <DatePicker mode="single" value={value} onChange={setValue} inline />;
+}
+
+export const Inline: Story = {
+  name: 'Inline (calendar always open)',
+  render: () => <InlinePicker />,
+};
+
 function MinMaxPicker() {
   const [value, setValue] = useState<Date | null>(null);
   return (
@@ -70,11 +87,7 @@ export const Disabled: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <DatePicker mode="single" value={today()} disabled />
-      <DatePicker
-        mode="range"
-        value={{ from: addDays(today(), -6), to: today() }}
-        disabled
-      />
+      <DatePicker mode="range" value={{ from: addDays(today(), -6), to: today() }} disabled />
     </div>
   ),
 };

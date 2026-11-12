@@ -11,14 +11,14 @@ export default meta;
 type Story = StoryObj;
 
 const steps: TaskStep[] = [
-  { id: 'open', title: 'Открыл страницу дебетовой карты', status: 'done' },
-  { id: 'tariffs', title: 'Сверил тарифы', file: 'tariffs.md', status: 'done' },
-  { id: 'rates', title: 'Посчитал кэшбэк', status: 'running' },
+  { id: 'open', title: 'Открыл исходники планировщика', status: 'done' },
+  { id: 'docs', title: 'Сверил с документацией', file: 'runtime.md', status: 'done' },
+  { id: 'repro', title: 'Собрал минимальный пример', status: 'running' },
   { id: 'answer', title: 'Собрал ответ', status: 'pending' },
 ];
 
 export const Running: Story = {
-  render: () => <div style={{ width: 420 }}><Task title="Считаю кэшбэк" status="running" steps={steps} /></div>,
+  render: () => <div style={{ width: 420 }}><Task title="Ищу причину утечки" status="running" steps={steps} /></div>,
 };
 
 export const Done: Story = {
@@ -33,12 +33,12 @@ export const Error: Story = {
   render: () => (
     <div style={{ width: 420 }}>
       <Task
-        title="Не удалось посчитать кэшбэк"
+        title="Не удалось воспроизвести баг"
         status="error"
         defaultOpen
         steps={[
-          { id: 'open', title: 'Открыл страницу дебетовой карты', status: 'done' },
-          { id: 'api', title: 'Запрос к тарифам', status: 'error' },
+          { id: 'open', title: 'Открыл исходники планировщика', status: 'done' },
+          { id: 'go', title: 'Запуск примера на Go', status: 'error' },
           { id: 'answer', title: 'Собрал ответ', status: 'pending' },
         ]}
       />
@@ -49,8 +49,8 @@ export const Error: Story = {
 export const Nested: Story = {
   render: () => (
     <div style={{ width: 420 }}>
-      <Task title="Ищу ответ по ипотеке" status="running" steps={steps.slice(0, 2)}>
-        <Task title="Подзадача: ставки" status="done" steps={[{ id: 'a', title: 'Собрал ставки', status: 'done' }]} />
+      <Task title="Разбираю задачу про графы" status="running" steps={steps.slice(0, 2)}>
+        <Task title="Подзадача: обход в ширину" status="done" steps={[{ id: 'a', title: 'Построил BFS', status: 'done' }]} />
       </Task>
     </div>
   ),

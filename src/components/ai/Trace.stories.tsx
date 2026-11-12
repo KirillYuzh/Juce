@@ -48,8 +48,8 @@ export const Default: Story = {
   render: () => (
     <Box>
       <Trace>
-        <Step title="Нашёл условия вклада" description="0,3 с" />
-        <Step title="Сравнил с тарифами" description="0,2 с" />
+        <Step title="Нашёл определение ранга" description="0,3 с" />
+        <Step title="Сверил с примером" description="0,2 с" />
         <Step title="Собрал ответ" />
       </Trace>
     </Box>
@@ -71,7 +71,7 @@ export const Statuses: Story = {
           <TraceIcon>
             <Icon name="alertCircle" size={16} />
           </TraceIcon>
-          <TraceTitle>Не удалось открыть тарифы</TraceTitle>
+          <TraceTitle>Не удалось открыть документацию</TraceTitle>
         </TraceLine>
       </Trace>
     </Box>
@@ -88,9 +88,9 @@ export const Collapsible: Story = {
           </TraceCollapsibleTrigger>
           <TraceCollapsibleContent>
             <Trace>
-              <Step title="Открыл страницу вкладов" />
-              <Step title="Выбрал срок 6 месяцев" />
-              <Step title="Посчитал доход" />
+              <Step title="Открыл конспект по алгебре" />
+              <Step title="Выбрал базис из миноров" />
+              <Step title="Посчитал определитель" />
             </Trace>
           </TraceCollapsibleContent>
         </TraceCollapsible>

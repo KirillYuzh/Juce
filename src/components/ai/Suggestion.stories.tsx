@@ -11,8 +11,8 @@ export default meta;
 type Story = StoryObj;
 
 const items = [
-  'Как оформить карту?',
-  'Какие условия по вкладам?',
+  'Почему утекает горутина?',
+  'Что такое ранг матрицы?',
   'Как попасть на стажировку?',
 ];
 
@@ -32,7 +32,7 @@ export const Overflow: Story = {
   render: () => (
     <div style={{ width: 320 }}>
       <Suggestions>
-        {[...items, 'Что с кэшбэком в этом месяце?', 'Как перевыпустить карту?'].map((item) => (
+        {[...items, 'Чем record отличается от класса?', 'Как оценить сложность алгоритма?'].map((item) => (
           <Suggestion key={item}>{item}</Suggestion>
         ))}
       </Suggestions>
@@ -44,8 +44,8 @@ export const Disabled: Story = {
   render: () => (
     <div style={{ width: 420 }}>
       <Suggestions>
-        <Suggestion disabled>Как оформить карту?</Suggestion>
-        <Suggestion disabled>Какие условия по вкладам?</Suggestion>
+        <Suggestion disabled>Почему утекает горутина?</Suggestion>
+        <Suggestion disabled>Что такое ранг матрицы?</Suggestion>
       </Suggestions>
     </div>
   ),

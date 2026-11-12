@@ -36,11 +36,11 @@ export const Default: Story = {
     <div style={{ width: 360 }}>
       <Collapsible>
         <CollapsibleTrigger style={trigger}>
-          Условия обслуживания
+          Условия использования
           <Icon name="chevronDown" size={16} />
         </CollapsibleTrigger>
         <CollapsibleContent style={content}>
-          Обслуживание бесплатно при покупках от 10 000 ₽ в месяц.
+          Базовый доступ бесплатен, командный тариф — 10 000 ₽ в месяц.
         </CollapsibleContent>
       </Collapsible>
     </div>
@@ -52,11 +52,11 @@ export const OpenByDefault: Story = {
     <div style={{ width: 360 }}>
       <Collapsible defaultOpen>
         <CollapsibleTrigger style={trigger}>
-          Условия обслуживания
+          Условия использования
           <Icon name="chevronDown" size={16} />
         </CollapsibleTrigger>
         <CollapsibleContent style={content}>
-          Обслуживание бесплатно при покупках от 10 000 ₽ в месяц.
+          Базовый доступ бесплатен, командный тариф — 10 000 ₽ в месяц.
         </CollapsibleContent>
       </Collapsible>
     </div>

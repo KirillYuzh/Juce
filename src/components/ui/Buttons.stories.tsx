@@ -6,7 +6,7 @@ const meta = {
   component: Button,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-  args: { children: 'Оформить карту' },
+  args: { children: 'Начать разбор' },
   argTypes: {
     variant: {
       control: 'inline-radio',
@@ -22,11 +22,11 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {};
 
 export const Secondary: Story = {
-  args: { variant: 'secondary', children: 'Как это сделать?' },
+  args: { variant: 'secondary', children: 'Как это работает?' },
 };
 
 export const Outline: Story = {
-  args: { variant: 'outline', size: 'm', children: 'Больше статей' },
+  args: { variant: 'outline', size: 'm', children: 'Больше задач' },
 };
 
 export const White: Story = {
@@ -45,10 +45,10 @@ export const Disabled: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-      <Button>Оформить карту</Button>
-      <Button variant="secondary">Как это сделать?</Button>
+      <Button>Начать разбор</Button>
+      <Button variant="secondary">Как это работает?</Button>
       <Button variant="outline" size="m">
-        Больше статей
+        Больше задач
       </Button>
       <Button variant="ghost" size="m">
         Отмена
@@ -77,7 +77,7 @@ export const WithIcons: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
       <Button iconLeft="search" size="m">
-        Найти банкомат
+        Скачать пример
       </Button>
       <Button variant="secondary" iconRight="arrowRight" size="m">
         Смотреть
@@ -100,9 +100,9 @@ export const IconButtons: Story = {
 export const Links: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
-      <TextLink href="#link">Смотреть</TextLink>
+      <TextLink href="#link">Смотреть пример</TextLink>
       <TextLink href="#link" arrow>
-        Пополнить или перевести
+        Открыть документацию
       </TextLink>
     </div>
   ),

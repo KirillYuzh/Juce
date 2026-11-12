@@ -33,14 +33,14 @@ export const Default: Story = {
       <HoverCard delay={80}>
         <HoverCardTrigger>
           <span style={link} tabIndex={0}>
-            тарифах
+            правилах
           </span>
         </HoverCardTrigger>
         <HoverCardContent>
           <span style={card}>
-            <strong style={note}>Дебетовая карта</strong>
+            <strong style={note}>Java-разработка</strong>
             <span style={{ color: 'var(--tb-text-secondary)' }}>
-              Бесплатное обслуживание при покупках от 10 000 ₽ в месяц.
+              Разборы generics, байткода и JVM — с примерами и тестами.
             </span>
           </span>
         </HoverCardContent>

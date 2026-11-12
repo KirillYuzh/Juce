@@ -21,11 +21,11 @@ export const Alerts: Story = {
           </Button>
         }
       >
-        Установите сертификат университета, чтобы сохранить доступ к платформе из внешней сети
+        Установите сертификат компании, чтобы сохранить доступ к платформе из внешней сети
       </Alert>
-      <Alert tone="success">Обзор готов: 34 источника, все ссылки проверены</Alert>
-      <Alert tone="warning">Два источника не удалось открыть — проверьте вручную</Alert>
-      <Alert tone="error">Не удалось загрузить датасет. Попробуйте ещё раз</Alert>
+      <Alert tone="success">Разбор готов: 34 источника, все ссылки проверены</Alert>
+      <Alert tone="warning">Два примера не собрались — проверьте вручную</Alert>
+      <Alert tone="error">Не удалось загрузить пример. Попробуйте ещё раз</Alert>
     </div>
   ),
 };
@@ -33,7 +33,7 @@ export const Alerts: Story = {
 export const Tooltips: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 24, paddingBlock: 48 }}>
-      <Tooltip text="Ссылки оформляются по ГОСТ">
+      <Tooltip text="Примеры запускаются на JDK 21">
         <Button variant="secondary" size="m">
           Наведите на меня
         </Button>

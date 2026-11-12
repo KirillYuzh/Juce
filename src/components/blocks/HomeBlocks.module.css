@@ -85,8 +85,8 @@
 }
 
 .promoDark {
-  background: var(--tb-accent);
-  color: var(--tb-primary);
+  background: var(--tb-primary);
+  color: #fff;
 }
 
 .promoTitle {

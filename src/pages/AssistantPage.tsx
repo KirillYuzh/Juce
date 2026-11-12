@@ -10,7 +10,7 @@ const startMessages: ChatMessage[] = [
     id: 'a1',
     role: 'assistant',
     content:
-      'Здравствуйте! Я Джупсик. Помогу найти статьи по теме, собрать обзор литературы или проверить список источников.\n\nС чего начнём?',
+      'Привет! Я Джупсик. Разберу код на Java или Go, объясню алгоритм, помогу с доказательством по линейной алгебре или дискретке.\n\nС чего начнём?',
   },
 ];
 
@@ -19,9 +19,12 @@ export function AssistantPage() {
   const [status, setStatus] = useState<PromptInputStatus>('ready');
   const timer = useRef<number | null>(null);
 
-  useEffect(() => () => {
-    if (timer.current) window.clearTimeout(timer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) window.clearTimeout(timer.current);
+    },
+    []
+  );
 
   const send = ({ text }: PromptInputPayload) => {
     if (status === 'streaming') return;
@@ -35,9 +38,9 @@ export function AssistantPage() {
           role: 'assistant',
           content:
             'Это демонстрационный ответ. В реальном приложении сюда приходит поток от модели.\n\nМожно передать рассуждения, источники и действия под сообщением.',
-          reasoning: 'Разбираю формулировку запроса и подбираю релевантные источники.',
+          reasoning: 'Разбираю условие задачи и вспоминаю, какой термин здесь нужен.',
           reasoningDuration: 2,
-          sources: [{ url: 'https://arxiv.org/', title: 'arXiv: препринты' }],
+          sources: [{ url: 'https://dev.java/', title: 'dev.java: документация JDK' }],
         },
       ]);
       setStatus('ready');
@@ -59,13 +62,15 @@ export function AssistantPage() {
           className="tb-container"
           style={{ display: 'flex', justifyContent: 'center', paddingBlock: 32 }}
         >
-          <div style={{ width: '100%', maxWidth: 720, height: 'calc(100vh - 160px)', minHeight: 520 }}>
+          <div
+            style={{ width: '100%', maxWidth: 720, height: 'calc(100vh - 160px)', minHeight: 520 }}
+          >
             <Chat
               messages={messages}
               onSend={send}
               onStop={stop}
               status={status}
-              suggestions={['Найди статьи про воспроизводимость', 'Собери обзор по теме']}
+              suggestions={['Почему утекает горутина?', 'Объясни ранг матрицы']}
               onRetry={(id) =>
                 setMessages((current) => current.filter((message) => message.id !== id))
               }

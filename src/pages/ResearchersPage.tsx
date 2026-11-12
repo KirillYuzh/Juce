@@ -8,14 +8,12 @@ import {
   FinalCtaSection,
   LearningSection,
   RecognitionSection,
-  ValuesSection,
 } from '../sections/ResearcherSections';
 import {
   researcherAwards,
   researcherDirections,
   researcherLearning,
   researcherNav,
-  researcherValues,
 } from '../data/researchers';
 
 export function ResearchersPage() {
@@ -32,36 +30,34 @@ export function ResearchersPage() {
               </Button>
             }
           >
-            Джупсик сверяет список литературы с открытыми базами и подсказывает, где не хватает
-            ссылки на данные
+            Джупсик разбирает stack trace и подсказывает, где в цепочке вызовов на самом деле
+            ломается код
           </Alert>
         </div>
 
         <Hero
-          title="Исследователям"
-          text="Джус собирает в одном месте датасеты, препринты, рецензии и лабораторные журналы. Рядом работает Джупсик — встроенный ассистент: найдёт статьи по теме, проверит ссылки и поможет собрать черновик"
-          cta="Начать исследование"
+          title="Разработчикам"
+          text="Джус собирает в одном месте разборы, задачи и конспекты по Java, Go и математике. Рядом работает Джупсик — встроенный ассистент: объяснит код, проверит доказательство и поможет подготовиться к собеседованию"
+          cta="Начать разбор"
           href="#/researchers"
-          image="/images/wang/roof.png"
+          image="/image.png"
         />
 
         <DirectionsSection title="Кому помогает платформа" directions={researcherDirections} />
 
-        <ValuesSection title="Как мы работаем с данными и результатами" values={researcherValues} />
-
         <RecognitionSection
-          title="Признание в научном сообществе"
+          title="Признание в сообществе"
           items={researcherAwards}
-          heroImage="/images/wang/listen.png"
-          bannerImage="/images/wang/explain.jpeg"
-          bannerTitle="Открытая наука"
+          heroImage="/image.png"
+          bannerImage="/image.png"
+          bannerTitle="Открытый код"
         />
 
         <LearningSection title="Обучение и стажировки" cards={researcherLearning} />
 
         <FinalCtaSection
-          title="Начните исследование на платформе Джус"
-          text="Заведите проект, пригласите группу и позовите Джупсика — он разберётся с литературой, пока вы формулируете гипотезу"
+          title="Начните разбор на платформе Джус"
+          text="Заведите проект, позовите команду и подключите Джупсика — он разберётся с кодом и формулами, пока вы формулируете задачу"
           cta="Создать проект"
           href="#/researchers"
         />

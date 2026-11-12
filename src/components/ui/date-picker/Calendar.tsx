@@ -38,6 +38,8 @@ export interface CalendarProps {
   onMonthChange?: (month: Date) => void;
   min?: Date;
   max?: Date;
+  /** Move focus into the grid on mount. Off for inline calendars on a page. */
+  autoFocus?: boolean;
   className?: string;
 }
 
@@ -50,6 +52,7 @@ export function Calendar({
   onMonthChange,
   min,
   max,
+  autoFocus = true,
   className,
 }: CalendarProps) {
   const selectedDay = mode === 'single' ? ((value as Date | null | undefined) ?? null) : null;
@@ -81,10 +84,10 @@ export function Calendar({
   };
 
   useEffect(() => {
-    if (!wantFocus.current) return;
+    if (!autoFocus || !wantFocus.current) return;
     wantFocus.current = false;
     dayRefs.current.get(dateKey(focusedDay))?.focus();
-  }, [focusedDay, visibleMonth]);
+  }, [focusedDay, visibleMonth, autoFocus]);
 
   const goMonth = (amount: number) => {
     // Keep the day-of-month when paging, so the roving tab stop stays inside the grid.

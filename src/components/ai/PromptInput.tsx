@@ -38,7 +38,7 @@ export function PromptInput({
   onSubmit,
   onStop,
   status = 'ready',
-  placeholder = 'Спросите что-нибудь…',
+  placeholder = 'Спросите про код, алгоритм или теорему…',
   disabled = false,
   accept,
   multiple = true,

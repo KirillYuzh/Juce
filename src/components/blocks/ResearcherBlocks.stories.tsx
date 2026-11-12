@@ -55,9 +55,9 @@ export const RecognitionBlock: Story = {
     <div className="tb-container" style={{ paddingBlock: 32 }}>
       <Recognition
         items={researcherAwards}
-        heroImage="/images/wang/listen.png"
-        bannerImage="/images/wang/explain.jpeg"
-        bannerTitle="Открытая наука"
+        heroImage="/image.png"
+        bannerImage="/image.png"
+        bannerTitle="Открытый код"
       />
     </div>
   ),

@@ -50,6 +50,8 @@ interface DatePickerBaseProps {
   placeholder?: string;
   /** Range mode only; defaults to defaultRangePresets. Pass [] to hide the column. */
   presets?: DateRangePreset[];
+  /** Render the calendar in place, without a trigger and a popover. */
+  inline?: boolean;
   min?: Date;
   max?: Date;
   disabled?: boolean;
@@ -71,7 +73,7 @@ export type DatePickerProps =
     } & DatePickerBaseProps);
 
 export function DatePicker(props: DatePickerProps) {
-  const { placeholder, presets, min, max, disabled, id, className, size = 'l' } = props;
+  const { placeholder, presets, inline, min, max, disabled, id, className, size = 'l' } = props;
   const mode: CalendarMode = props.mode ?? 'single';
 
   const [innerValue, setInnerValue] = useState<Date | DateRange | null>(props.value ?? null);
@@ -111,6 +113,46 @@ export function DatePicker(props: DatePickerProps) {
   const display = text || placeholder || (mode === 'range' ? 'Выберите период' : 'Выберите дату');
   const presetItems = mode === 'range' ? (presets ?? defaultRangePresets) : [];
 
+  const body = (
+    <div className={styles.body}>
+      {presetItems.length > 0 && (
+        <div className={styles.presets} role="group" aria-label="Быстрый выбор периода">
+          {presetItems.map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              className={styles.preset}
+              onClick={() => applyPreset(preset)}
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
+      )}
+      <Calendar
+        mode={mode}
+        value={value}
+        onChange={handleSelect}
+        min={min}
+        max={max}
+        autoFocus={!inline}
+        className={styles.calendar}
+      />
+    </div>
+  );
+
+  if (inline) {
+    return (
+      <div
+        className={cx(styles.inline, className)}
+        role="group"
+        aria-label={mode === 'range' ? 'Выбор периода' : 'Выбор даты'}
+      >
+        {body}
+      </div>
+    );
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen} className={className}>
       <PopoverTrigger
@@ -129,23 +171,7 @@ export function DatePicker(props: DatePickerProps) {
         role="dialog"
         aria-label={mode === 'range' ? 'Выбор периода' : 'Выбор даты'}
       >
-        <div className={styles.body}>
-          {presetItems.length > 0 && (
-            <div className={styles.presets} role="group" aria-label="Быстрый выбор периода">
-              {presetItems.map((preset) => (
-                <button
-                  key={preset.label}
-                  type="button"
-                  className={styles.preset}
-                  onClick={() => applyPreset(preset)}
-                >
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-          )}
-          <Calendar mode={mode} value={value} onChange={handleSelect} min={min} max={max} />
-        </div>
+        {body}
       </PopoverContent>
     </Popover>
   );

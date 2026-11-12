@@ -77,7 +77,7 @@ export const Shimmer: Story = {
         className="tb-shimmer tb-shimmer-reverse"
         style={{ margin: 0, font: '500 17px/24px var(--tb-font-text)' }}
       >
-        Думаю над запросом…
+        Думаю над задачей…
       </p>
       <p
         className="tb-shimmer"

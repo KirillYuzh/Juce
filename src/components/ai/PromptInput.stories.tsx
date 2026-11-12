@@ -74,7 +74,7 @@ export const WithActions: Story = {
 export const Streaming: Story = {
   render: () => (
     <div style={{ width: 560 }}>
-      <PromptInput status="streaming" defaultValue="Расскажи про вклады" onStop={() => undefined} />
+      <PromptInput status="streaming" defaultValue="Объясни разницу между процессом и потоком" onStop={() => undefined} />
     </div>
   ),
 };

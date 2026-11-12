@@ -23,15 +23,15 @@ import {
 } from '../data/home';
 
 const hypothesisFormats = [
-  { value: 'quick', label: 'Быстрая проверка гипотезы' },
-  { value: 'deep', label: 'Разбор с источниками' },
-  { value: 'peer', label: 'С рецензированием группы' },
+  { value: 'quick', label: 'Быстрый разбор' },
+  { value: 'deep', label: 'Разбор с примерами кода' },
+  { value: 'peer', label: 'С ревью команды' },
 ];
 
 const dataFormats = [
-  { value: 'catalog', label: 'Каталог датасетов' },
-  { value: 'repro', label: 'Воспроизведение эксперимента' },
-  { value: 'export', label: 'Выгрузка в LaTeX' },
+  { value: 'task', label: 'Задача с интервью' },
+  { value: 'proof', label: 'Доказательство по шагам' },
+  { value: 'export', label: 'Выгрузка в Jupyter' },
 ];
 
 export function HomePage() {
@@ -41,12 +41,12 @@ export function HomePage() {
 
       <main>
         <Hero
-          title="Ассистент, который читает статьи вместе с вами"
-          text="Джупсик ищет источники, собирает обзор литературы и объясняет, откуда взялся каждый вывод"
+          title="Ассистент, который разбирает код и формулы вместе с вами"
+          text="Джупсик объясняет Java и Go, раскладывает доказательства по шагам и показывает, откуда взялся каждый вывод в модели"
           cta="Открыть чат"
           href="#/assistant"
-          image="/images/wang/roof.png"
-          imageAlt="Исследовательская группа за работой"
+          image="/image.png"
+          imageAlt="Команда разработчиков за работой"
         />
 
         <ShowcaseSection
@@ -54,22 +54,22 @@ export function HomePage() {
           tabs={[
             {
               id: 'review',
-              label: 'Обзор литературы',
-              title: 'Систематический обзор',
+              label: 'Разбор кода',
+              title: 'Разбор кода',
               designs: projectTemplates,
               options: reviewFormats,
             },
             {
               id: 'hypothesis',
-              label: 'Проверка гипотезы',
-              title: 'Проверка гипотезы',
+              label: 'Алгоритмы',
+              title: 'Алгоритмы и сложность',
               designs: projectTemplates,
               options: hypothesisFormats,
             },
             {
               id: 'data',
-              label: 'Работа с данными',
-              title: 'Работа с датасетами',
+              label: 'Математика',
+              title: 'Линейная алгебра и дискретка',
               designs: projectTemplates,
               options: dataFormats,
             },
@@ -86,17 +86,17 @@ export function HomePage() {
           cards={services}
           promos={[
             {
-              title: 'Обзор за вечер',
-              text: 'Ассистент соберёт черновик обзора по вашей теме с ссылками на каждый тезис',
-              image: '/images/wang/roof.png',
+              title: 'Разбор за вечер',
+              text: 'Ассистент соберёт объяснение темы с примерами на Java, Go и ссылками на документацию',
+              image: '/image.png',
               cta: 'Попробовать',
               href: '#/assistant',
               tone: 'light',
             },
             {
-              title: 'Граф связей между статьями',
-              text: 'Показывает, кто на кого ссылается и где выводы расходятся',
-              image: '/images/wang/smile.png',
+              title: 'Граф зависимостей в проекте',
+              text: 'Показывает, какой модуль на кого ссылается и где цикл мешает сборке',
+              image: '/image.png',
               cta: 'Посмотреть',
               href: '#/assistant',
               tone: 'dark',
@@ -106,12 +106,12 @@ export function HomePage() {
 
         <ArticlesSection title="Из блога" articles={articles} moreHref="#" />
 
-        <ResearchPromoSection title="Лабораториям и группам" items={researchPromos} />
+        <ResearchPromoSection title="Командам и группам" items={researchPromos} />
 
         <JournalBanner
-          title="Как собрать обзор литературы за вечер"
+          title="Как разобрать чужой код за вечер"
           source="Блог Джус"
-          image="/images/wang/listen.png"
+          image="/image.png"
           cta="Читать"
           href="#"
         />

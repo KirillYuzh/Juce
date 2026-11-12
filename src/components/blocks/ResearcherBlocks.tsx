@@ -74,7 +74,7 @@ export function Recognition({
   items,
   heroImage,
   bannerImage,
-  bannerTitle = 'Открытая наука',
+  bannerTitle = 'Открытый код',
 }: {
   items: RecognitionItem[];
   heroImage: string;

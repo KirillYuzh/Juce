@@ -30,7 +30,7 @@ export const ClickableFrames: Story = {
       <StackTrace
         stack={stack}
         defaultOpen
-        title="Упало на тарифах"
+        title="Упало на парсинге"
         onFilePathClick={(path, line, column) => console.log('open', path, line, column)}
       />
     </div>

@@ -11,7 +11,7 @@ export default meta;
 type Story = StoryObj;
 
 const sources = [
-  { url: 'https://arxiv.org/', title: 'arXiv: препринты' },
+  { url: 'https://go.dev/', title: 'go.dev: документация' },
   { url: 'https://www.nature.com/', title: 'Nature' },
   { url: 'https://scholar.google.com/' },
 ];

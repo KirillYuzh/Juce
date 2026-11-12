@@ -56,12 +56,12 @@ export function Chat({
   status = 'ready',
   suggestions = [],
   title = 'Джупсик',
-  subtitle = 'ИИ-ассистент для научных исследований',
-  placeholder = 'Спросите про статьи, методы или данные…',
+  subtitle = 'ИИ-ассистент по Java, Go и математике',
+  placeholder = 'Спросите про код, алгоритм или теорему…',
   emptyTitle = 'Чем помочь?',
-  emptyText = 'Найдите источники, соберите обзор литературы или проверьте гипотезу.',
+  emptyText = 'Разберите код, объясните алгоритм или проверьте доказательство.',
   className,
-  footnote = 'Джупсик может ошибаться. Проверяйте цитаты и числа по первоисточникам.',
+  footnote = 'Джупсик может ошибаться. Проверяйте код и выкладки по первоисточникам.',
 }: ChatProps) {
   return (
     <div className={cx(styles.chat, className)}>
@@ -203,23 +203,23 @@ function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?
           <IconButton
             icon={copied ? 'check' : 'copy'}
             label={copied ? 'Скопировано' : 'Скопировать ответ'}
-            size="s"
-            variant="plain"
+            size="xs"
+            variant="ghost"
             onClick={copy}
           />
           <IconButton
             icon="thumbsUp"
             label="Полезный ответ"
-            size="s"
-            variant="plain"
+            size="xs"
+            variant="ghost"
             aria-pressed={vote === 'up'}
             onClick={() => setVote(vote === 'up' ? null : 'up')}
           />
           <IconButton
             icon="thumbsDown"
             label="Неполезный ответ"
-            size="s"
-            variant="plain"
+            size="xs"
+            variant="ghost"
             aria-pressed={vote === 'down'}
             onClick={() => setVote(vote === 'down' ? null : 'down')}
           />
@@ -227,8 +227,8 @@ function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?
             <IconButton
               icon="refresh"
               label="Повторить ответ"
-              size="s"
-              variant="plain"
+              size="xs"
+              variant="ghost"
               onClick={onRetry}
             />
           )}

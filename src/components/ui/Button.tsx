@@ -84,8 +84,8 @@ export function Button({
 export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: IconName;
   label: string;
-  size?: 's' | 'm';
-  variant?: 'neutral' | 'plain';
+  size?: 'xs' | 's' | 'm';
+  variant?: 'neutral' | 'plain' | 'ghost';
 }
 
 export function IconButton({
@@ -104,11 +104,12 @@ export function IconButton({
         styles.iconButton,
         styles[`iconButtonSize-${size}`],
         variant === 'plain' && styles.iconButtonPlain,
+        variant === 'ghost' && styles.iconButtonGhost,
         className
       )}
       {...rest}
     >
-      <Icon name={icon} size={size === 's' ? 20 : 24} />
+      <Icon name={icon} size={size === 'xs' ? 16 : size === 's' ? 20 : 24} />
     </button>
   );
 }

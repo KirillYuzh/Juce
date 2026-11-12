@@ -169,12 +169,6 @@
   color: var(--tb-primary);
 }
 
-.logoMark {
-  flex: none;
-  width: 32px;
-  height: 32px;
-}
-
 .logoWord {
   font: 700 20px/1 var(--tb-font-heading);
   letter-spacing: -0.01em;

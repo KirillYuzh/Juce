@@ -102,7 +102,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 48px;
-  align-items: center;
+  align-items: start;
 }
 
 .awardsList {
@@ -177,12 +177,8 @@
 }
 
 .trackAccent {
-  background: var(--tb-accent);
-  color: var(--tb-primary);
-}
-
-.trackAccent .trackText {
-  color: var(--tb-primary);
+  background: var(--tb-primary);
+  color: #fff;
 }
 
 .trackIcon {

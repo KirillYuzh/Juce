@@ -15,13 +15,13 @@ const column = { display: 'flex', flexDirection: 'column' as const, gap: 16, wid
 export const Inputs: Story = {
   render: () => (
     <div style={column}>
-      <Input label="Фамилия, имя и отчество" placeholder="Фамилия, имя и отчество*" />
-      <Input label="Телефон" placeholder="Мобильный телефон*" type="tel" />
-      <Input label="Почта" placeholder="Электронная почта" hint="Пришлём условия и статус заявки" />
+      <Input label="Имя пользователя" placeholder="Имя пользователя*" />
+      <Input label="Telegram" placeholder="@username" />
+      <Input label="Почта" placeholder="Электронная почта" hint="Пришлём доступ к репозиторию" />
       <Input
-        label="Промокод"
+        label="Промокод курса"
         placeholder="Введите промокод"
-        error="Такого промокода не существует"
+        error="Такого промокода нет или он истёк"
         defaultValue="JUCE2026"
       />
     </div>
@@ -31,7 +31,7 @@ export const Inputs: Story = {
 export const Textareas: Story = {
   render: () => (
     <div style={column}>
-      <Textarea label="Комментарий" placeholder="Расскажите о себе" />
+      <Textarea label="Комментарий" placeholder="Какую задачу разбираете?" />
     </div>
   ),
 };
@@ -40,20 +40,20 @@ export const Selects: Story = {
   render: () => (
     <div style={column}>
       <Select
-        label="Повышенный кэшбэк"
+        label="Язык разбора"
         options={[
-          { value: 'all', label: 'Выберите повышенный кэшбэк (четыре категории)' },
-          { value: 'travel', label: 'Путешествия' },
-          { value: 'food', label: 'Кафе и рестораны' },
-          { value: 'transport', label: 'Транспорт' },
+          { value: 'all', label: 'Выберите язык (доступно четыре)' },
+          { value: 'java', label: 'Java' },
+          { value: 'go', label: 'Go' },
+          { value: 'python', label: 'Python' },
         ]}
       />
       <Select
-        label="Срок вклада"
+        label="Формат объяснения"
         options={[
-          { value: '6', label: '6 месяцев' },
-          { value: '12', label: '12 месяцев' },
-          { value: '24', label: '24 месяца' },
+          { value: 'short', label: 'Кратко' },
+          { value: 'deep', label: 'Подробно' },
+          { value: 'code', label: 'С примерами кода' },
         ]}
       />
     </div>
@@ -63,7 +63,7 @@ export const Selects: Story = {
 export const Checkboxes: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <Checkbox label="Соглашаюсь получать рекламу про кэшбэк" />
+      <Checkbox label="Присылать разборы по Java и Go" />
       <Checkbox label="Отмеченный пункт" defaultChecked />
       <Checkbox label="Недоступный пункт" disabled />
     </div>
@@ -73,9 +73,9 @@ export const Checkboxes: Story = {
 export const Radios: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <Radio name="citizenship" label="Да" defaultChecked />
-      <Radio name="citizenship" label="Нет" />
-      <Radio name="citizenship" label="Недоступно" disabled />
+      <Radio name="experience" label="Да" defaultChecked />
+      <Radio name="experience" label="Нет" />
+      <Radio name="experience" label="Недоступно" disabled />
     </div>
   ),
 };
@@ -83,8 +83,8 @@ export const Radios: Story = {
 export const Switches: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <Switch label="Уведомления по карте" defaultChecked />
-      <Switch label="Рекламные рассылки" />
+      <Switch label="Уведомления о новых разборах" defaultChecked />
+      <Switch label="Напоминания о дедлайнах" />
     </div>
   ),
 };
@@ -97,19 +97,19 @@ export const WholeForm: Story = {
         event.preventDefault();
       }}
     >
-      <Input placeholder="Фамилия, имя и отчество*" required />
+      <Input placeholder="Имя пользователя*" required />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-        <Input placeholder="Мобильный телефон*" type="tel" required />
+        <Input placeholder="Telegram*" required />
         <Input placeholder="Электронная почта" type="email" />
       </div>
-      <Input placeholder="Дата рождения*" />
+      <Input placeholder="Дата старта курса*" />
       <Select
         options={[
-          { value: 'all', label: 'Выберите повышенный кэшбэк (четыре категории)' },
-          { value: 'travel', label: 'Путешествия' },
+          { value: 'all', label: 'Выберите язык (доступно четыре)' },
+          { value: 'java', label: 'Java' },
         ]}
       />
-      <Checkbox label="Соглашаюсь получать рекламу про кэшбэк, повышенный процент и выгодные предложения" />
+      <Checkbox label="Соглашаюсь получать разборы задач и новости платформы" />
     </form>
   ),
 };

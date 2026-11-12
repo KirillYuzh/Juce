@@ -16,9 +16,9 @@ export const Badges: Story = {
     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
       <Badge>Neutral</Badge>
       <Badge tone="accent">Premium</Badge>
-      <Badge tone="success">Одобрено</Badge>
-      <Badge tone="error">Ошибка</Badge>
-      <Badge tone="warning">Проверка</Badge>
+      <Badge tone="success">Собрано</Badge>
+      <Badge tone="error">Ошибка сборки</Badge>
+      <Badge tone="warning">На проверке</Badge>
     </div>
   ),
 };
@@ -27,9 +27,9 @@ export const Chips: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
       <Chip>Все</Chip>
-      <Chip active>Дебетовая карта</Chip>
-      <Chip>Кредитная карта</Chip>
-      <Chip>Вклад</Chip>
+      <Chip active>Java</Chip>
+      <Chip>Go</Chip>
+      <Chip>Математика</Chip>
     </div>
   ),
 };
@@ -37,9 +37,9 @@ export const Chips: Story = {
 export const DarkChips: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', padding: 24, borderRadius: 16, background: '#333' }}>
-      <Chip tone="dark">О нас</Chip>
+      <Chip tone="dark">О проекте</Chip>
       <Chip tone="dark">Вакансии</Chip>
-      <Chip tone="dark">Работа в ИТ</Chip>
+      <Chip tone="dark">Разборы задач</Chip>
     </div>
   ),
 };
@@ -47,8 +47,8 @@ export const DarkChips: Story = {
 export const Avatars: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-      <Avatar size="s" initials="ДК" />
-      <Avatar initials="ТБ" />
+      <Avatar size="s" initials="Дж" />
+      <Avatar initials="Дж" />
       <Avatar size="l" initials="АС" />
     </div>
   ),
@@ -59,13 +59,13 @@ export const ProgressBars: Story = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, width: 360 }}>
       <div>
         <div className="tb-text-s" style={{ marginBottom: 8 }}>
-          Акцентная (кэшбэк)
+          Акцентная
         </div>
         <Progress value={35} />
       </div>
       <div>
         <div className="tb-text-s" style={{ marginBottom: 8 }}>
-          Вклад
+          Прогресс
         </div>
         <Progress value={70} tone="brand" />
       </div>

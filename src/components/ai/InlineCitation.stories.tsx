@@ -30,17 +30,17 @@ export const InText: Story = {
   render: () => (
     <p style={paragraph}>
       <InlineCitationText>
-        Воспроизводимость проверяют повторным анализом открытых данных
+        Горутины дешевле потоков: стек растёт по мере необходимости
       </InlineCitationText>
       <InlineCitation>
         <InlineCitationCard>
           <InlineCitationCardTrigger sources={[{ url: 'https://arxiv.org/' }]} />
           <InlineCitationCardBody>
-            <InlineCitationSource url="https://arxiv.org/" title="arXiv: препринты" />
+            <InlineCitationSource url="https://go.dev/" title="go.dev: горутины" />
           </InlineCitationCardBody>
         </InlineCitationCard>
       </InlineCitation>
-      <InlineCitationText>, реже — независимой репликацией.</InlineCitationText>
+      <InlineCitationText>, а планировщик сам раскладывает их по потокам.</InlineCitationText>
     </p>
   ),
 };
@@ -48,7 +48,7 @@ export const InText: Story = {
 export const MultipleSources: Story = {
   render: () => (
     <p style={paragraph}>
-      <InlineCitationText>Про методы и данные можно прочитать в разделах</InlineCitationText>
+      <InlineCitationText>Про планировщик и каналы можно прочитать в разделах</InlineCitationText>
       <InlineCitation>
         <InlineCitationCard>
           <InlineCitationCardTrigger
@@ -59,7 +59,7 @@ export const MultipleSources: Story = {
             ]}
           />
           <InlineCitationCardBody>
-            <InlineCitationSource url="https://arxiv.org/" title="arXiv: препринты" />
+            <InlineCitationSource url="https://go.dev/" title="go.dev: горутины" />
             <InlineCitationSource url="https://www.nature.com/" title="Nature" />
             <InlineCitationSource url="https://scholar.google.com/" />
           </InlineCitationCardBody>
@@ -75,11 +75,11 @@ export const Quote: Story = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 460 }}>
       <InlineCitation>
         <InlineCitationQuote>
-          «Кэшбэк рублями — единственная валюта начисления по дебетовой карте».
+          «Ранг матрицы равен размеру её наибольшего ненулевого минора».
         </InlineCitationQuote>
       </InlineCitation>
       <p style={{ ...paragraph, color: 'var(--tb-text-secondary)' }}>
-        <InlineCitationText>Источник: тарифы дебетовой карты.</InlineCitationText>
+        <InlineCitationText>Источник: конспект по линейной алгебре.</InlineCitationText>
       </p>
     </div>
   ),

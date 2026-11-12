@@ -19,7 +19,7 @@ export interface ProductShowcaseProps {
 }
 
 export function ProductShowcase({
-  title = 'Новый проект',
+  title = 'Новая задача',
   designs,
   options,
   onSubmit,
@@ -35,14 +35,14 @@ export function ProductShowcase({
           <img
             className={styles.previewCard}
             src={activeDesign.image}
-            alt={`Шаблон проекта: ${activeDesign.label}`}
+            alt={`Шаблон задачи: ${activeDesign.label}`}
           />
         )}
         <div className={styles.note}>
           <Icon name="user" size={24} />
           <span>
             <span className={styles.noteTitle}>Джупсик подключён</span>
-            Найдёт источники и проверит ссылки
+            Подскажет нужный раздел документации
           </span>
         </div>
       </div>
@@ -55,7 +55,7 @@ export function ProductShowcase({
         }}
       >
         <div className={styles.progressRow}>
-          <span>Готовность проекта</span>
+          <span>Готовность задачи</span>
           <span className={styles.progressValue}>5%</span>
         </div>
         <Progress value={5} />
@@ -80,17 +80,17 @@ export function ProductShowcase({
           </>
         )}
 
-        <Select aria-label="Формат работы" options={options} defaultValue={options[0]?.value} />
+        <Select aria-label="Формат разбора" options={options} defaultValue={options[0]?.value} />
 
-        <Input aria-label="Название проекта" placeholder="Название проекта*" required />
+        <Input aria-label="Название задачи" placeholder="Название задачи*" required />
         <div className={styles.row}>
-          <Input aria-label="Научная группа" placeholder="Научная группа" />
+          <Input aria-label="Команда" placeholder="Команда" />
           <Input aria-label="Электронная почта" placeholder="Электронная почта*" type="email" required />
         </div>
         <Input aria-label="Дедлайн" placeholder="Дедлайн, например 2026-12-01" />
 
         <fieldset className={styles.radioGroup}>
-          <legend className={styles.legend}>Нужен обзор литературы?</legend>
+          <legend className={styles.legend}>Нужен разбор по шагам?</legend>
           <label className={styles.radioCard}>
             Да
             <input type="radio" name="review" value="yes" defaultChecked />
@@ -108,15 +108,15 @@ export function ProductShowcase({
             type="checkbox"
             style={{ width: 24, height: 24, accentColor: 'var(--tb-primary)' }}
           />
-          <span>Присылать подборки статей по теме проекта</span>
+          <span>Присылать разборы по теме задачи</span>
         </label>
 
         <div className={styles.formFooter}>
           <p className={styles.legal}>
-            Создавая проект, я принимаю <a href="#">условия обработки данных</a> и правила
+            Создавая задачу, я принимаю <a href="#">условия обработки данных</a> и правила
             платформы
           </p>
-          <Button type="submit">Создать проект</Button>
+          <Button type="submit">Создать задачу</Button>
         </div>
       </form>
     </div>

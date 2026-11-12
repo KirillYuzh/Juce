@@ -17,15 +17,15 @@ export const UserAndAssistant: Story = {
       <Message align="end">
         <MessageContent>
           <Bubble align="end">
-            <BubbleContent>Как оформить дебетовую карту?</BubbleContent>
+            <BubbleContent>Как работает планировщик Go?</BubbleContent>
           </Bubble>
         </MessageContent>
       </Message>
       <Message>
         <MessageContent>
           <p style={{ margin: 0 }}>
-            Оставьте заявку на сайте, укажите телефон и адрес. Курьер привезёт карту в удобное
-            время.
+            Планировщик раскладывает горутины по потокам ОС и переключает их на точках
+            блокировки: канал, мьютекс, системный вызов.
           </p>
           <MessageFooter>
             <IconButton icon="copy" label="Скопировать" size="s" variant="plain" />
