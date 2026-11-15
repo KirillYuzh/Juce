@@ -28,6 +28,17 @@ export const Inputs: Story = {
   ),
 };
 
+export const InputSizes: Story = {
+  name: 'Input sizes',
+  render: () => (
+    <div style={column}>
+      <Input size="l" label="l — 56px" placeholder="Имя пользователя*" />
+      <Input size="m" label="m — 44px" placeholder="Электронная почта" />
+      <Input size="s" label="s — 32px" placeholder="Промокод" />
+    </div>
+  ),
+};
+
 export const Textareas: Story = {
   render: () => (
     <div style={column}>
