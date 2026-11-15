@@ -299,8 +299,10 @@
 .tb-shimmer {
   --tb-shimmer-duration: 2s;
   --tb-shimmer-angle: 20deg;
+  /* Блик считается от currentColor, а не от --tb-white: иначе на тёмной теме
+     почти белый текст не отличается от блика и эффект не виден. */
   --tb-shimmer-spread: calc(3ch + 40px);
-  --tb-shimmer-color: color-mix(in oklab, currentColor 35%, var(--tb-white));
+  --tb-shimmer-color: color-mix(in oklab, currentColor 45%, transparent);
 
   background-image: linear-gradient(
     var(--tb-shimmer-angle),
