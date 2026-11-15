@@ -33,6 +33,12 @@ const startMessages: ChatMessage[] = [
   },
 ];
 
+const emptySuggestions = [
+  'Почему утекает горутина?',
+  'Объясни ранг матрицы',
+  'Что нового в Java 21',
+];
+
 function ChatDemo({
   initial = startMessages,
   suggestions = [],
@@ -95,21 +101,44 @@ function ChatDemo({
   );
 }
 
+// Демо-обёртка не видна в сниппете Storybook, поэтому код использования задаём явно.
+const conversationSource = `<Chat
+  messages={messages}
+  status={status}
+  onSend={handleSend}
+  onStop={handleStop}
+  onRetry={handleRetry}
+/>`;
+
 export const Conversation: Story = {
   render: () => <ChatDemo />,
+  parameters: { docs: { source: { code: conversationSource } } },
 };
 
 export const Empty: Story = {
-  render: () => (
-    <ChatDemo
-      initial={[]}
-      suggestions={['Почему утекает горутина?', 'Объясни ранг матрицы', 'Что нового в Java 21']}
-    />
-  ),
+  render: () => <ChatDemo initial={[]} suggestions={emptySuggestions} />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Chat
+  messages={[]}
+  suggestions={['Почему утекает горутина?', 'Объясни ранг матрицы', 'Что нового в Java 21']}
+  onSend={handleSend}
+/>`,
+      },
+    },
+  },
 };
 
 export const WithoutSimulation: Story = {
   render: () => <ChatDemo initial={startMessages} withSimulation={false} />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Chat messages={messages} onSend={handleSend} />`,
+      },
+    },
+  },
 };
 
 const markdownMessages: ChatMessage[] = [
@@ -130,4 +159,12 @@ const markdownMessages: ChatMessage[] = [
 export const MarkdownAnswer: Story = {
   name: 'Markdown answer',
   render: () => <ChatDemo initial={markdownMessages} withSimulation={false} />,
+  parameters: {
+    docs: {
+      source: {
+        code: `// content ассистента рендерится как markdown: заголовки, таблицы, блоки кода
+<Chat messages={messages} onSend={handleSend} />`,
+      },
+    },
+  },
 };

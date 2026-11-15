@@ -133,7 +133,13 @@ function Demo() {
             <h2 style={{ margin: 0, font: '700 24px/28px var(--tb-font-heading)' }}>
               Обзор проекта
             </h2>
-            <p style={{ margin: 0, font: '400 15px/24px var(--tb-font-text)', color: 'var(--tb-text-secondary)' }}>
+            <p
+              style={{
+                margin: 0,
+                font: '400 15px/24px var(--tb-font-text)',
+                color: 'var(--tb-text-secondary)',
+              }}
+            >
               Нажмите ⌘B или Ctrl+B, чтобы свернуть панель. На узком экране она превращается в
               выдвижной ящик.
             </p>
@@ -146,6 +152,45 @@ function Demo() {
 
 export const Default: Story = {
   render: () => <Demo />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<SidebarProvider>
+  <Sidebar>
+    <SidebarHeader>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton icon={<Icon name="globe" size={20} />}>Джус</SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarHeader>
+
+    <SidebarContent>
+      <SidebarGroup>
+        <SidebarGroupLabel>Рабочее пространство</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton icon={<Icon name="doc" size={20} />} isActive>
+                Обзор
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </SidebarContent>
+
+    <SidebarFooter>…</SidebarFooter>
+    <SidebarRail />
+  </Sidebar>
+
+  <SidebarInset>
+    <SidebarTrigger />
+  </SidebarInset>
+</SidebarProvider>`,
+      },
+    },
+  },
 };
 
 export const IconCollapsible: Story = {
