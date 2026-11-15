@@ -45,6 +45,17 @@ function Demo({ initialStatus = 'ready' as PromptInputStatus }) {
 
 export const Default: Story = {
   render: () => <Demo />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<PromptInput
+  status={status}
+  onSubmit={handleSubmit}
+  onStop={handleStop}
+/>`,
+      },
+    },
+  },
 };
 
 export const WithActions: Story = {
@@ -74,7 +85,11 @@ export const WithActions: Story = {
 export const Streaming: Story = {
   render: () => (
     <div style={{ width: 560 }}>
-      <PromptInput status="streaming" defaultValue="Объясни разницу между процессом и потоком" onStop={() => undefined} />
+      <PromptInput
+        status="streaming"
+        defaultValue="Объясни разницу между процессом и потоком"
+        onStop={() => undefined}
+      />
     </div>
   ),
 };

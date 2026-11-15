@@ -34,10 +34,13 @@ function FieldShell({ label, hint, error, id, children, className }: FieldShellP
   );
 }
 
+export type InputSize = 's' | 'm' | 'l';
+
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   hint?: string;
   error?: string;
+  size?: InputSize;
   suffixSlot?: ReactNode;
   className?: string;
   fieldClassName?: string;
@@ -47,6 +50,7 @@ export function Input({
   label,
   hint,
   error,
+  size = 'l',
   suffixSlot,
   className,
   fieldClassName,
@@ -57,7 +61,11 @@ export function Input({
   const inputId = id ?? generated;
   return (
     <FieldShell label={label} hint={hint} error={error} id={inputId} className={fieldClassName}>
-      <input id={inputId} className={cx(styles.input, className)} {...rest} />
+      <input
+        id={inputId}
+        className={cx(styles.input, styles[`size-${size}`], className)}
+        {...rest}
+      />
       {suffixSlot && <span className={styles.suffix}>{suffixSlot}</span>}
     </FieldShell>
   );

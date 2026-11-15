@@ -90,7 +90,19 @@ export function PromptInput({
         submit();
       }}
     >
-      <div className={styles.group}>
+      <fieldset
+        className={styles.group}
+        disabled={disabled}
+        onMouseDown={(event) => {
+          const target = event.target as Element;
+          // По самому textarea не вмешиваемся: браузер сам ставит каретку.
+          if (target === textareaRef.current) return;
+          // Кнопки, label и файловый input не должны забирать фокус у поля ввода.
+          event.preventDefault();
+          if (target.closest('button, label, a, input, [role="button"]')) return;
+          textareaRef.current?.focus();
+        }}
+      >
         {files.length > 0 && (
           <div className={styles.attachments}>
             {files.map((file, index) => (
@@ -131,21 +143,26 @@ export function PromptInput({
         <div className={styles.toolbar}>
           <div className={styles.tools}>
             {actions}
-            <label className={styles.attachLabel} aria-label="Прикрепить файлы">
-              <input
-                ref={fileRef}
-                className={styles.fileInput}
-                type="file"
-                accept={accept}
-                multiple={multiple}
-                tabIndex={-1}
-                onChange={(event) => {
-                  const next = Array.from(event.target.files ?? []);
-                  setFiles((current) => [...current, ...next]);
-                }}
-              />
+            <button
+              type="button"
+              className={styles.attachButton}
+              aria-label="Прикрепить файлы"
+              onClick={() => fileRef.current?.click()}
+            >
               <Icon name="paperclip" size={20} />
-            </label>
+            </button>
+            <input
+              ref={fileRef}
+              className={styles.fileInput}
+              type="file"
+              accept={accept}
+              multiple={multiple}
+              tabIndex={-1}
+              onChange={(event) => {
+                const next = Array.from(event.target.files ?? []);
+                setFiles((current) => [...current, ...next]);
+              }}
+            />
           </div>
 
           {hint && <span className={styles.status}>{hint}</span>}
@@ -170,7 +187,7 @@ export function PromptInput({
             </button>
           )}
         </div>
-      </div>
+      </fieldset>
     </form>
   );
 }

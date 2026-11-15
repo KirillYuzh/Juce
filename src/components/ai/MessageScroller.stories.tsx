@@ -105,6 +105,30 @@ function Demo() {
 
 export const Default: Story = {
   render: () => <Demo />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<MessageScroller.Provider autoScroll defaultScrollPosition="end">
+  <MessageScroller.Root style={{ height: 420 }}>
+    <MessageScroller.Viewport>
+      <MessageScroller.Content>
+        {messages.map((message) => (
+          <MessageScroller.Item
+            key={message.id}
+            messageId={message.id}
+            scrollAnchor={message.role === 'user'}
+          >
+            <Bubble>{message.text}</Bubble>
+          </MessageScroller.Item>
+        ))}
+      </MessageScroller.Content>
+    </MessageScroller.Viewport>
+    <MessageScroller.Button />
+  </MessageScroller.Root>
+</MessageScroller.Provider>`,
+      },
+    },
+  },
 };
 
 export const OpeningAtStart: Story = {
