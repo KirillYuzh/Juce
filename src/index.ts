@@ -25,6 +25,7 @@ export type { HoverCardProps } from './components/ui/HoverCard';
 
 export * from './components/ui/date-picker';
 export * from './components/ui/code-block';
+export * from './components/ui/charts';
 
 export { MessageScroller, MessageScrollerProvider } from './components/ai/MessageScroller';
 export {
@@ -61,11 +62,7 @@ export { Suggestion, Suggestions } from './components/ai/Suggestion';
 export { Task, TaskItem, TaskItemFile } from './components/ai/Task';
 export type { TaskStep } from './components/ai/Task';
 export { Trace, TraceDescription, TraceIcon, TraceLine, TraceTitle } from './components/ai/Trace';
-export {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from './components/ui/Resizable';
+export { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './components/ui/Resizable';
 export type { ResizableOrientation } from './components/ui/Resizable';
 export {
   SIDEBAR_WIDTH,

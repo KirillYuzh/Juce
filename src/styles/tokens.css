@@ -119,6 +119,12 @@
   --tb-border-on-primary: rgb(255 255 255 / 0.32);
   --tb-overlay: rgb(34 37 38 / 0.4);
 
+  /* Charts */
+  --tb-chart-1: #3b82d9;
+  --tb-chart-2: #ff6574;
+  --tb-chart-3: #12b5c4;
+  --tb-chart-4: #6460e8;
+
   /* Effects */
   --tb-skeleton: #f0f1f2;
   --tb-skeleton-highlight: #e7e8ea;
@@ -165,6 +171,9 @@
   --tb-container: 1152px;
   --tb-gutter: 24px;
   --tb-header-height: 64px;
+
+  /* Motion: сильный ease-out для UI, а не встроенный кривой браузера. */
+  --tb-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* Increased contrast */
@@ -267,6 +276,12 @@
   --tb-gray-400: #6b7783;
   --tb-gray-500: #9aa7b3;
   --tb-gray-600: #b9c5d0;
+
+  /* Charts */
+  --tb-chart-1: #8cc0ff;
+  --tb-chart-2: #ff979c;
+  --tb-chart-3: #4fd6e0;
+  --tb-chart-4: #9f9bf5;
 
   /* Effects */
   --tb-skeleton: #252c33;
