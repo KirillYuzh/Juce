@@ -1,11 +1,11 @@
 import type { Decorator, Preview } from '@storybook/react-vite';
+import { storySource } from '../src/lib/story-source';
 import '../src/styles/fonts.css';
 import '../src/styles/tokens.css';
 import '../src/styles/global.css';
 import '../src/styles/utilities.css';
 import './preview.css';
 
-// Same contract the package exposes: data-theme on <html> switches the palette.
 const withTheme: Decorator = (Story, context) => {
   document.documentElement.dataset.theme = context.globals.theme === 'dark' ? 'dark' : 'light';
   return <Story />;
@@ -31,6 +31,11 @@ const preview: Preview = {
   },
   parameters: {
     layout: 'centered',
+    docs: {
+      source: {
+        transform: storySource,
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -39,7 +44,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Foundations', 'Primitives', 'Utilities', 'AI', 'Blocks', 'Templates', 'Pages'],
+        order: ['Foundations', 'Primitives', 'Utilities', 'Chat', 'Blocks', 'Templates', 'Pages'],
       },
     },
     a11y: {

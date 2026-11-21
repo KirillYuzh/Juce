@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
+import { cx } from '../../../lib/cx';
 import {
   axisTicks,
-  cx,
   labelStep,
   linePath,
   seriesColors,
@@ -70,7 +70,15 @@ export function LineChart({
       return { path: linePath(points, curve), points };
     });
 
-    return { padding, plotWidth, x, y, lines, tickValues, every: labelStep(data.length, plotWidth) };
+    return {
+      padding,
+      plotWidth,
+      x,
+      y,
+      lines,
+      tickValues,
+      every: labelStep(data.length, plotWidth),
+    };
   }, [curve, data, grid, height, series, ticks, width]);
 
   const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
@@ -143,7 +151,7 @@ export function LineChart({
                     cy={y}
                     r={3}
                   />
-                )),
+                ))
               )}
 
             {hovered !== null && (

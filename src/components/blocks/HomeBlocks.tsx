@@ -2,9 +2,7 @@ import styles from './HomeBlocks.module.css';
 import { Button, TextLink } from '../ui/Button';
 import { Icon, type IconName } from '../ui/Icon';
 import type { Product } from '../../data/home';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 const toneClass: Record<Product['tone'], string> = {
   dark: styles.productDark,

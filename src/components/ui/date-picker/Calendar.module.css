@@ -81,8 +81,6 @@
   min-width: 0;
 }
 
-/* The range band lives on the cell, so the selected pill always sits on top
-   and the band never runs underneath the rounded edges. */
 .cellInRange::before {
   content: '';
   position: absolute;

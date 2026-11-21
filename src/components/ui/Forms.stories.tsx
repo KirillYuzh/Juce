@@ -1,5 +1,6 @@
+import { useState, type CSSProperties, type FormEvent } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Checkbox, Input, Radio, Select, Switch, Textarea } from './Fields';
+import { Checkbox, ChipSelect, Input, Radio, Select, Switch, Textarea } from './Fields';
 
 const meta: Meta = {
   title: 'Primitives/Forms',
@@ -39,6 +40,26 @@ export const InputSizes: Story = {
   ),
 };
 
+export const InsetRadius: Story = {
+  name: 'Inset radius',
+  render: () => (
+    <div
+      style={
+        {
+          '--tb-radius-parent': 'var(--tb-radius-l)',
+          '--tb-radius-parent-padding': 'var(--tb-space-3)',
+          width: 400,
+          padding: 'var(--tb-space-3)',
+          borderRadius: 'var(--tb-radius-l)',
+          background: 'var(--tb-bg-secondary)',
+        } as CSSProperties
+      }
+    >
+      <Input size="s" radius="inset" placeholder="Радиус родителя минус его padding" />
+    </div>
+  ),
+};
+
 export const Textareas: Story = {
   render: () => (
     <div style={column}>
@@ -71,6 +92,48 @@ export const Selects: Story = {
   ),
 };
 
+const directions = [
+  { value: 'java', label: 'Java' },
+  { value: 'go', label: 'Go' },
+  { value: 'math', label: 'Математика' },
+  { value: 'algorithms', label: 'Алгоритмы' },
+  { value: 'databases', label: 'Базы данных' },
+  { value: 'frontend', label: 'Фронтенд' },
+];
+
+function ChipSelectDemo() {
+  const [value, setValue] = useState(['go']);
+  return (
+    <div style={column}>
+      <ChipSelect
+        label="Направления"
+        options={directions}
+        value={value}
+        onChange={setValue}
+        hint="Можно выбрать несколько"
+      />
+    </div>
+  );
+}
+
+export const MultipleChoice: Story = {
+  name: 'Multiple choice',
+  render: () => <ChipSelectDemo />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<ChipSelect
+  label="Направления"
+  options={directions}
+  value={value}
+  onChange={setValue}
+  hint="Можно выбрать несколько"
+/>`,
+      },
+    },
+  },
+};
+
 export const Checkboxes: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -100,14 +163,11 @@ export const Switches: Story = {
   ),
 };
 
+const submit = (event: FormEvent<HTMLFormElement>) => event.preventDefault();
+
 export const WholeForm: Story = {
   render: () => (
-    <form
-      style={{ ...column, gap: 12 }}
-      onSubmit={(event) => {
-        event.preventDefault();
-      }}
-    >
+    <form style={{ ...column, gap: 12 }} onSubmit={submit}>
       <Input placeholder="Имя пользователя*" required />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
         <Input placeholder="Telegram*" required />

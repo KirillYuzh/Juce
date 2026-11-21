@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styles from './StackTrace.module.css';
 import {
   Trace,
@@ -10,9 +9,8 @@ import {
   TraceTitle,
 } from './Trace';
 import { Icon } from '../ui/Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { useCopy } from '../ui/clipboard';
+import { cx } from '../../lib/cx';
 
 export interface StackFrame {
   raw: string;
@@ -57,17 +55,7 @@ export function StackTrace({
   title,
 }: StackTraceProps) {
   const { error, frames } = parseStackTrace(stack);
-  const [copied, setCopied] = useState(false);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(stack);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  };
+  const { copied, copy } = useCopy(stack);
 
   return (
     <Trace className={className}>

@@ -1,15 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Bubble, BubbleContent, Message, MessageContent, MessageFooter } from './Message';
-import { IconButton } from '../ui/Button';
+import { Bubble, BubbleContent, Message, MessageContent, MessageReactions } from './Message';
 
 const meta: Meta = {
-  title: 'AI/Message',
+  title: 'Chat/Message',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };
 
 export default meta;
 type Story = StoryObj;
+
+const answer =
+  'Планировщик раскладывает горутины по потокам ОС и переключает их на точках блокировки: канал, мьютекс, системный вызов.';
 
 export const UserAndAssistant: Story = {
   render: () => (
@@ -23,15 +25,8 @@ export const UserAndAssistant: Story = {
       </Message>
       <Message>
         <MessageContent>
-          <p style={{ margin: 0 }}>
-            Планировщик раскладывает горутины по потокам ОС и переключает их на точках
-            блокировки: канал, мьютекс, системный вызов.
-          </p>
-          <MessageFooter>
-            <IconButton icon="copy" label="Скопировать" size="s" variant="plain" />
-            <IconButton icon="thumbsUp" label="Полезно" size="s" variant="plain" />
-            <IconButton icon="refresh" label="Повторить" size="s" variant="plain" />
-          </MessageFooter>
+          <p style={{ margin: 0 }}>{answer}</p>
+          <MessageReactions content={answer} onRetry={() => {}} />
         </MessageContent>
       </Message>
     </div>

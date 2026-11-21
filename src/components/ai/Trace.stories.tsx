@@ -14,7 +14,7 @@ import { Icon, type IconName } from '../ui/Icon';
 import { Spinner } from '../ui/Display';
 
 const meta: Meta = {
-  title: 'AI/Trace',
+  title: 'Chat/Trace',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };

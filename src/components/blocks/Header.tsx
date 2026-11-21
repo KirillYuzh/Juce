@@ -4,9 +4,7 @@ import { Logo } from '../ui/Display';
 import { Icon } from '../ui/Icon';
 import { Button, IconButton } from '../ui/Button';
 import type { NavItem } from '../../data/home';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export interface HeaderProps {
   nav: NavItem[];
@@ -14,9 +12,7 @@ export interface HeaderProps {
   loginLabel?: string;
   loginHref?: string;
   homeHref?: string;
-  /** Название в логотипе: шаблон подставляется в любой продукт. */
   brand?: string;
-  /** Кнопка поиска появляется только когда есть куда вести. */
   onSearch?: () => void;
   className?: string;
 }

@@ -13,9 +13,7 @@ import {
   type StatPanelLink,
 } from '../components/blocks/HomeBlocks';
 import type { Product } from '../data/home';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../lib/cx';
 
 export function Section({
   title,

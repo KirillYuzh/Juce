@@ -1,9 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import styles from './Navigation.module.css';
 import { Icon } from './Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export interface TabItem {
   id: string;

@@ -73,6 +73,30 @@ const items: QuestionnaireItemConfig[] = [
 
 export const Default: Story = {
   render: () => <QuestionnaireStory />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Questionnaire items={items} onSubmit={handleSubmit}>
+  <QuestionnaireProgress />
+  <QuestionnaireItem name="topic">
+    <QuestionnaireTitle>Что разбираем сегодня?</QuestionnaireTitle>
+    <QuestionnaireDescription>Выберите направление или напишите своё.</QuestionnaireDescription>
+    <QuestionnaireChoices>
+      <QuestionnaireChoice value="java">Java</QuestionnaireChoice>
+      <QuestionnaireChoice value="go">Go</QuestionnaireChoice>
+      <QuestionnaireInput label="Свой вариант" placeholder="Например, указатели в C" />
+    </QuestionnaireChoices>
+    <QuestionnaireError />
+  </QuestionnaireItem>
+  <QuestionnaireActions>
+    <QuestionnairePrevious />
+    <QuestionnaireNext />
+    <QuestionnaireSubmit />
+  </QuestionnaireActions>
+</Questionnaire>`,
+      },
+    },
+  },
 };
 
 function QuestionnaireStory() {
@@ -81,11 +105,7 @@ function QuestionnaireStory() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <Questionnaire
-        key={round}
-        items={items}
-        onSubmit={(value) => setAnswers(value)}
-      >
+      <Questionnaire key={round} items={items} onSubmit={(value) => setAnswers(value)}>
         <QuestionnaireProgress />
         {items.map((question) => (
           <QuestionnaireItem key={question.name} name={question.name}>

@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartLegend, ChartTooltip } from './ChartParts';
+import { cx } from '../../../lib/cx';
 import {
   arcPath,
-  cx,
   seriesColors,
   toNumber,
   usePlotWidth,
@@ -16,7 +16,6 @@ export interface PieChartProps {
   nameKey: string;
   valueKey: string;
   height?: number;
-  /** Доля внутреннего радиуса (0 — круг, 0.6 — пончик). */
   innerRadius?: number;
   centerValue?: string;
   centerLabel?: string;
@@ -46,7 +45,7 @@ export function PieChart({
   const [plotRef, width] = usePlotWidth();
   const [hover, setHover] = useState<{ index: number; x: number; y: number } | null>(null);
   const colors = seriesColors(
-    data.map((row) => ({ key: String(row[nameKey]), label: String(row[nameKey]) })),
+    data.map((row) => ({ key: String(row[nameKey]), label: String(row[nameKey]) }))
   );
 
   const slices = useMemo(() => {

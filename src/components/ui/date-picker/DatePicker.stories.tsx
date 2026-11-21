@@ -26,6 +26,9 @@ function SinglePicker() {
 
 export const Single: Story = {
   render: () => <SinglePicker />,
+  parameters: {
+    docs: { source: { code: '<DatePicker mode="single" value={value} onChange={setValue} />' } },
+  },
 };
 
 const lastMonthPreset: DateRangePreset = {
@@ -53,6 +56,18 @@ function RangePicker() {
 
 export const RangeWithPresets: Story = {
   render: () => <RangePicker />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<DatePicker
+  mode="range"
+  value={range}
+  onChange={setRange}
+  presets={[...defaultRangePresets, lastMonthPreset]}
+/>`,
+      },
+    },
+  },
 };
 
 function InlinePicker() {
@@ -63,6 +78,11 @@ function InlinePicker() {
 export const Inline: Story = {
   name: 'Inline (calendar always open)',
   render: () => <InlinePicker />,
+  parameters: {
+    docs: {
+      source: { code: '<DatePicker mode="single" value={value} onChange={setValue} inline />' },
+    },
+  },
 };
 
 function MinMaxPicker() {
@@ -81,6 +101,20 @@ function MinMaxPicker() {
 
 export const MinMax: Story = {
   render: () => <MinMaxPicker />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<DatePicker
+  mode="single"
+  value={value}
+  onChange={setValue}
+  min={min}
+  max={max}
+  placeholder="Доступны 3 недели"
+/>`,
+      },
+    },
+  },
 };
 
 export const Disabled: Story = {

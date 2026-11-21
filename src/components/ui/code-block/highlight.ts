@@ -1,8 +1,5 @@
 import { useMemo } from 'react';
 
-// Regex tokenizer, no dependencies. Demo-grade: enough to make the block read
-// like code, not a parser. Unknown language renders as plain text.
-
 export type CodeLanguage =
   | 'js'
   | 'ts'
@@ -53,8 +50,6 @@ const jsRules: Rule[] = [
   r('function', /\b[A-Za-z_$][\w$]*(?=\s*\()/),
 ];
 
-// JSX tags/attributes on top of the JS rules; generics may false-positive, which
-// is an acceptable trade for a demo tokenizer.
 const jsxRules: Rule[] = [
   r('tag', /<\/?[A-Za-z][\w.:-]*/),
   r('attr', /[A-Za-z_][\w:-]*(?=\s*=)/),
@@ -182,7 +177,6 @@ function tokenizeWith(code: string, rules: Rule[]): CodeToken[] {
   return tokens;
 }
 
-// Basic SGR support: 30-37 / 90-97 foreground, everything else ignored.
 function ansiKind(codes: string): CodeTokenKind {
   let kind: CodeTokenKind = 'plain';
   for (const part of codes.split(';')) {
@@ -257,7 +251,6 @@ export function tokenizeCode(code: string, language: string = 'text'): CodeLine[
     }
   }
 
-  // A trailing newline should not render as an extra blank line.
   if (lines.length > 1 && lines[lines.length - 1].length === 0) lines.pop();
   return lines;
 }

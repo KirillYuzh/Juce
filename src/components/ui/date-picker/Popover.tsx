@@ -9,9 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import styles from './Popover.module.css';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../../lib/cx';
 
 interface PopoverContextValue {
   open: boolean;
@@ -38,10 +36,6 @@ export interface PopoverProps {
   children: ReactNode;
 }
 
-/**
- * Headless popover: positions Content under the Trigger, handles open state,
- * Escape, outside clicks and moving focus in/out.
- */
 export function Popover({
   open: openProp,
   defaultOpen = false,
@@ -81,7 +75,6 @@ export function Popover({
     };
   }, [open, setOpen]);
 
-  // Content focuses itself unless a child already claimed focus (e.g. Calendar does).
   useEffect(() => {
     if (!open) return;
     const content = contentRef.current;
@@ -90,7 +83,6 @@ export function Popover({
     target.focus();
   }, [open]);
 
-  // Return focus to the trigger only when focus was lost with the closed content.
   const wasOpen = useRef(false);
   useEffect(() => {
     if (wasOpen.current && !open) {

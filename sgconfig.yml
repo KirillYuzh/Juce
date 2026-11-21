@@ -1,0 +1,6 @@
+ruleDirs:
+  - tools/rules
+languageGlobs:
+  Tsx:
+    - '**/*.ts'
+    - '**/*.tsx'

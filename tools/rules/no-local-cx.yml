@@ -1,0 +1,16 @@
+id: no-local-cx
+language: Tsx
+severity: error
+message: >-
+  Локальная копия cx разойдётся с остальными и соберёт классы иначе. Одна
+  утилита — src/lib/cx.ts.
+note: >-
+  Импортируй `{ cx }` из src/lib/cx и удали свою реализацию. Не обходи правило
+  переименованием: причина — дублирование утилиты, а не её имя.
+ignores:
+  - 'src/lib/cx.ts'
+rule:
+  kind: variable_declarator
+  has:
+    field: name
+    regex: '^cx$'

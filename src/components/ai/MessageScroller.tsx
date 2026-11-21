@@ -11,9 +11,7 @@ import {
 } from 'react';
 import styles from './MessageScroller.module.css';
 import { Icon } from '../ui/Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 type ScrollPosition = 'start' | 'end' | 'last-anchor';
 type ScrollAlign = 'start' | 'center' | 'end' | 'nearest';
@@ -71,6 +69,7 @@ export function MessageScrollerProvider({
   const preserveRef = useRef(true);
   const lastMetrics = useRef({ scrollHeight: 0, scrollTop: 0 });
   const autoscrollTimer = useRef<number | null>(null);
+  const initializedViewport = useRef<HTMLDivElement | null>(null);
 
   const registerViewport = useCallback((element: HTMLDivElement | null, preserve: boolean) => {
     preserveRef.current = preserve;
@@ -150,12 +149,12 @@ export function MessageScrollerProvider({
     [flashAutoscrolling, scrollMargin, viewport]
   );
 
-  // Initial position, applied once the viewport and rows are mounted.
   useEffect(() => {
-    if (!viewport) return;
+    if (!viewport || initializedViewport.current === viewport) return;
     let frame = 0;
     let second = 0;
     const apply = () => {
+      initializedViewport.current = viewport;
       if (defaultScrollPosition === 'end') {
         viewport.scrollTop = viewport.scrollHeight;
       } else if (defaultScrollPosition === 'last-anchor') {
@@ -184,11 +183,15 @@ export function MessageScrollerProvider({
       window.cancelAnimationFrame(frame);
       window.cancelAnimationFrame(second);
     };
-    // Runs on viewport mount only; later renders should not reset the position.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewport]);
+  }, [
+    autoScroll,
+    defaultScrollPosition,
+    scrollMargin,
+    scrollPreviousItemPeek,
+    updateScrollState,
+    viewport,
+  ]);
 
-  // Track position, release follow on real user input, follow growth.
   useEffect(() => {
     if (!viewport) return;
     let frame = 0;

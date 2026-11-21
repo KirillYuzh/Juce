@@ -11,9 +11,7 @@ import {
 } from 'react';
 import styles from './Carousel.module.css';
 import { IconButton } from './Button';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type CarouselOrientation = 'horizontal' | 'vertical';
 
@@ -57,16 +55,11 @@ export interface CarouselProps {
   children: ReactNode;
   orientation?: CarouselOrientation;
   opts?: CarouselOptions;
-  /** Called once with the imperative api, like Embla's setApi. */
   setApi?: (api: CarouselApi) => void;
   className?: string;
   'aria-label'?: string;
 }
 
-/**
- * Scroll-snap carousel: native scrolling, keyboard arrows and an imperative
- * api, with no carousel dependency. Slides size themselves with `basis`.
- */
 export function Carousel({
   children,
   orientation = 'horizontal',
@@ -253,7 +246,6 @@ export function CarouselContent({ children, className }: CarouselContentProps) {
 
 export interface CarouselItemProps {
   children: ReactNode;
-  /** Width of the slide, e.g. "100%", "50%", "320px". */
   basis?: string;
   className?: string;
   style?: CSSProperties;
@@ -313,7 +305,6 @@ export function CarouselNext({
   );
 }
 
-/** Dots that mirror the slides; handy under short card carousels. */
 export function CarouselDots({ className }: { className?: string }) {
   const { api } = useCarousel('CarouselDots');
   const [state, setState] = useState({ index: 0, count: 0 });

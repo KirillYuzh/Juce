@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Sources } from './Sources';
 
 const meta: Meta = {
-  title: 'AI/Sources',
+  title: 'Chat/Sources',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };

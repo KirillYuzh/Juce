@@ -11,7 +11,7 @@ import {
 } from './InlineCitation';
 
 const meta: Meta = {
-  title: 'AI/Inline citation',
+  title: 'Chat/Inline citation',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };

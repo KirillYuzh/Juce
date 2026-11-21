@@ -1,9 +1,9 @@
 import { useId, useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
+import { cx } from '../../../lib/cx';
 import {
   axisTicks,
-  cx,
   labelStep,
   linePath,
   seriesColors,
@@ -115,7 +115,6 @@ export function AreaChart({
   };
 
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
-  // Тултип всегда сбоку от точки: иначе он закрывает точку у верхнего края.
   const tooltipX = hovered === null ? 0 : geometry.x(hovered);
   const flipTooltip = width - tooltipX < 190 && tooltipX > 190;
 

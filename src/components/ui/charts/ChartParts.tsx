@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import styles from './Chart.module.css';
-import { cx, type TooltipIndicator } from './chartUtils';
+import { cx } from '../../../lib/cx';
+import type { TooltipIndicator } from './chartUtils';
 
 export interface ChartTooltipRow {
   label: string;
@@ -14,7 +15,6 @@ export interface ChartTooltipProps {
   title?: string;
   rows: ChartTooltipRow[];
   indicator?: TooltipIndicator;
-  /** Сдвинуть карточку влево от точки, чтобы она не уезжала за край. */
   flip?: boolean;
 }
 

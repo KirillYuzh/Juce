@@ -5,6 +5,12 @@
   min-width: 0;
 }
 
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .label {
   font: 500 13px/18px var(--tb-font-text);
   color: var(--tb-text-secondary);
@@ -18,9 +24,10 @@
 
 .input,
 .textarea {
+  --tb-radius-fallback: 12px;
   width: 100%;
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--tb-radius, var(--tb-radius-fallback));
   background: var(--tb-field);
   color: var(--tb-text-primary);
   font: 400 15px/24px var(--tb-font-text);
@@ -30,21 +37,23 @@
     box-shadow 0.15s ease;
 }
 
-/* Same height scale as Button: l = 56, m = 44, s = 32. */
 .size-l {
   min-height: 56px;
   padding: 16px;
+  padding-inline-start: max(16px, var(--tb-radius, var(--tb-radius-fallback)));
 }
 
 .size-m {
   min-height: 44px;
   padding: 10px 14px;
+  padding-inline-start: max(14px, var(--tb-radius, var(--tb-radius-fallback)));
 }
 
 .size-s {
+  --tb-radius-fallback: 8px;
   min-height: 32px;
   padding: 6px 10px;
-  border-radius: 8px;
+  padding-inline-start: max(10px, var(--tb-radius, var(--tb-radius-fallback)));
   font: 400 13px/16px var(--tb-font-text);
 }
 
@@ -75,7 +84,6 @@
   width: 100%;
 }
 
-/* Trigger and menu share the tabs look: a light track with white pills. */
 .selectTrigger {
   display: flex;
   align-items: center;
@@ -141,8 +149,6 @@
   box-shadow: var(--tb-shadow-popover);
 }
 
-/* The list scrolls inside the menu chrome, so the edge mask fades options to
-   the menu background. Always on by default: no prop or class switches it off. */
 .selectList {
   box-sizing: border-box;
   display: flex;

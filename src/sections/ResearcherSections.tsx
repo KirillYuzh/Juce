@@ -14,7 +14,6 @@ import {
   type Vacancy,
 } from '../components/blocks/ResearcherBlocks';
 
-// Три направления не делятся на две колонки без пустого места в последнем ряду.
 const rowOfCards = {
   gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
 } as const;

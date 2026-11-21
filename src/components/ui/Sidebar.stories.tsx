@@ -15,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSkeleton,
+  SidebarMenuSubSkeleton,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
@@ -24,6 +25,7 @@ import {
   SidebarTrigger,
 } from './Sidebar';
 import { Icon } from './Icon';
+import { Skeleton } from './Display';
 
 const meta: Meta = {
   title: 'Primitives/Sidebar',
@@ -43,7 +45,7 @@ const nav = [
 
 function Demo() {
   return (
-    <div style={{ height: 560 }}>
+    <div style={{ height: 700 }}>
       <SidebarProvider>
         <Sidebar>
           <SidebarHeader>
@@ -240,15 +242,54 @@ export const IconCollapsible: Story = {
 export const Loading: Story = {
   name: 'Skeleton',
   render: () => (
-    <div style={{ height: 420 }}>
+    <div style={{ height: 700 }}>
       <SidebarProvider>
-        <Sidebar collapsible="none">
+        <Sidebar>
+          <SidebarHeader>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton icon={<Icon name="globe" size={20} />}>Джус</SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarHeader>
+
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Загрузка</SidebarGroupLabel>
+              <SidebarGroupLabel>Рабочее пространство</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {Array.from({ length: 4 }, (_, index) => (
+                  <SidebarMenuItem>
+                    <SidebarMenuSkeleton />
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuSkeleton />
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuSub>
+                      {Array.from({ length: 3 }, (_, index) => (
+                        <SidebarMenuSubItem key={index}>
+                          <SidebarMenuSubSkeleton />
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuSkeleton />
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuSkeleton />
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            <SidebarSeparator />
+
+            <SidebarGroup>
+              <SidebarGroupLabel>Команда</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {Array.from({ length: 2 }, (_, index) => (
                     <SidebarMenuItem key={index}>
                       <SidebarMenuSkeleton />
                     </SidebarMenuItem>
@@ -257,10 +298,24 @@ export const Loading: Story = {
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
+
+          <SidebarFooter>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton icon={<Icon name="shield" size={20} />}>
+                  Настройки
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarFooter>
         </Sidebar>
+
         <SidebarInset>
-          <div style={{ padding: 24 }}>
+          <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
             <SidebarTrigger />
+            <Skeleton width="45%" height={28} radius={10} />
+            <Skeleton width="70%" height={16} radius={8} />
+            <Skeleton width="60%" height={16} radius={8} />
           </div>
         </SidebarInset>
       </SidebarProvider>

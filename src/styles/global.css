@@ -60,7 +60,6 @@ ol {
   list-style: none;
 }
 
-/* Typography utilities */
 .tb-h1 {
   font: 700 44px/48px var(--tb-font-heading);
   letter-spacing: 0;

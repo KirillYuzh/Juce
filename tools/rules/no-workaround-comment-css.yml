@@ -1,0 +1,12 @@
+id: no-workaround-comment-css
+language: Css
+severity: error
+message: >-
+  Комментарий-оправдание в CSS не заменяет исправление и устаревает быстрее
+  стилей.
+note: >-
+  Устрани причину или перенеси ограничение в README. Не оставляй в стилях
+  пометки вроде hack или temporary.
+rule:
+  kind: comment
+  regex: '(?i)(\b(workaround|hack|temporary|todo|fixme)\b|костыл|временн)'

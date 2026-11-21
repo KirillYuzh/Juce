@@ -1,0 +1,13 @@
+id: no-direct-clipboard
+language: Tsx
+severity: error
+message: >-
+  Прямой navigator.clipboard падает в небезопасном контексте и заставляет каждый
+  компонент заново держать состояние «скопировано».
+note: >-
+  Используй useCopy из src/components/ui/clipboard: он делает fallback,
+  сбрасывает состояние по таймеру и чистит его при размонтировании.
+ignores:
+  - 'src/components/ui/clipboard.ts'
+rule:
+  pattern: navigator.clipboard

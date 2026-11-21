@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Markdown } from './Markdown';
 
 const meta: Meta<typeof Markdown> = {
-  title: 'AI/Markdown',
+  title: 'Chat/Markdown',
   component: Markdown,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],

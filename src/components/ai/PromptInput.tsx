@@ -2,9 +2,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import styles from './PromptInput.module.css';
 import { Icon } from '../ui/Icon';
 import { Spinner } from '../ui/Display';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type PromptInputStatus = 'ready' | 'submitted' | 'streaming' | 'error';
 
@@ -95,9 +93,7 @@ export function PromptInput({
         disabled={disabled}
         onMouseDown={(event) => {
           const target = event.target as Element;
-          // По самому textarea не вмешиваемся: браузер сам ставит каретку.
           if (target === textareaRef.current) return;
-          // Кнопки, label и файловый input не должны забирать фокус у поля ввода.
           event.preventDefault();
           if (target.closest('button, label, a, input, [role="button"]')) return;
           textareaRef.current?.focus();

@@ -302,4 +302,27 @@ function ShowMoreDemo() {
 
 export const WithShowMore: Story = {
   render: () => <ShowMoreDemo />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<CodeBlock>
+  <CodeBlockHeader>
+    <CodeBlockTitle>tokenize.ts</CodeBlockTitle>
+    <CodeBlockActions>
+      <CodeBlockCopyButton value={code} />
+    </CodeBlockActions>
+  </CodeBlockHeader>
+  <CodeBlockContent language="ts" lineNumbers style={{ maxHeight: 120 }}>
+    {code}
+  </CodeBlockContent>
+  <CodeBlockFooter>
+    <span>Показано начало файла</span>
+    <Button size="s" variant="ghost" iconRight="chevronDown">
+      Показать полностью
+    </Button>
+  </CodeBlockFooter>
+</CodeBlock>`,
+      },
+    },
+  },
 };

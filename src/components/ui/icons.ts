@@ -1,15 +1,3 @@
-// Ant Design Icons (MIT, https://github.com/ant-design/ant-design-icons),
-// snapshot of @ant-design/icons-svg 4.6.0. Edit the path data here: the kit
-// keeps icons local instead of depending on a runtime icon package.
-// Every icon shares the 1024 grid, so one viewBox constant is enough.
-//
-// Not one-to-one with Ant Design names:
-//   square        → BorderOutlined (квадрат «стоп»; StopFilled — это круг с чертой)
-//   wrap          → ColumnWidthOutlined
-//   quote         → MessageOutlined
-//   arrowUpRight  → ExportOutlined (как и external)
-//   apple/android → *Filled, telegram → TelegramFilled
-
 export const ANTD_VIEW_BOX = '64 64 896 896';
 
 export type IconName =
@@ -17,6 +5,7 @@ export type IconName =
   | 'user'
   | 'menu'
   | 'close'
+  | 'trash'
   | 'chevronUp'
   | 'chevronDown'
   | 'chevronLeft'
@@ -69,6 +58,9 @@ export const antdIcons: Record<AntdIconName, readonly string[]> = {
   ],
   close: [
     'M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z',
+  ],
+  trash: [
+    'M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z',
   ],
   chevronUp: [
     'M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z',

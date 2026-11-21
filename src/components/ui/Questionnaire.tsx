@@ -11,9 +11,7 @@ import {
 import styles from './Questionnaire.module.css';
 import { Button } from './Button';
 import { Icon } from './Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type QuestionnaireAnswers = Record<string, string | string[]>;
 
@@ -30,7 +28,6 @@ export interface QuestionnaireItemConfig {
   required?: boolean;
   multiple?: boolean;
   choices?: QuestionnaireChoiceConfig[];
-  /** Freeform answer shown under the choices. */
   input?: { label: string; placeholder?: string };
 }
 
@@ -77,11 +74,6 @@ export interface QuestionnaireProps {
   className?: string;
 }
 
-/**
- * Multi-step questionnaire: one question at a time, single or multiple choice,
- * a freeform answer and a skip for optional steps. Answers are a plain object,
- * so the host decides what to do with them.
- */
 export function Questionnaire({
   items,
   onSubmit,
@@ -105,7 +97,6 @@ export function Questionnaire({
   const toggleChoice = (item: QuestionnaireItemConfig, value: string) => {
     setError(null);
     setAnswers((current) => {
-      // Picking a fixed answer drops the freeform one: they are alternatives.
       const next = { ...current };
       delete next[otherKey(item.name)];
       if (!item.multiple) return { ...next, [item.name]: value };
@@ -143,7 +134,6 @@ export function Questionnaire({
       setError('Выберите ответ, чтобы продолжить');
       return;
     }
-    // Fold "other" answers into their own name and drop empty entries.
     const result: QuestionnaireAnswers = {};
     items.forEach((item) => {
       const other = answers[otherKey(item.name)];
@@ -228,7 +218,6 @@ export function QuestionnaireItem({ name, children, className }: QuestionnaireIt
   const fieldsetRef = useRef<HTMLFieldSetElement>(null);
   const mounted = useRef(false);
 
-  // Focus the new step, but never steal focus on the first paint.
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;

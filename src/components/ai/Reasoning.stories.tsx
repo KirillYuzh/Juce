@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Reasoning } from './Reasoning';
 
 const meta: Meta = {
-  title: 'AI/Reasoning',
+  title: 'Chat/Reasoning',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };
@@ -39,12 +39,14 @@ export const Empty: Story = {
 };
 
 export const Controlled: Story = {
-  render: () => {
-    const [open, setOpen] = useState(true);
-    return (
-      <div style={{ width: 420 }}>
-        <Reasoning text={text} duration={4} open={open} onOpenChange={setOpen} />
-      </div>
-    );
-  },
+  render: () => <ControlledReasoning />,
 };
+
+function ControlledReasoning() {
+  const [open, setOpen] = useState(true);
+  return (
+    <div style={{ width: 420 }}>
+      <Reasoning text={text} duration={4} open={open} onOpenChange={setOpen} />
+    </div>
+  );
+}

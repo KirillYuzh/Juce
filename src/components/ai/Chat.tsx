@@ -1,18 +1,14 @@
-import { useState } from 'react';
+import type { ReactNode } from 'react';
 import styles from './Chat.module.css';
 import { MessageScroller } from './MessageScroller';
-import { Bubble, BubbleContent, Message, MessageContent, MessageFooter } from './Message';
+import { Bubble, BubbleContent, Message, MessageContent, MessageReactions } from './Message';
 import { PromptInput, type PromptInputPayload, type PromptInputStatus } from './PromptInput';
 import { Suggestions, Suggestion } from './Suggestion';
 import { Reasoning } from './Reasoning';
 import { Sources, type SourceItem } from './Sources';
 import { Markdown } from './Markdown';
 import { Avatar, Spinner } from '../ui/Display';
-import { IconButton } from '../ui/Button';
-import { Icon } from '../ui/Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export interface ChatMessage {
   id: string;
@@ -40,6 +36,9 @@ export interface ChatProps {
   emptyText?: string;
   className?: string;
   footnote?: string;
+  headerLeading?: ReactNode;
+  framed?: boolean;
+  showAuthor?: boolean;
 }
 
 const statusLabel: Record<PromptInputStatus, string> = {
@@ -63,13 +62,19 @@ export function Chat({
   emptyText = 'Разберите код, объясните алгоритм или проверьте доказательство.',
   className,
   footnote = 'Джупсик может ошибаться. Проверяйте код и выкладки по первоисточникам.',
+  headerLeading,
+  framed = true,
+  showAuthor = true,
 }: ChatProps) {
   return (
-    <div className={cx(styles.chat, className)}>
+    <div className={cx(styles.chat, !framed && styles.plain, className)}>
       <div className={styles.header}>
-        <div className={styles.headerText}>
-          <span className={styles.title}>{title}</span>
-          <span className={styles.subtitle}>{subtitle}</span>
+        <div className={styles.headerMain}>
+          {headerLeading}
+          <div className={styles.headerText}>
+            <span className={styles.title}>{title}</span>
+            <span className={styles.subtitle}>{subtitle}</span>
+          </div>
         </div>
         <span className={styles.status} aria-live="polite">
           {status === 'streaming' && <Spinner size={12} />}
@@ -86,41 +91,41 @@ export function Chat({
         </span>
       </div>
 
-      <MessageScroller.Provider autoScroll defaultScrollPosition="end">
-        <MessageScroller.Root className={styles.scroller}>
-          <MessageScroller.Viewport className={styles.viewport}>
-            <MessageScroller.Content className={styles.content}>
-              {messages.length === 0 ? (
-                <div className={styles.empty}>
-                  <span className={styles.emptyIcon}>
-                    <Icon name="shield" size={28} />
-                  </span>
-                  <span className={styles.emptyTitle}>{emptyTitle}</span>
-                  <span className={styles.emptyText}>{emptyText}</span>
-                </div>
-              ) : (
-                messages.map((message) => (
-                  <MessageScroller.Item
-                    key={message.id}
-                    messageId={message.id}
-                    scrollAnchor={message.role === 'user'}
-                  >
-                    {message.role === 'user' ? (
-                      <UserMessage message={message} />
-                    ) : (
-                      <AssistantMessage
-                        message={message}
-                        onRetry={onRetry ? () => onRetry(message.id) : undefined}
-                      />
-                    )}
-                  </MessageScroller.Item>
-                ))
-              )}
-            </MessageScroller.Content>
-          </MessageScroller.Viewport>
-          <MessageScroller.Button />
-        </MessageScroller.Root>
-      </MessageScroller.Provider>
+      <div className={styles.body}>
+        <MessageScroller.Provider autoScroll defaultScrollPosition="end">
+          <MessageScroller.Root className={styles.scroller}>
+            <MessageScroller.Viewport className={styles.viewport}>
+              <MessageScroller.Content className={styles.content}>
+                {messages.length === 0 ? (
+                  <div className={styles.empty}>
+                    <span className={styles.emptyTitle}>{emptyTitle}</span>
+                    <span className={styles.emptyText}>{emptyText}</span>
+                  </div>
+                ) : (
+                  messages.map((message) => (
+                    <MessageScroller.Item
+                      key={message.id}
+                      messageId={message.id}
+                      scrollAnchor={message.role === 'user'}
+                    >
+                      {message.role === 'user' ? (
+                        <UserMessage message={message} />
+                      ) : (
+                        <AssistantMessage
+                          message={message}
+                          showAuthor={showAuthor}
+                          onRetry={onRetry ? () => onRetry(message.id) : undefined}
+                        />
+                      )}
+                    </MessageScroller.Item>
+                  ))
+                )}
+              </MessageScroller.Content>
+            </MessageScroller.Viewport>
+            <MessageScroller.Button />
+          </MessageScroller.Root>
+        </MessageScroller.Provider>
+      </div>
 
       <div className={styles.composer}>
         {suggestions.length > 0 && (
@@ -155,26 +160,23 @@ function UserMessage({ message }: { message: ChatMessage }) {
   );
 }
 
-function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?: () => void }) {
-  const [copied, setCopied] = useState(false);
-  const [vote, setVote] = useState<'up' | 'down' | null>(null);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(message.content);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  };
-
+function AssistantMessage({
+  message,
+  showAuthor,
+  onRetry,
+}: {
+  message: ChatMessage;
+  showAuthor: boolean;
+  onRetry?: () => void;
+}) {
   return (
     <Message>
-      <span className={styles.author}>
-        <Avatar initials="Дж" size="s" />
-        Джупсик
-      </span>
+      {showAuthor && (
+        <span className={styles.author}>
+          <Avatar initials="Дж" size="s" />
+          Джупсик
+        </span>
+      )}
       <MessageContent>
         {message.reasoning !== undefined && (
           <Reasoning
@@ -190,40 +192,7 @@ function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?
           <span className={styles.subtitle}>Не удалось получить ответ. Попробуйте ещё раз.</span>
         )}
         {message.sources && message.sources.length > 0 && <Sources sources={message.sources} />}
-        <MessageFooter>
-          <IconButton
-            icon={copied ? 'check' : 'copy'}
-            label={copied ? 'Скопировано' : 'Скопировать ответ'}
-            size="xs"
-            variant="ghost"
-            onClick={copy}
-          />
-          <IconButton
-            icon={vote === 'up' ? 'thumbsUpFilled' : 'thumbsUp'}
-            label="Полезный ответ"
-            size="xs"
-            variant="ghost"
-            aria-pressed={vote === 'up'}
-            onClick={() => setVote(vote === 'up' ? null : 'up')}
-          />
-          <IconButton
-            icon={vote === 'down' ? 'thumbsDownFilled' : 'thumbsDown'}
-            label="Неполезный ответ"
-            size="xs"
-            variant="ghost"
-            aria-pressed={vote === 'down'}
-            onClick={() => setVote(vote === 'down' ? null : 'down')}
-          />
-          {onRetry && (
-            <IconButton
-              icon="refresh"
-              label="Повторить ответ"
-              size="xs"
-              variant="ghost"
-              onClick={onRetry}
-            />
-          )}
-        </MessageFooter>
+        <MessageReactions content={message.content} onRetry={onRetry} />
       </MessageContent>
     </Message>
   );

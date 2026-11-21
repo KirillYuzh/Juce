@@ -167,7 +167,6 @@
   background: var(--tb-bg-tertiary);
 }
 
-/* Quiet action: grey until hovered, filled when pressed. */
 .iconButtonGhost {
   background: transparent;
   color: var(--tb-text-secondary);

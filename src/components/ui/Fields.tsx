@@ -1,9 +1,9 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import styles from './Fields.module.css';
+import { Chip } from './Display';
 import { Icon } from './Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
+import { radiusStyle, type RadiusValue } from '../../lib/radius';
 
 interface FieldShellProps {
   label?: string;
@@ -41,6 +41,7 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   hint?: string;
   error?: string;
   size?: InputSize;
+  radius?: RadiusValue;
   suffixSlot?: ReactNode;
   className?: string;
   fieldClassName?: string;
@@ -51,10 +52,12 @@ export function Input({
   hint,
   error,
   size = 'l',
+  radius,
   suffixSlot,
   className,
   fieldClassName,
   id,
+  style,
   ...rest
 }: InputProps) {
   const generated = useId();
@@ -64,6 +67,7 @@ export function Input({
       <input
         id={inputId}
         className={cx(styles.input, styles[`size-${size}`], className)}
+        style={radiusStyle(radius, style)}
         {...rest}
       />
       {suffixSlot && <span className={styles.suffix}>{suffixSlot}</span>}
@@ -115,10 +119,6 @@ export interface SelectProps extends Omit<
   onChange?: (value: string) => void;
 }
 
-/**
- * Listbox in the tabs look: a light track, a white pill with the current value
- * and the same pill treatment for the options. No native select involved.
- */
 export function Select({
   label,
   hint,
@@ -265,6 +265,74 @@ export function Select({
         )}
       </div>
     </FieldShell>
+  );
+}
+
+export interface ChipSelectOption {
+  value: string;
+  label: string;
+}
+
+export interface ChipSelectProps {
+  options: ChipSelectOption[];
+  value: string[];
+  onChange: (value: string[]) => void;
+  label?: string;
+  hint?: string;
+  className?: string;
+  fieldClassName?: string;
+  'aria-label'?: string;
+}
+
+export function ChipSelect({
+  options,
+  value,
+  onChange,
+  label,
+  hint,
+  className,
+  fieldClassName,
+  'aria-label': ariaLabel,
+}: ChipSelectProps) {
+  const id = useId();
+  const labelId = `${id}-label`;
+  const hintId = `${id}-hint`;
+
+  const toggle = (option: string) => {
+    onChange(value.includes(option) ? value.filter((item) => item !== option) : [...value, option]);
+  };
+
+  return (
+    <div className={cx(styles.field, fieldClassName)}>
+      {label && (
+        <span id={labelId} className={styles.label}>
+          {label}
+        </span>
+      )}
+      <div
+        className={cx(styles.chipGroup, className)}
+        role="group"
+        aria-label={label ? undefined : ariaLabel}
+        aria-labelledby={label ? labelId : undefined}
+        aria-describedby={hint ? hintId : undefined}
+      >
+        {options.map((option) => (
+          <Chip
+            key={option.value}
+            variant="outline"
+            active={value.includes(option.value)}
+            onClick={() => toggle(option.value)}
+          >
+            {option.label}
+          </Chip>
+        ))}
+      </div>
+      {hint && (
+        <span id={hintId} className={styles.hint}>
+          {hint}
+        </span>
+      )}
+    </div>
   );
 }
 

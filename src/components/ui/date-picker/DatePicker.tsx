@@ -12,16 +12,13 @@ import {
   today,
   type DateRange,
 } from '../../../lib/date';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../../lib/cx';
 
 export interface DateRangePreset {
   label: string;
   getRange: () => DateRange;
 }
 
-/** getRange() keeps presets relative to the day the user opens the picker. */
 export const defaultRangePresets: DateRangePreset[] = [
   {
     label: 'Сегодня',
@@ -48,9 +45,7 @@ export const defaultRangePresets: DateRangePreset[] = [
 
 interface DatePickerBaseProps {
   placeholder?: string;
-  /** Range mode only; defaults to defaultRangePresets. Pass [] to hide the column. */
   presets?: DateRangePreset[];
-  /** Render the calendar in place, without a trigger and a popover. */
   inline?: boolean;
   min?: Date;
   max?: Date;

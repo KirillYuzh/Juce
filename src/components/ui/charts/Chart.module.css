@@ -24,8 +24,6 @@
   fill: var(--tb-text-tertiary);
 }
 
-/* Отрисовка при монтировании: только stroke-dashoffset и opacity,
-   холст не перестраивается, анимация остаётся на композиторе. */
 .line {
   stroke-dasharray: 1;
   animation: chart-draw 300ms var(--tb-ease-out) both;
@@ -39,7 +37,6 @@
   animation: chart-fade 300ms var(--tb-ease-out) both;
 }
 
-/* Столбцы растут от базовой линии через scale, а не через height/y. */
 .barVertical {
   transform-box: fill-box;
   transform-origin: bottom center;

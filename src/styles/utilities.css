@@ -1,6 +1,3 @@
-/* Scroll-aware edge fades (adapted from shadcn scroll-fade, no JS).
-   The four offsets are registered lengths so scroll-driven animations can
-   interpolate them; the mask reads them directly. */
 @property --tb-sf-t {
   syntax: '<length>';
   inherits: false;
@@ -28,8 +25,7 @@
 .tb-scroll-fade-y,
 .tb-scroll-fade-x,
 .tb-scroll-fade {
-  /* Keep it a plain length: a percentage would be invalid inside the
-     registered <length> properties that the keyframes animate. */
+
   --tb-sf-size: 40px;
   --tb-sf-reveal: 96px;
   scrollbar-width: none;
@@ -131,7 +127,7 @@
 }
 
 @supports not (animation-timeline: scroll()) {
-  /* Без scroll-driven animations края затеняются статично. */
+
   .tb-scroll-fade-y {
     mask-image: linear-gradient(
       to bottom,
@@ -295,12 +291,10 @@
   }
 }
 
-/* Text shimmer (adapted from shadcn shimmer). */
 .tb-shimmer {
   --tb-shimmer-duration: 2s;
   --tb-shimmer-angle: 20deg;
-  /* Блик считается от currentColor, а не от --tb-white: иначе на тёмной теме
-     почти белый текст не отличается от блика и эффект не виден. */
+
   --tb-shimmer-spread: calc(3ch + 40px);
   --tb-shimmer-color: color-mix(in oklab, currentColor 45%, transparent);
 

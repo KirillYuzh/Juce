@@ -1,17 +1,7 @@
-/*
- * Design tokens: T-Bank component structure, Juce palette.
- * Only the key variables below are swapped — every component still reads --tb-*.
- *
- * Theming contract:
- *   :root / [data-theme='light']  — light theme (default)
- *   [data-theme='dark'] / .dark   — dark theme
- * Override --tb-* in your own CSS to rebrand; see README → «Темы».
- */
 :root,
 [data-theme='light'] {
   color-scheme: light;
 
-  /* Palette: #222526 (ink), #ccdcef (mist), #ff6574 (coral) */
   --ink: #222526;
   --mist: #ccdcef;
   --coral: #ff6574;
@@ -51,7 +41,6 @@
   --purple: #b555d6;
   --brown: #a8856a;
 
-  /* Brand */
   --tb-primary: var(--ink);
   --tb-primary-hover: #3a3d3e;
   --tb-primary-active: #111314;
@@ -66,7 +55,6 @@
   --tb-accent-text-hover: #a52435;
   --tb-accent-on-inverse: var(--coral);
 
-  /* Neutrals */
   --tb-white: #ffffff;
   --tb-black: var(--ink);
   --tb-dark: var(--ink);
@@ -80,7 +68,6 @@
   --tb-gray-500: #79818c;
   --tb-gray-600: #616871;
 
-  /* Text */
   --tb-text-primary: var(--label);
   --tb-text-secondary: var(--label-2);
   --tb-text-tertiary: var(--label-3);
@@ -91,7 +78,6 @@
   --tb-text-link: var(--link);
   --tb-text-link-hover: var(--link-hover);
 
-  /* Surfaces */
   --tb-bg: #ffffff;
   --tb-surface: #ffffff;
   --tb-bg-secondary: var(--bg);
@@ -102,7 +88,6 @@
   --tb-option-hover: rgb(255 255 255 / 0.6);
   --tb-option-selected: #ffffff;
 
-  /* Status */
   --tb-success: var(--green);
   --tb-success-text: #168821;
   --tb-success-soft: #e8f6ea;
@@ -112,39 +97,33 @@
   --tb-warning: var(--yellow);
   --tb-warning-text: #9a6b00;
 
-  /* Lines */
   --tb-border: #e7e8ea;
   --tb-border-strong: var(--gray-3);
   --tb-border-inverse: rgb(255 255 255 / 0.12);
   --tb-border-on-primary: rgb(255 255 255 / 0.32);
   --tb-overlay: rgb(34 37 38 / 0.4);
 
-  /* Charts */
   --tb-chart-1: #3b82d9;
   --tb-chart-2: #ff6574;
   --tb-chart-3: #12b5c4;
   --tb-chart-4: #6460e8;
 
-  /* Effects */
   --tb-skeleton: #f0f1f2;
   --tb-skeleton-highlight: #e7e8ea;
   --tb-syntax-property: #476b8f;
 
-  /* Radii */
   --tb-radius-xs: 8px;
   --tb-radius-s: 12px;
   --tb-radius-m: 16px;
   --tb-radius-l: 24px;
   --tb-radius-pill: 999px;
 
-  /* Shadows */
   --tb-shadow-popover:
     0 25px 15px rgba(0, 0, 0, 0.03), 0 11px 11px rgba(0, 0, 0, 0.04), 0 3px 6px rgba(0, 0, 0, 0.05);
   --tb-shadow-modal: 0 18px 30px rgba(51, 51, 51, 0.24);
   --tb-shadow-control: 0 1px 4px rgba(0, 0, 0, 0.12);
   --tb-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
 
-  /* Spacing */
   --tb-space-1: 4px;
   --tb-space-2: 8px;
   --tb-space-3: 12px;
@@ -159,7 +138,6 @@
   --tb-space-24: 96px;
   --tb-space-32: 128px;
 
-  /* Typography */
   --tb-font-heading:
     'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   --tb-font-text:
@@ -167,16 +145,13 @@
   --tb-font-quote: 'Linux Libertine', 'Linux Libertine O', Georgia, 'Times New Roman', serif;
   --tb-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Layout */
   --tb-container: 1152px;
   --tb-gutter: 24px;
   --tb-header-height: 64px;
 
-  /* Motion: сильный ease-out для UI, а не встроенный кривой браузера. */
   --tb-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Increased contrast */
 @media (prefers-contrast: more) {
   :root {
     --accent: #c9283e;
@@ -192,20 +167,10 @@
   }
 }
 
-/*
- * Dark theme — the second built-in palette.
- *
- * Enable with <html data-theme="dark"> or class="dark".
- * Values are a second render of the light roles, not an inversion: the cool
- * neutral hue is kept, surfaces rise in lightness (page < panel < card < hover),
- * text stops at 91% white, accent/status hues stay put while chroma is reduced.
- * Pairs are checked with APCA + WCAG against the real surfaces.
- */
 [data-theme='dark'],
 .dark {
   color-scheme: dark;
 
-  /* Surfaces */
   --tb-bg: #171c21;
   --tb-surface: #232a30;
   --tb-bg-secondary: #1e2429;
@@ -216,7 +181,6 @@
   --tb-option-hover: rgb(255 255 255 / 0.07);
   --tb-option-selected: #2f373f;
 
-  /* Text */
   --tb-text-primary: #e9eff6;
   --tb-text-secondary: rgb(233 239 246 / 0.74);
   --tb-text-tertiary: rgb(233 239 246 / 0.6);
@@ -226,22 +190,18 @@
   --tb-text-link: #8cc0ff;
   --tb-text-link-hover: #b0d4ff;
 
-  /* Primary action: light fill, dark label */
   --tb-primary: #e3ebf3;
   --tb-primary-hover: #d3dee9;
   --tb-primary-active: #c4d1de;
   --tb-on-primary: #151a1f;
 
-  /* Secondary action */
   --tb-secondary: #303941;
   --tb-secondary-hover: #3b454e;
   --tb-secondary-soft: #303941;
 
-  /* Inverse surface: footer, tooltip, selected chip */
   --tb-dark: #2b3238;
   --tb-dark-soft: #39424a;
 
-  /* Accent */
   --tb-accent: #ff979c;
   --tb-accent-hover: #ffb1b5;
   --tb-accent-soft: #3b2929;
@@ -250,7 +210,6 @@
   --tb-accent-on-inverse: #ffa7aa;
   --tb-on-accent: #151a1f;
 
-  /* Status */
   --tb-success: #61ca84;
   --tb-success-text: #8ad9a2;
   --tb-success-soft: #233628;
@@ -260,14 +219,12 @@
   --tb-warning: #f6d15c;
   --tb-warning-text: #f6d15c;
 
-  /* Lines */
   --tb-border: rgb(255 255 255 / 0.12);
   --tb-border-strong: #6d7b88;
   --tb-border-inverse: rgb(255 255 255 / 0.12);
   --tb-border-on-primary: rgb(21 26 31 / 0.32);
   --tb-overlay: rgb(0 0 0 / 0.6);
 
-  /* Neutrals used as recessed fills and tracks */
   --tb-gray-100: #262d33;
   --tb-gray-150: #1b2026;
   --tb-gray-200: #2f373f;
@@ -277,13 +234,11 @@
   --tb-gray-500: #9aa7b3;
   --tb-gray-600: #b9c5d0;
 
-  /* Charts */
   --tb-chart-1: #8cc0ff;
   --tb-chart-2: #ff979c;
   --tb-chart-3: #4fd6e0;
   --tb-chart-4: #9f9bf5;
 
-  /* Effects */
   --tb-skeleton: #252c33;
   --tb-skeleton-highlight: #2f373f;
   --tb-syntax-property: #9dc0e0;
@@ -294,7 +249,6 @@
   --tb-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
-/* Increased contrast, dark */
 @media (prefers-contrast: more) {
   [data-theme='dark'],
   .dark {
