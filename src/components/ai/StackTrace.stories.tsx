@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { StackTrace } from './StackTrace';
 
 const meta: Meta = {
-  title: 'AI/Stack trace',
+  title: 'Chat/Stack trace',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };

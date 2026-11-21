@@ -50,6 +50,7 @@
     "rules:test": "node scripts/test-rules.mjs",
     "test": "node scripts/run-tests.mjs",
     "test:update": "node scripts/run-tests.mjs --update",
+    "test:bombadil": "node scripts/bombadil.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "check": "npm run typecheck && npm run lint && npm run lint:rules && npm run rules:test && npm run test",
     "prepare": "npm run build:lib",
@@ -62,6 +63,7 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
+    "@antithesishq/bombadil": "^0.8.0",
     "@ast-grep/cli": "^0.51.3",
     "@eslint/js": "^9.39.5",
     "@storybook/addon-a11y": "^10.6.7",

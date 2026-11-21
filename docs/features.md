@@ -8,6 +8,8 @@
 | Шапка с меню        | `components/blocks/Header.tsx`    | есть на обеих страницах              | `viewport 390 844`, затем `exists 'nav[aria-label="Мобильное меню"]'`                                   |
 | Кнопка поиска       | `Header`                          | иконка в шапке                       | `exists 'button[aria-label="Поиск"]'`                                                                   |
 | Ассистент           | `src/pages/AssistantPage.tsx`     | `#/assistant`                        | `exists 'textarea[aria-label="Сообщение ассистенту"]'`                                                  |
+| Список диалогов     | `components/ai/ChatList.tsx`      | Storybook `Chat/Sidebar`             | поиск, выбор, удаление в два шага, скелетоны                                                            |
+| Рабочее место чата  | `components/ai/ChatLayout.tsx`    | Storybook `Chat/Conversation`        | свернуть и развернуть сайдбар, выбрать диалог, отправить сообщение                                      |
 | Отправка сообщения  | `components/ai/Chat.tsx`          | `#/assistant`                        | `type 'textarea' '...'`, `click 'button[aria-label="Отправить сообщение"]'`, `wait '[data-message-id]'` |
 | Остановка стрима    | `Chat`                            | пока идёт ответ                      | `exists 'button[aria-label="Остановить ответ"]'`                                                        |
 | Копирование ответа  | `Chat` → `useCopy`                | под ответом ассистента               | `click 'button[aria-label="Скопировать ответ"]'`, затем `text` кнопки = `Скопировано`                   |

@@ -111,7 +111,7 @@ const commands = {
     await cdp.send('Page.navigate', { url });
     const ready = await waitFor(
       cdp,
-      "document.readyState === 'complete' && (document.getElementById('root')?.childElementCount ?? 0) > 0",
+      "document.readyState === 'complete' && ((document.getElementById('root')?.childElementCount ?? 0) + (document.getElementById('storybook-root')?.childElementCount ?? 0)) > 0",
       timeout
     );
     if (!ready) throw new Error(`Страница не отрисовалась за ${timeout} мс: ${url}`);

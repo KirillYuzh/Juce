@@ -34,9 +34,32 @@ export const Chips: Story = {
   ),
 };
 
+export const OutlineChips: Story = {
+  name: 'Outline chips',
+  render: () => (
+    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', maxWidth: 360 }}>
+      <Chip variant="outline">Java</Chip>
+      <Chip variant="outline">Go</Chip>
+      <Chip variant="outline" active>
+        Математика
+      </Chip>
+      <Chip variant="outline">Алгоритмы</Chip>
+    </div>
+  ),
+};
+
 export const DarkChips: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', padding: 24, borderRadius: 16, background: '#333' }}>
+    <div
+      style={{
+        display: 'flex',
+        gap: 8,
+        flexWrap: 'wrap',
+        padding: 24,
+        borderRadius: 16,
+        background: '#333',
+      }}
+    >
       <Chip tone="dark">О проекте</Chip>
       <Chip tone="dark">Вакансии</Chip>
       <Chip tone="dark">Разборы задач</Chip>

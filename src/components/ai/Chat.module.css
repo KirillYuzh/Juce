@@ -9,6 +9,12 @@
   box-shadow: inset 0 0 0 1px var(--tb-border);
 }
 
+.plain {
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -18,11 +24,26 @@
   border-bottom: 1px solid var(--tb-border);
 }
 
+.headerMain {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-3);
+  min-width: 0;
+}
+
 .headerText {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .title {
@@ -102,18 +123,6 @@
   gap: 8px;
   padding: 32px 20px;
   text-align: center;
-}
-
-.emptyIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  margin-bottom: 8px;
-  border-radius: 20px;
-  background: var(--tb-secondary-soft);
-  color: var(--tb-primary);
 }
 
 .emptyTitle {

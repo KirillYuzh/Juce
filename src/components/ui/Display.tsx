@@ -13,19 +13,30 @@ export function Badge({ tone = 'neutral', children }: { tone?: BadgeTone; childr
   );
 }
 
+export type ChipVariant = 'solid' | 'outline';
+
 export interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
   tone?: 'light' | 'dark';
+  variant?: ChipVariant;
   children: ReactNode;
 }
 
-export function Chip({ active, tone = 'light', className, children, ...rest }: ChipProps) {
+export function Chip({
+  active,
+  tone = 'light',
+  variant = 'solid',
+  className,
+  children,
+  ...rest
+}: ChipProps) {
   return (
     <button
       type="button"
       className={cx(
         styles.chip,
         tone === 'dark' && styles.chipDark,
+        variant === 'outline' && styles.chipOutline,
         active && styles.chipActive,
         className
       )}

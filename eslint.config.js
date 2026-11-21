@@ -6,7 +6,7 @@ import globals from 'globals';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'storybook-static/**', 'node_modules/**', '.research/**'],
+    ignores: ['dist/**', 'storybook-static/**', 'node_modules/**', '.research/**', 'artifacts/**'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

@@ -29,19 +29,27 @@
 | комментарии-оправдания (`workaround`, `hack`, `temporary`, `TODO`) | исправить причину или закрепить ограничение типом/тестом/README |
 | `skip` / `only` в тестах                                           | починить причину или удалить тест вместе с кодом                |
 
+## Радиусы
+
+`radius="inset"` у компонента = радиус родителя минус его padding. Родитель задаёт `--tb-radius-parent` и `--tb-radius-parent-padding`, компонент — фолбэк `--tb-radius-fallback`. Хелпер — `radiusStyle` из `lib/radius`.
+
 ## Проверки
 
 ```bash
-npm run check   # typecheck + eslint + ast-grep + фикстуры правил + тесты
+npm run check         # typecheck + eslint + ast-grep + фикстуры правил + тесты
+npm run test:bombadil # property-based UI-тест чата в Storybook, нужен браузер
 ```
 
 - Правила: `tools/rules/*.yml`, фикстуры — `tools/rules/fixtures/<id>/{bad,good}`.
 - Тесты: `src/**/*.test.{ts,tsx}`, базовая линия — `tools/test-baseline.json`.
 - Тестов стало меньше или появился `skip` — `npm run test` падает. Добавили тесты — `npm run test:update`, чтобы поднять базу.
+- `test:bombadil` в `check` не входит: ему нужен живой Storybook и браузер. Подробности — в `docs/runtime.md`.
 
 ## Рантайм
 
 Запуск, порты, драйвер Chrome и артефакты — в `docs/runtime.md`. Карта фич — `docs/features.md`.
+
+Вкладка code в Storybook показывает только компоненты: `storySource` (`lib/story-source.ts`) срезает `render`, layout-обёртки и `style`. Сложный демо-компонент описывают через `docs.source.code`.
 
 UI-правка без скриншота не готова: приложи PNG из `npm run drive -- screenshot artifacts/<фича>.png`.
 

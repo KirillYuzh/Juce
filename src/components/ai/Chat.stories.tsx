@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Chat, type ChatMessage } from './Chat';
+import { ChatLayout, ChatSidebarToggle } from './ChatLayout';
+import { ChatList, type ChatListItem } from './ChatList';
 import type { PromptInputPayload, PromptInputStatus } from './PromptInput';
 
 const meta: Meta = {
-  title: 'AI/Chat',
+  title: 'Chat/Conversation',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };
@@ -39,14 +41,133 @@ const emptySuggestions = [
   'Что нового в Java 21',
 ];
 
+const chats: ChatListItem[] = [
+  {
+    id: 'c1',
+    title: 'Утечка горутины',
+    preview: 'Почему небуферизованный канал блокирует отправку?',
+  },
+  {
+    id: 'c2',
+    title: 'Ранг матрицы',
+    preview: 'Объясни ранг матрицы на примере системы уравнений.',
+  },
+  {
+    id: 'c3',
+    title: 'Разбор задачи с интервью',
+    preview: 'Найди пару с максимальной суммой без повторов.',
+  },
+];
+
+const threads: Record<string, ChatMessage[]> = {
+  c1: startMessages,
+  c2: [
+    {
+      id: 'c2-a1',
+      role: 'assistant',
+      content:
+        'Ранг — число линейно независимых строк. Приведите матрицу к ступенчатому виду: количество ненулевых строк и есть ранг.',
+    },
+  ],
+  c3: [],
+};
+
+function WorkspaceDemo({ initialOpen = true }: { initialOpen?: boolean }) {
+  const [items, setItems] = useState(chats);
+  const [activeId, setActiveId] = useState(chats[0].id);
+  const [open, setOpen] = useState(initialOpen);
+  const [messages, setMessages] = useState(threads);
+
+  const active = items.find((chat) => chat.id === activeId);
+
+  const create = () => {
+    const id = `c-${Date.now()}`;
+    setItems((current) => [{ id, title: 'Новый диалог', preview: '' }, ...current]);
+    setMessages((current) => ({ ...current, [id]: [] }));
+    setActiveId(id);
+  };
+
+  const remove = (id: string) => {
+    setItems((current) => current.filter((chat) => chat.id !== id));
+    setMessages((current) => {
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
+    if (id === activeId) {
+      setActiveId(items.find((chat) => chat.id !== id)?.id ?? '');
+    }
+  };
+
+  const send = ({ text }: PromptInputPayload) => {
+    if (!active) return;
+    const message: ChatMessage = { id: `u-${Date.now()}`, role: 'user', content: text };
+    setMessages((current) => ({
+      ...current,
+      [active.id]: [...(current[active.id] ?? []), message],
+    }));
+    setItems((current) =>
+      current.map((chat) => (chat.id === active.id ? { ...chat, preview: text } : chat))
+    );
+  };
+
+  return (
+    <div style={{ height: '100vh', maxWidth: 1000, margin: '0 auto', padding: 24 }}>
+      <ChatLayout
+        sidebarOpen={open}
+        onSidebarOpenChange={setOpen}
+        sidebar={
+          <ChatList
+            chats={items}
+            activeId={activeId}
+            onSelect={setActiveId}
+            onCreate={create}
+            onDelete={remove}
+          />
+        }
+      >
+        <Chat
+          framed={false}
+          headerLeading={<ChatSidebarToggle />}
+          title={active?.title ?? 'Диалог'}
+          subtitle="ИИ-ассистент по Java, Go и математике"
+          messages={messages[activeId] ?? []}
+          onSend={send}
+          suggestions={activeId === 'c1' ? emptySuggestions : []}
+        />
+      </ChatLayout>
+    </div>
+  );
+}
+
+const workspaceSource = `<ChatLayout
+  sidebar={
+    <ChatList
+      chats={chats}
+      activeId={activeId}
+      onSelect={setActiveId}
+      onCreate={createChat}
+      onDelete={deleteChat}
+    />
+  }
+>
+  <Chat
+    messages={messages}
+    onSend={handleSend}
+    headerLeading={<ChatSidebarToggle />}
+  />
+</ChatLayout>`;
+
 function ChatDemo({
   initial = startMessages,
   suggestions = [],
   withSimulation = true,
+  showAuthor = true,
 }: {
   initial?: ChatMessage[];
   suggestions?: string[];
   withSimulation?: boolean;
+  showAuthor?: boolean;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initial);
   const [status, setStatus] = useState<PromptInputStatus>('ready');
@@ -95,6 +216,7 @@ function ChatDemo({
         onStop={stop}
         status={status}
         suggestions={suggestions}
+        showAuthor={showAuthor}
         onRetry={(id) => setMessages((current) => current.filter((message) => message.id !== id))}
       />
     </div>
@@ -110,6 +232,18 @@ const conversationSource = `<Chat
 />`;
 
 export const Conversation: Story = {
+  render: () => <WorkspaceDemo />,
+  parameters: { layout: 'fullscreen', docs: { source: { code: workspaceSource } } },
+};
+
+export const SidebarCollapsed: Story = {
+  name: 'Sidebar collapsed',
+  render: () => <WorkspaceDemo initialOpen={false} />,
+  parameters: { layout: 'fullscreen' },
+};
+
+export const SingleChat: Story = {
+  name: 'Single chat',
   render: () => <ChatDemo />,
   parameters: { docs: { source: { code: conversationSource } } },
 };
@@ -140,6 +274,18 @@ export const WithoutSimulation: Story = {
   },
 };
 
+export const WithoutAuthor: Story = {
+  name: 'Without author',
+  render: () => <ChatDemo withSimulation={false} showAuthor={false} />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Chat messages={messages} onSend={handleSend} showAuthor={false} />`,
+      },
+    },
+  },
+};
+
 const markdownMessages: ChatMessage[] = [
   {
     id: 'u1',
@@ -157,12 +303,11 @@ const markdownMessages: ChatMessage[] = [
 
 export const MarkdownAnswer: Story = {
   name: 'Markdown answer',
-  render: () => <ChatDemo initial={markdownMessages} withSimulation={false} />,
+  render: () => <ChatDemo initial={markdownMessages} withSimulation={false} showAuthor={false} />,
   parameters: {
     docs: {
       source: {
-        code: `// content ассистента рендерится как markdown: заголовки, таблицы, блоки кода
-<Chat messages={messages} onSend={handleSend} />`,
+        code: `<Chat messages={messages} onSend={handleSend} showAuthor={false} />`,
       },
     },
   },

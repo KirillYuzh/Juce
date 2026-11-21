@@ -4,10 +4,10 @@
 
 ## Запуск
 
-| Что | Команда | Адрес |
-| --- | --- | --- |
-| Демо | `npm run dev` | http://localhost:5173 |
-| Storybook | `npm run storybook` | http://localhost:6006 |
+| Что            | Команда                             | Адрес                 |
+| -------------- | ----------------------------------- | --------------------- |
+| Демо           | `npm run dev`                       | http://localhost:5173 |
+| Storybook      | `npm run storybook`                 | http://localhost:6006 |
 | Собранное демо | `npm run build && npx vite preview` | http://localhost:4173 |
 
 Маршруты демо: `#/` — главная, `#/assistant` — ассистент. Учётных записей, бэкенда и тестовых пользователей нет. Весь контент лежит в `src/data`, изображения — в `public`.
@@ -35,6 +35,20 @@ npm run drive -- screenshot artifacts/assistant-mobile.png
 ```
 
 Команды: `open`, `url`, `click`, `type`, `text`, `attr`, `exists`, `wait`, `viewport`, `eval`, `screenshot`. Флаги: `--port`, `--base`, `--timeout`.
+
+Драйвер понимает и демо (`#/...`), и Storybook (`--base http://localhost:6006` и путь `iframe.html?id=...`).
+
+## Bombadil
+
+Property-based фаззинг UI. Спека `bombadil/chat.spec.ts` проверяет, что строки списка чатов не выходят за границы списка и страница не получает горизонтальный скролл. Это регрессия на сдвиг строки вправо при выборе.
+
+```bash
+npm run test:bombadil                # поднимет Storybook на 6006 и прогонит 45 секунд
+npm run test:bombadil -- --no-server # если Storybook уже запущен
+BOMBADIL_URL=... npm run test:bombadil
+```
+
+В `npm run check` не входит: нужен браузер и живой Storybook, прогон дольше юнит-тестов. Запускай перед PR, который трогает чат.
 
 ## Артефакты
 

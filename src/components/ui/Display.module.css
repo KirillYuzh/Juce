@@ -76,6 +76,35 @@
   color: var(--tb-primary);
 }
 
+.chipOutline {
+  background: transparent;
+  color: var(--tb-text-secondary);
+  box-shadow: inset 0 0 0 1px var(--tb-border);
+}
+
+.chipOutline:hover {
+  background: transparent;
+  color: var(--tb-text-primary);
+  box-shadow: inset 0 0 0 1px var(--tb-border-strong);
+}
+
+.chipOutline.chipActive {
+  background: transparent;
+  color: var(--tb-primary);
+  box-shadow: inset 0 0 0 1px var(--tb-primary);
+}
+
+.chipOutline.chipActive:hover {
+  background: var(--tb-bg-hover);
+  color: var(--tb-primary);
+  box-shadow: inset 0 0 0 1px var(--tb-primary);
+}
+
+.chipOutline:focus-visible {
+  outline: 2px solid var(--tb-text-link);
+  outline-offset: 2px;
+}
+
 .avatar {
   display: inline-flex;
   align-items: center;
@@ -157,6 +186,12 @@
   }
   100% {
     background-position: 0 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
   }
 }
 

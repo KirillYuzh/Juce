@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Task, type TaskStep } from './Task';
 
 const meta: Meta = {
-  title: 'AI/Task',
+  title: 'Chat/Task',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };

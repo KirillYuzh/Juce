@@ -5,7 +5,7 @@ import { Bubble, BubbleContent, Message, MessageContent } from './Message';
 import { Button } from '../ui/Button';
 
 const meta: Meta = {
-  title: 'AI/Message scroller',
+  title: 'Chat/Message scroller',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };

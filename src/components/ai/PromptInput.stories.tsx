@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PromptInput, type PromptInputPayload, type PromptInputStatus } from './PromptInput';
 
 const meta: Meta = {
-  title: 'AI/Prompt input',
+  title: 'Chat/Prompt input',
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
 };

@@ -11,6 +11,7 @@ import {
 } from 'react';
 import styles from './Sidebar.module.css';
 import { IconButton } from './Button';
+import { Skeleton } from './Display';
 import { cx } from '../../lib/cx';
 
 export const SIDEBAR_WIDTH = '16rem';
@@ -404,8 +405,16 @@ export function SidebarMenuSubButton({
 export function SidebarMenuSkeleton({ className }: { className?: string }) {
   return (
     <span className={cx(styles.skeleton, className)} aria-hidden="true">
-      <span className={styles.skeletonIcon} />
-      <span className={styles.skeletonText} />
+      <Skeleton className={styles.skeletonIcon} width={20} height={20} radius={6} />
+      <Skeleton className={styles.skeletonText} width="60%" height={14} radius={7} />
+    </span>
+  );
+}
+
+export function SidebarMenuSubSkeleton({ className }: { className?: string }) {
+  return (
+    <span className={cx(styles.subSkeleton, className)} aria-hidden="true">
+      <Skeleton width="45%" height={12} radius={6} />
     </span>
   );
 }
