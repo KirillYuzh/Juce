@@ -14,9 +14,7 @@ import {
   type ReactNode,
 } from 'react';
 import styles from './Resizable.module.css';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type ResizableOrientation = 'horizontal' | 'vertical';
 
@@ -38,7 +36,6 @@ function useResizable(component: string): ResizableContextValue {
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
-/** Moves the divider between two neighbours by `delta` percent. */
 function drag(sizes: number[], index: number, delta: number, limits: ResizableContextValue['limits']) {
   const next = [...sizes];
   const start = index;
@@ -138,13 +135,11 @@ export function ResizablePanelGroup({
 
 export interface ResizablePanelProps {
   children: ReactNode;
-  /** Share of the group, in percent. */
   defaultSize?: number;
   minSize?: number;
   maxSize?: number;
   className?: string;
   style?: CSSProperties;
-  /** @internal set by the group */
   index?: number;
 }
 
@@ -176,7 +171,6 @@ export const ResizablePanel = Object.assign(PanelImpl, { isResizablePanel: true 
 export interface ResizableHandleProps {
   withHandle?: boolean;
   className?: string;
-  /** @internal set by the group */
   index?: number;
 }
 

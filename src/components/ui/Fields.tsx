@@ -1,9 +1,7 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import styles from './Fields.module.css';
 import { Icon } from './Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 interface FieldShellProps {
   label?: string;
@@ -115,10 +113,6 @@ export interface SelectProps extends Omit<
   onChange?: (value: string) => void;
 }
 
-/**
- * Listbox in the tabs look: a light track, a white pill with the current value
- * and the same pill treatment for the options. No native select involved.
- */
 export function Select({
   label,
   hint,

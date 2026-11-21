@@ -1,9 +1,7 @@
 import type { ReactNode } from 'react';
 import styles from './Display.module.css';
 import { Icon, type IconName } from './Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type BadgeTone = 'neutral' | 'accent' | 'success' | 'error' | 'warning';
 

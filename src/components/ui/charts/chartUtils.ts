@@ -7,7 +7,6 @@ export type TooltipIndicator = 'dot' | 'line' | 'dashed' | 'none';
 export interface ChartSeries {
   key: string;
   label: string;
-  /** Любой CSS-цвет. По умолчанию — --tb-chart-N по порядку серий. */
   color?: string;
 }
 
@@ -23,14 +22,12 @@ export const toNumber = (value: string | number | undefined) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
-/** Округлённый шаг сетки: 1, 2, 5 × 10^k. */
 export function niceStep(raw: number) {
   const power = 10 ** Math.floor(Math.log10(raw || 1));
   const norm = (raw || 1) / power;
   return (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10) * power;
 }
 
-/** Тики от 0 до округлённого максимума. */
 export function axisTicks(maxValue: number, count: number) {
   const step = niceStep(Math.max(maxValue, 1) / Math.max(count - 1, 1));
   const max = Math.max(Math.ceil(Math.max(maxValue, 1) / step) * step, step);
@@ -39,7 +36,6 @@ export function axisTicks(maxValue: number, count: number) {
   return { max, step, values };
 }
 
-/** Тики через ноль, для графиков с отрицательными значениями. */
 export function signedTicks(minValue: number, maxValue: number, count: number) {
   const span = Math.max(maxValue - minValue, 1);
   const step = niceStep(span / Math.max(count - 1, 1));
@@ -70,7 +66,6 @@ export function linePath(points: Point[], curve: ChartCurve) {
     return path;
   }
 
-  // Сглаживание Катмулла–Рома, пересчитанное в кубические кривые.
   for (let index = 1; index < points.length; index += 1) {
     const p0 = points[index - 2] ?? points[index - 1];
     const p1 = points[index - 1];
@@ -85,14 +80,13 @@ export function linePath(points: Point[], curve: ChartCurve) {
   return path;
 }
 
-/** Сектор пончика: внешняя дуга по часовой, внутренняя — обратно. */
 export function arcPath(
   cx: number,
   cy: number,
   innerRadius: number,
   outerRadius: number,
   startAngle: number,
-  endAngle: number,
+  endAngle: number
 ) {
   const point = (angle: number, radius: number): Point => [
     cx + radius * Math.cos(angle),
@@ -132,6 +126,3 @@ export function usePlotWidth() {
 
   return [ref, width] as const;
 }
-
-export const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');

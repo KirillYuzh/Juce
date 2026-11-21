@@ -5,7 +5,6 @@ import '../src/styles/global.css';
 import '../src/styles/utilities.css';
 import './preview.css';
 
-// Same contract the package exposes: data-theme on <html> switches the palette.
 const withTheme: Decorator = (Story, context) => {
   document.documentElement.dataset.theme = context.globals.theme === 'dark' ? 'dark' : 'light';
   return <Story />;

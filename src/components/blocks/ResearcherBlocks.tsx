@@ -1,10 +1,7 @@
 import styles from './ResearcherBlocks.module.css';
 import { Button } from '../ui/Button';
+import { cx } from '../../lib/cx';
 
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
-
-// Ряд карточек, который сам собирается в одну, две или три колонки.
 const rowOfCards = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',

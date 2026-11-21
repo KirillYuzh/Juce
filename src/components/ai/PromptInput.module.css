@@ -21,7 +21,6 @@
   cursor: default;
 }
 
-/* В disabled-группе у кнопок не остаётся hover/курсора: недоступно — значит всё. */
 .group:disabled .attachButton {
   opacity: 0.35;
   pointer-events: none;

@@ -30,7 +30,6 @@
     box-shadow 0.15s ease;
 }
 
-/* Same height scale as Button: l = 56, m = 44, s = 32. */
 .size-l {
   min-height: 56px;
   padding: 16px;
@@ -75,7 +74,6 @@
   width: 100%;
 }
 
-/* Trigger and menu share the tabs look: a light track with white pills. */
 .selectTrigger {
   display: flex;
   align-items: center;
@@ -141,8 +139,6 @@
   box-shadow: var(--tb-shadow-popover);
 }
 
-/* The list scrolls inside the menu chrome, so the edge mask fades options to
-   the menu background. Always on by default: no prop or class switches it off. */
 .selectList {
   box-sizing: border-box;
   display: flex;

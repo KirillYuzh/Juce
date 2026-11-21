@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartLegend, ChartTooltip } from './ChartParts';
+import { cx } from '../../../lib/cx';
 import {
-  cx,
   labelStep,
   seriesColors,
   signedTicks,
@@ -18,13 +18,11 @@ export interface BarChartProps {
   series: ChartSeries[];
   xKey: string;
   height?: number;
-  /** vertical — столбцы вверх, horizontal — полосы вправо. */
   layout?: 'vertical' | 'horizontal';
   stacked?: boolean;
   legend?: boolean;
   grid?: boolean;
   ticks?: number;
-  /** Подписи значений на столбцах. Работают для одной серии. */
   labels?: boolean;
   tooltip?: boolean;
   tooltipIndicator?: TooltipIndicator;
@@ -87,7 +85,6 @@ export function BarChart({
     const band = (horizontal ? plotHeight : plotWidth) / Math.max(data.length, 1);
     const groupSize = stacked ? 1 : series.length;
     const barSize = (band * 0.68) / groupSize;
-    // Ось значений: для столбцов она идёт вверх, для полос — вправо.
     const center = (value: number) => {
       const ratio = (value - min) / span;
       return horizontal ? padding.left + plotWidth * ratio : padding.top + plotHeight * (1 - ratio);
@@ -120,7 +117,7 @@ export function BarChart({
       min,
       max,
     };
-  }, [data, height, horizontal, series, stacked, ticks, width]);
+  }, [data, grid, height, horizontal, series, stacked, ticks, width]);
 
   const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
     if (data.length === 0) return;

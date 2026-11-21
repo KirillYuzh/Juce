@@ -4,18 +4,14 @@ import { footerSections, type FooterSection } from '../../data/footer';
 import { researcherFooterLinks } from '../../data/researchers';
 import { Chip } from '../ui/Display';
 import { Icon } from '../ui/Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export interface FooterProps {
   variant?: 'light' | 'dark';
   sections?: FooterSection[];
   chips?: string[];
   className?: string;
-  /** Название продукта в нижней строке. */
   brand?: string;
-  /** Почта поддержки; пустая строка скрывает блок с контактами. */
   email?: string;
   legal?: ReactNode;
   copyright?: string;

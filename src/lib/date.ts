@@ -1,9 +1,3 @@
-/*
- * Small local-time date helpers for the date picker.
- * ponytail: no time zones, no locales, no date-fns — the kit only needs ru-RU days.
- * Upgrade path: swap the format* functions for Intl.DateTimeFormat if other locales appear.
- */
-
 export interface DateRange {
   from: Date | null;
   to: Date | null;
@@ -39,7 +33,6 @@ export const MONTHS_GENITIVE = [
   'декабря',
 ];
 
-/** Week starts on Monday, as in the Russian calendar. */
 export const WEEKDAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 export const WEEKDAYS_FULL = [
@@ -52,7 +45,6 @@ export const WEEKDAYS_FULL = [
   'воскресенье',
 ];
 
-/** 0 = Monday … 6 = Sunday. */
 export function weekdayIndex(date: Date): number {
   return (date.getDay() + 6) % 7;
 }
@@ -111,7 +103,6 @@ function dayNumber(date: Date): number {
   return date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
 }
 
-/** Day-level comparisons: the time of day is ignored. */
 export function isBefore(a: Date, b: Date): boolean {
   return dayNumber(a) < dayNumber(b);
 }
@@ -138,14 +129,12 @@ export function clampDate(date: Date, min?: Date | null, max?: Date | null): Dat
   return date;
 }
 
-/** Stable local key, e.g. 2025-11-12. Never use toISOString() here — it shifts by the UTC offset. */
 export function dateKey(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-/** Month grid padded to whole Monday-first weeks; empty cells are null. */
 export function getMonthWeeks(month: Date): Array<Array<Date | null>> {
   const first = startOfMonth(month);
   const total = daysInMonth(month);

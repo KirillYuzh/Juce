@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react';
 import styles from './Message.module.css';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type MessageAlign = 'start' | 'end';
 export type BubbleVariant = 'muted' | 'accent' | 'outline';

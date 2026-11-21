@@ -1,9 +1,7 @@
 import type { ReactNode } from 'react';
 import styles from './InlineCitation.module.css';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/HoverCard';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export interface CitationSource {
   url: string;

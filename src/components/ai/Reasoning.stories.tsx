@@ -39,12 +39,14 @@ export const Empty: Story = {
 };
 
 export const Controlled: Story = {
-  render: () => {
-    const [open, setOpen] = useState(true);
-    return (
-      <div style={{ width: 420 }}>
-        <Reasoning text={text} duration={4} open={open} onOpenChange={setOpen} />
-      </div>
-    );
-  },
+  render: () => <ControlledReasoning />,
 };
+
+function ControlledReasoning() {
+  const [open, setOpen] = useState(true);
+  return (
+    <div style={{ width: 420 }}>
+      <Reasoning text={text} duration={4} open={open} onOpenChange={setOpen} />
+    </div>
+  );
+}

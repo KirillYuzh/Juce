@@ -11,13 +11,11 @@ import {
 } from './Trace';
 import { Icon, type IconName } from '../ui/Icon';
 import { Spinner } from '../ui/Display';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type TaskStatus = 'running' | 'error' | 'done' | 'pending';
 
-export function statusIcon(status: TaskStatus = 'pending'): ReactNode {
+function statusIcon(status: TaskStatus = 'pending'): ReactNode {
   if (status === 'running') return <Spinner size={14} />;
   if (status === 'error') return <Icon name="alertCircle" size={16} />;
   if (status === 'done') return <Icon name="checkCircle" size={16} />;

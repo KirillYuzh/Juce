@@ -10,16 +10,13 @@ import {
   type ReactNode,
 } from 'react';
 import styles from './Sidebar.module.css';
-import { Icon } from './Icon';
 import { IconButton } from './Button';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export const SIDEBAR_WIDTH = '16rem';
 export const SIDEBAR_WIDTH_MOBILE = '18rem';
 export const SIDEBAR_WIDTH_ICON = '3.25rem';
-export const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
+const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
 interface SidebarContextValue {
   open: boolean;
@@ -151,11 +148,7 @@ export function Sidebar({
   return (
     <>
       {isMobile && openMobile && (
-        <div
-          className={styles.backdrop}
-          onClick={() => setOpenMobile(false)}
-          aria-hidden="true"
-        />
+        <div className={styles.backdrop} onClick={() => setOpenMobile(false)} aria-hidden="true" />
       )}
       <aside
         className={cx(styles.sidebar, className)}
@@ -175,7 +168,13 @@ export function Sidebar({
   );
 }
 
-export function SidebarTrigger({ label = 'Переключить панель', className }: { label?: string; className?: string }) {
+export function SidebarTrigger({
+  label = 'Переключить панель',
+  className,
+}: {
+  label?: string;
+  className?: string;
+}) {
   const { toggleSidebar, state } = useSidebar();
   return (
     <IconButton
@@ -193,15 +192,33 @@ export function SidebarInset({ children, className }: { children: ReactNode; cla
   return <main className={cx(styles.inset, className)}>{children}</main>;
 }
 
-export function SidebarHeader({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarHeader({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <div className={cx(styles.header, className)}>{children}</div>;
 }
 
-export function SidebarFooter({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarFooter({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <div className={cx(styles.footer, className)}>{children}</div>;
 }
 
-export function SidebarContent({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarContent({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <div className={cx(styles.content, className)}>{children}</div>;
 }
 
@@ -209,11 +226,23 @@ export function SidebarSeparator({ className }: { className?: string }) {
   return <hr className={cx(styles.separator, className)} />;
 }
 
-export function SidebarGroup({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarGroup({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <div className={cx(styles.group, className)}>{children}</div>;
 }
 
-export function SidebarGroupLabel({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarGroupLabel({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <div className={cx(styles.groupLabel, className)}>{children}</div>;
 }
 
@@ -229,7 +258,13 @@ export function SidebarGroupAction({
   );
 }
 
-export function SidebarGroupContent({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarGroupContent({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <div className={cx(styles.groupContent, className)}>{children}</div>;
 }
 
@@ -237,12 +272,20 @@ export function SidebarMenu({ children, className }: { children?: ReactNode; cla
   return <ul className={cx(styles.menu, className)}>{children}</ul>;
 }
 
-export function SidebarMenuItem({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarMenuItem({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <li className={cx(styles.menuItem, className)}>{children}</li>;
 }
 
-export interface SidebarMenuButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+export interface SidebarMenuButtonProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'children'
+> {
   children: ReactNode;
   isActive?: boolean;
   href?: string;
@@ -271,7 +314,12 @@ export function SidebarMenuButton({
 
   if (href) {
     return (
-      <a className={classes} href={href} data-active={isActive || undefined} aria-current={isActive || undefined}>
+      <a
+        className={classes}
+        href={href}
+        data-active={isActive || undefined}
+        aria-current={isActive || undefined}
+      >
         {content}
       </a>
     );
@@ -296,15 +344,33 @@ export function SidebarMenuAction({
   );
 }
 
-export function SidebarMenuBadge({ children, className }: { children: ReactNode; className?: string }) {
+export function SidebarMenuBadge({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return <span className={cx(styles.menuBadge, className)}>{children}</span>;
 }
 
-export function SidebarMenuSub({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarMenuSub({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <ul className={cx(styles.menuSub, className)}>{children}</ul>;
 }
 
-export function SidebarMenuSubItem({ children, className }: { children?: ReactNode; className?: string }) {
+export function SidebarMenuSubItem({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
   return <li className={cx(styles.menuSubItem, className)}>{children}</li>;
 }
 
@@ -318,7 +384,12 @@ export function SidebarMenuSubButton({
   const classes = cx(styles.menuSubButton, className);
   if (href) {
     return (
-      <a className={classes} href={href} data-active={isActive || undefined} aria-current={isActive || undefined}>
+      <a
+        className={classes}
+        href={href}
+        data-active={isActive || undefined}
+        aria-current={isActive || undefined}
+      >
         <span className={styles.menuLabel}>{children}</span>
       </a>
     );
@@ -349,9 +420,4 @@ export function SidebarRail({ className }: { className?: string }) {
       onClick={toggleSidebar}
     />
   );
-}
-
-/** Small convenience: an icon-based sub-item arrow. */
-export function SidebarMenuChevron() {
-  return <Icon name="chevronDown" size={16} className={styles.chevron} />;
 }

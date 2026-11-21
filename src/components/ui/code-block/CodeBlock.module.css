@@ -53,7 +53,6 @@
   text-overflow: ellipsis;
 }
 
-/* Floating by default; a header in the same surface pins it inline. */
 .actions {
   position: absolute;
   top: 8px;
@@ -113,9 +112,6 @@
   height: 26px;
 }
 
-/* Scrolls both ways; the fade mask comes from the shared tb-scroll-fade-x utility.
-   --tb-sf-r is pinned for browsers without scroll-driven animations, where the
-   static mask would otherwise clip the end of short lines. */
 .scroller {
   --tb-sf-r: 0px;
 
@@ -226,7 +222,6 @@
   font-weight: 500;
 }
 
-/* Slate from the secondary family — keeps the block blue-grey, never yellow. */
 .tkProperty,
 .tkAttr,
 .tkKey {

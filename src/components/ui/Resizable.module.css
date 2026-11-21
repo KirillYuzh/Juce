@@ -31,7 +31,6 @@
   touch-action: none;
 }
 
-/* A wider invisible grab area around the hairline. */
 .handle::before {
   content: '';
   position: absolute;

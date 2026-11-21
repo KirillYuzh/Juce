@@ -21,24 +21,19 @@ import {
   startOfWeek,
   type DateRange,
 } from '../../../lib/date';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../../lib/cx';
 
 export type CalendarMode = 'single' | 'range';
 
 export interface CalendarProps {
   mode?: CalendarMode;
-  /** Date for single mode, { from, to } for range mode. */
   value?: Date | DateRange | null;
   onChange?: (value: Date | DateRange | null) => void;
-  /** Controlled visible month. */
   month?: Date;
   defaultMonth?: Date;
   onMonthChange?: (month: Date) => void;
   min?: Date;
   max?: Date;
-  /** Move focus into the grid on mount. Off for inline calendars on a page. */
   autoFocus?: boolean;
   className?: string;
 }
@@ -69,7 +64,6 @@ export function Calendar({
 
   const titleId = useId();
   const dayRefs = useRef(new Map<string, HTMLButtonElement>());
-  // Focus follows the keyboard and the first open, never a mouse click on a nav button.
   const wantFocus = useRef(true);
 
   const setMonth = (next: Date) => {
@@ -90,7 +84,6 @@ export function Calendar({
   }, [focusedDay, visibleMonth, autoFocus]);
 
   const goMonth = (amount: number) => {
-    // Keep the day-of-month when paging, so the roving tab stop stays inside the grid.
     setFocusedDay(addMonths(focusedDay, amount));
     setMonth(addMonths(visibleMonth, amount));
   };

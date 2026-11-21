@@ -1,15 +1,3 @@
-// Ant Design Icons (MIT, https://github.com/ant-design/ant-design-icons),
-// snapshot of @ant-design/icons-svg 4.6.0. Edit the path data here: the kit
-// keeps icons local instead of depending on a runtime icon package.
-// Every icon shares the 1024 grid, so one viewBox constant is enough.
-//
-// Not one-to-one with Ant Design names:
-//   square        → BorderOutlined (квадрат «стоп»; StopFilled — это круг с чертой)
-//   wrap          → ColumnWidthOutlined
-//   quote         → MessageOutlined
-//   arrowUpRight  → ExportOutlined (как и external)
-//   apple/android → *Filled, telegram → TelegramFilled
-
 export const ANTD_VIEW_BOX = '64 64 896 896';
 
 export type IconName =

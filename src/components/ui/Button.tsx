@@ -1,14 +1,10 @@
 import type { ReactNode } from 'react';
 import styles from './Button.module.css';
 import { Icon, type IconName } from './Icon';
-
-// Buttons keep the source's 12px radius and 56/44/32 heights.
+import { cx } from '../../lib/cx';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'white' | 'outline' | 'ghost' | 'dark';
 export type ButtonSize = 's' | 'm' | 'l';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
 
 export interface ButtonProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,

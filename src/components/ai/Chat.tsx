@@ -10,9 +10,8 @@ import { Markdown } from './Markdown';
 import { Avatar, Spinner } from '../ui/Display';
 import { IconButton } from '../ui/Button';
 import { Icon } from '../ui/Icon';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { useCopy } from '../ui/clipboard';
+import { cx } from '../../lib/cx';
 
 export interface ChatMessage {
   id: string;
@@ -156,18 +155,8 @@ function UserMessage({ message }: { message: ChatMessage }) {
 }
 
 function AssistantMessage({ message, onRetry }: { message: ChatMessage; onRetry?: () => void }) {
-  const [copied, setCopied] = useState(false);
   const [vote, setVote] = useState<'up' | 'down' | null>(null);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(message.content);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  };
+  const { copied, copy } = useCopy(message.content);
 
   return (
     <Message>

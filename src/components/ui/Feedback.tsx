@@ -2,9 +2,7 @@ import { useState, type ReactNode } from 'react';
 import styles from './Feedback.module.css';
 import { Icon } from './Icon';
 import { Button } from './Button';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type AlertTone = 'info' | 'warning' | 'error' | 'success';
 

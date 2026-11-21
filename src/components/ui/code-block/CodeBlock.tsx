@@ -1,16 +1,12 @@
-import { useEffect, useRef, useState, type HTMLAttributes } from 'react';
+import type { HTMLAttributes } from 'react';
 import styles from './CodeBlock.module.css';
 import { Icon } from '../Icon';
+import { useCopy } from '../clipboard';
+import { cx } from '../../../lib/cx';
 import { useHighlightedCode, type CodeLanguage, type CodeTokenKind } from './highlight';
 
 export { useHighlightedCode, tokenizeCode } from './highlight';
 export type { CodeLanguage, CodeLine, CodeToken, CodeTokenKind } from './highlight';
-
-// The scroll-fade mask lives in the shared utilities stylesheet, which is
-// imported once by the app and Storybook entry points.
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
 
 const TOKEN_CLASS: Record<CodeTokenKind, string> = {
   plain: '',
@@ -70,25 +66,6 @@ export function CodeBlockFooter({ className, ...rest }: HTMLAttributes<HTMLDivEl
   return <div className={cx(styles.footer, className)} {...rest} />;
 }
 
-async function writeClipboard(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Clipboard API blocked (insecure context, denied permission): fall back.
-    const area = document.createElement('textarea');
-    area.value = text;
-    area.setAttribute('readonly', '');
-    area.style.position = 'fixed';
-    area.style.opacity = '0';
-    document.body.append(area);
-    area.select();
-    const copied = document.execCommand('copy');
-    area.remove();
-    return copied;
-  }
-}
-
 export interface CodeBlockCopyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   value: string;
   label?: string;
@@ -103,17 +80,11 @@ export function CodeBlockCopyButton({
   onClick,
   ...rest
 }: CodeBlockCopyButtonProps) {
-  const [copied, setCopied] = useState(false);
-  const timer = useRef<number | undefined>(undefined);
-
-  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const { copied, copy } = useCopy(value);
 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
-    if (!(await writeClipboard(value))) return;
-    setCopied(true);
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setCopied(false), 2000);
+    await copy();
   };
 
   return (
@@ -182,7 +153,6 @@ export interface CodeBlockContentProps extends Omit<HTMLAttributes<HTMLDivElemen
   lineNumbers?: boolean;
   startLine?: number;
   wrap?: boolean;
-  /** Accessible name of the scroll region. */
   ariaLabel?: string;
 }
 

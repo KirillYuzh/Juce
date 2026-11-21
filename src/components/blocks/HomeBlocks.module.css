@@ -1,4 +1,3 @@
-/* Product cards */
 .product {
   --media: 290px;
   position: relative;
@@ -7,8 +6,7 @@
   align-items: center;
   justify-content: center;
   min-height: 408px;
-  /* Reserve the photo band, then centre the text inside what is left:
-     the gap above the title equals the gap under the description. */
+
   padding: 0 32px var(--media);
   overflow: hidden;
   border-radius: var(--tb-radius-l);
@@ -75,7 +73,6 @@
   justify-content: center;
 }
 
-/* Promo cards */
 .promo {
   --media: 290px;
   position: relative;
@@ -134,7 +131,6 @@
   justify-content: center;
 }
 
-/* Text cards */
 .textCard {
   display: flex;
   flex-direction: column;
@@ -159,7 +155,6 @@
   padding-top: 24px;
 }
 
-/* App stat panel */
 .statPanel {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -232,7 +227,6 @@
   object-position: center 10%;
 }
 
-/* Wide article banner */
 .banner {
   position: relative;
   display: flex;

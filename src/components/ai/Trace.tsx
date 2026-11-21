@@ -2,9 +2,7 @@ import type { ReactNode } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/Collapsible';
 import type { CollapsibleProps } from '../ui/Collapsible';
 import styles from './Trace.module.css';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export type TraceStatus = 'running' | 'error';
 

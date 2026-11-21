@@ -1,9 +1,7 @@
 import type { ReactNode } from 'react';
 import styles from './Suggestion.module.css';
 import { Button } from '../ui/Button';
-
-const cx = (...values: Array<string | false | null | undefined>) =>
-  values.filter(Boolean).join(' ');
+import { cx } from '../../lib/cx';
 
 export function Suggestions({ children, className }: { children: ReactNode; className?: string }) {
   return <div className={cx(styles.row, 'tb-scroll-fade-x', className)}>{children}</div>;
