@@ -1,0 +1,18 @@
+.card {
+  transition: box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
+.cardOpen {
+  transition: none;
+}
+
+.panel {
+  transition:
+    grid-template-rows var(--tb-duration-base) var(--tb-ease-standard),
+    padding-bottom var(--tb-duration-base) var(--tb-ease-standard);
+}
+
+.dropdown {
+  transition: opacity var(--tb-duration-fast) var(--tb-ease-standard), visibility 0s linear
+      var(--tb-duration-fast);
+}

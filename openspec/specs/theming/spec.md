@@ -6,7 +6,7 @@
 
 Оси независимы:
 
-- `data-theme` — цвет и `color-scheme`. Значения: `light` (по умолчанию), `dark`, `palette-wasabi`, `palette-wasabi-dark`.
+- `data-theme` — цвет и `color-scheme`. Значения: `light` (по умолчанию), `dark`, `heroui`, `heroui-dark`.
 - `data-skin` — форма: радиусы, фон поверхности и снятие теней. Значения: `default` (по умолчанию), `blueprint`.
 
 ## Requirements
@@ -24,7 +24,7 @@ Scope — контейнер, несущий атрибуты темы. Влож
 
 #### Scenario: Цвет и форма задаются раздельно
 
-- **WHEN** контейнер получает `data-theme="palette-wasabi-dark"` и `data-skin="blueprint"`
+- **WHEN** контейнер получает `data-theme="heroui-dark"` и `data-skin="blueprint"`
 - **THEN** цветовые роли и `color-scheme: dark` приходят из темы, радиусы и фон-сетка — из скина, а тени скин может снять
 
 #### Scenario: Две темы на одной странице
@@ -58,7 +58,7 @@ The system SHALL declare the complete structural set in every scope and the comp
 
 #### Scenario: Скин меняет форму, тема — цвет
 
-- **WHEN** скин переопределяет структурные роли (например, `blueprint` берёт нулевые радиусы, снятые тени и моноширинный шрифт заголовков)
+- **WHEN** скин переопределяет структурные роли (например, `blueprint` берёт нулевые радиусы, снятые тени, свою сетку и фокус)
 - **THEN** тема структурные роли не трогает, а компоненты получают изменение без правок
 
 #### Scenario: Компонент берёт роль
@@ -68,7 +68,7 @@ The system SHALL declare the complete structural set in every scope and the comp
 
 #### Scenario: Scope объявляет набор целиком
 
-- **WHEN** в `tokens.css`, `skins.css` или `themes.css` появляется блок `[data-theme=…]` или `[data-skin=…]`
+- **WHEN** в `tokens.css` или `skins.css` появляется блок `[data-theme=…]` или `[data-skin=…]`
 - **THEN** цветовой блок объявляет все роли своей темы, иначе тест токенов падает с именем пропущенного токена
 
 #### Scenario: Литеральный цвет или палитровая переменная в компоненте
@@ -116,24 +116,24 @@ The system SHALL verify WCAG AA contrast for every theme on its text, border and
 
 ### Requirement: Один способ добавить тему
 
-The system SHALL add a theme or a skin as a single token block that the token test picks up, SHALL generate palettes through `scripts/gen-themes.mjs`, SHALL NOT branch on a theme or skin name in components, and SHALL NOT support the `.dark` class.
+The system SHALL add a theme or a skin as a single hand-written token block in `src/styles` that the token test picks up, SHALL NOT generate palettes, SHALL NOT branch on a theme or skin name in components, and SHALL NOT support the `.dark` class.
 
-Палитры `palette-wasabi` и `palette-wasabi-dark` собираются генератором в `src/styles/themes.css` и `src/styles/themes.ts`; `npm run gen:themes -- --check` падает при расхождении файлов с генератором.
+Темы — рукописные блоки в `src/styles/tokens.css`, список значений — в `src/styles/themes.ts`; генератора нет.
 
 #### Scenario: Новая тема
 
 - **WHEN** добавляется тема
 - **THEN** появляется один блок `[data-theme='…']` с полным цветовым набором, тест токенов подхватывает его сам, а компоненты не меняются
 
-#### Scenario: Новая палитра
+#### Scenario: Рукописный блок токенов
 
-- **WHEN** в список палитр генератора добавляется `palette-…`
-- **THEN** `npm run gen:themes` пересобирает `themes.css` и `themes.ts`, а `npm run gen:themes -- --check` проходит
+- **WHEN** нужно поправить или добавить тему
+- **THEN** правят блок в `src/styles/tokens.css` и список в `src/styles/themes.ts` руками, отдельной сборки и проверки синхронизации нет
 
-#### Scenario: Правка сгенерированного файла
+#### Scenario: Неполный цветовой набор
 
-- **WHEN** `themes.css` или `themes.ts` правят руками
-- **THEN** `npm run gen:themes -- --check` падает, а `npm run gen:themes` перезаписывает файлы
+- **WHEN** в блоке темы пропущена цветовая роль
+- **THEN** тест токенов падает с именем пропущенного токена
 
 #### Scenario: Ветвление по имени темы
 

@@ -71,6 +71,7 @@
   padding: 3px 0;
   font: 400 13px/20px var(--tb-font-text);
   color: var(--tb-text-secondary);
+  transition: color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -172,6 +173,10 @@
   align-items: center;
   gap: 20px;
   color: var(--tb-text-inverse);
+}
+
+.socials a {
+  transition: color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

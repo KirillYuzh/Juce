@@ -15,8 +15,8 @@
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
   transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -74,7 +74,7 @@
 
 .accordionChevron {
   flex: none;
-  transition: transform 0.2s ease;
+  transition: transform var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .accordionOpen .accordionChevron {
@@ -82,7 +82,21 @@
 }
 
 .accordionPanel {
-  padding: 0 0 20px;
+  display: grid;
+  grid-template-rows: 0fr;
+  padding-bottom: 0;
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-secondary);
+  transition:
+    grid-template-rows var(--tb-duration-base) var(--tb-ease-standard),
+    padding-bottom var(--tb-duration-base) var(--tb-ease-standard);
+}
+
+.accordionOpen .accordionPanel {
+  grid-template-rows: 1fr;
+  padding-bottom: 20px;
+}
+
+.accordionPanelInner {
+  overflow: hidden;
 }

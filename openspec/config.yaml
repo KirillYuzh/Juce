@@ -7,8 +7,8 @@ context: |
 
   Project: juce-ui — React 19 UI kit (primitives, AI patterns, blocks, pages) with Storybook 10.
   Layers: src/lib -> src/data -> src/components/ui -> src/components/ai -> src/components/blocks -> src/sections -> src/pages; imports are enforced by eslint-plugin-boundaries.
-  Quality gates: npm run check (typecheck, eslint, ast-grep, rule fixtures, tests with a ratchet baseline), npm run gen:themes -- --check, npm run lint:css, npm run check:pack, npm run spec:validate.
-  Theming has two independent axes: data-theme picks colour roles (--tb-* colour tokens and color-scheme), data-skin picks shape (radius and shadow roles). Theme and skin blocks live in src/styles/tokens.css, src/styles/skins.css and the generated src/styles/themes.css; palettes come from scripts/gen-themes.mjs, and components never branch on a theme name.
+  Quality gates: npm run check (typecheck, eslint, ast-grep, rule fixtures, CSS checks for hover, theme branching, radii, motion tokens and the single reduced-motion guard, tests with a ratchet baseline, pack check and openspec validation).
+  Theming has two independent axes: data-theme picks colour roles (--tb-* colour tokens and color-scheme), data-skin picks shape (radius, surface pattern and shadow overrides). Theme blocks live in src/styles/tokens.css, skin blocks in src/styles/skins.css, motion tokens and the guard in src/styles/skins.css and src/styles/motion.css. Themes are hand-written; components never branch on a theme name.
   One engine per problem: TanStack for tables and virtualization; floating layers are being consolidated on Base UI.
   Specs describe observable behavior, never internal class or function names.
 

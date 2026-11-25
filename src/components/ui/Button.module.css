@@ -7,10 +7,10 @@
   font: 500 15px/20px var(--tb-font-text);
   white-space: nowrap;
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease,
-    opacity 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard),
+    box-shadow var(--tb-duration-fast) var(--tb-ease-standard),
+    opacity var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .size-l {
@@ -144,7 +144,9 @@
   border-radius: var(--tb-radius-circle);
   background: var(--tb-gray-100);
   color: var(--tb-text-primary);
-  transition: background-color 0.15s ease;
+  transition:
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -209,7 +211,7 @@
 
 .link {
   color: var(--tb-text-link);
-  transition: color 0.15s ease;
+  transition: color var(--tb-duration-fast) var(--tb-ease-standard);
   text-underline-offset: 3px;
 }
 

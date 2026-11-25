@@ -23,15 +23,15 @@ export function App() {
 
 Цвет и форма — независимые оси:
 
-| Ось   | Атрибут      | Что задаёт                                                 | Значения                                                                |
-| ----- | ------------ | ---------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Цвет  | `data-theme` | цветовые роли `--tb-*` и `color-scheme`                    | `light` (по умолчанию), `dark`, `palette-wasabi`, `palette-wasabi-dark` |
-| Форма | `data-skin`  | радиусы `--tb-radius-*`, фон поверхности, отключение теней | `default` (по умолчанию), `blueprint`                                   |
+| Ось   | Атрибут      | Что задаёт                                                 | Значения                                                |
+| ----- | ------------ | ---------------------------------------------------------- | ------------------------------------------------------- |
+| Цвет  | `data-theme` | цветовые роли `--tb-*` и `color-scheme`                    | `light` (по умолчанию), `dark`, `heroui`, `heroui-dark` |
+| Форма | `data-skin`  | радиусы `--tb-radius-*`, фон поверхности, отключение теней | `default` (по умолчанию), `blueprint`                   |
 
 Оси не связаны: `blueprint` есть и в светлой, и в тёмной теме. Атрибуты ставятся на любой контейнер, обычно на `<html>`:
 
 ```ts
-document.documentElement.dataset.theme = 'palette-wasabi-dark';
+document.documentElement.dataset.theme = 'heroui-dark';
 document.documentElement.dataset.skin = 'blueprint';
 ```
 
@@ -46,7 +46,7 @@ export function Split() {
       <ThemeScope theme="light" skin="default">
         <Preview />
       </ThemeScope>
-      <ThemeScope theme="palette-wasabi-dark" skin="blueprint">
+      <ThemeScope theme="heroui-dark" skin="blueprint">
         <Preview />
       </ThemeScope>
     </div>
@@ -69,7 +69,7 @@ apply();
 
 ### Своя тема
 
-Тема — один блок цветовых ролей. Палитры `palette-*` собирает генератор `scripts/gen-themes.mjs` в `src/styles/themes.css` и `src/styles/themes.ts`; свою тему можно положить рядом руками:
+Тема — один блок цветовых ролей в `src/styles/tokens.css`; список значений для переключателя и типов — `src/styles/themes.ts`. Оба файла рукописные, генератора нет — свою тему кладут рядом:
 
 ```css
 [data-theme='ocean'] {
@@ -89,7 +89,7 @@ document.documentElement.dataset.theme = 'ocean';
 
 ### Свой скин
 
-Скин — один блок структурных ролей. Цвет он не задаёт и работает с любой темой:
+Скин — один блок структурных ролей. Цвет он не задаёт и работает с любой темой. `blueprint` меняет радиусы, тени, сетку и фокус, но не шрифт заголовков:
 
 ```css
 [data-skin='sharp'] {
@@ -134,7 +134,17 @@ document.documentElement.dataset.skin = 'sharp';
 | Linux Libertine | цитаты и длинный научный текст  | OFL      |
 | JetBrains Mono  | код, стек-трейсы и номера строк | OFL 1.1  |
 
-Цвета живут в `src/styles/tokens.css`, формы скинов — в `src/styles/skins.css`. README не дублирует значения: единственный источник правды — токены.
+Цвет и темы живут в `src/styles/tokens.css`, формы скинов — в `src/styles/skins.css`. README не дублирует значения: единственный источник правды — токены.
+
+### Движение
+
+Длительности — `--tb-duration-fast|base|slow`, кривые — `--tb-ease-standard`. `transition` перечисляет свойства явно (без `all`) и берёт значения только из токенов.
+
+`prefers-reduced-motion: reduce` обрабатывается один раз в `src/styles/motion.css`: декоративные переходы схлопываются, а индикаторы с классом `tb-motion-essential` продолжают вращаться. Компоненты свой блок `prefers-reduced-motion` не объявляют — за этим следит `npm run lint:css`.
+
+## Patterns
+
+Storybook `Patterns/Examples` — сочетания примитивов: как примитивы собираются в готовый экран, без нового компонента. В `storySort` раздел стоит после `Primitives`.
 
 ## Лицензии
 

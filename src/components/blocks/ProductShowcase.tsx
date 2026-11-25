@@ -85,7 +85,12 @@ export function ProductShowcase({
         <Input aria-label="Название задачи" placeholder="Название задачи*" required />
         <div className={styles.row}>
           <Input aria-label="Команда" placeholder="Команда" />
-          <Input aria-label="Электронная почта" placeholder="Электронная почта*" type="email" required />
+          <Input
+            aria-label="Электронная почта"
+            placeholder="Электронная почта*"
+            type="email"
+            required
+          />
         </div>
         <Input aria-label="Дедлайн" placeholder="Дедлайн, например 2026-12-01" />
 
@@ -103,18 +108,17 @@ export function ProductShowcase({
           </label>
         </fieldset>
 
-        <label className={styles.legal} style={{ display: 'flex', gap: 12 }}>
+        <label className={styles.legal} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <input
             type="checkbox"
-            style={{ width: 24, height: 24, accentColor: 'var(--tb-primary)' }}
+            style={{ width: 24, height: 24, flex: 'none', accentColor: 'var(--tb-primary)' }}
           />
-          <span>Присылать разборы по теме задачи</span>
+          <span style={{ lineHeight: '24px' }}>Присылать разборы по теме задачи</span>
         </label>
 
         <div className={styles.formFooter}>
           <p className={styles.legal}>
-            Создавая задачу, я принимаю <a href="#">условия обработки данных</a> и правила
-            платформы
+            Создавая задачу, я принимаю <a href="#">условия обработки данных</a> и правила платформы
           </p>
           <Button type="submit">Создать задачу</Button>
         </div>

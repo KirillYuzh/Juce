@@ -13,9 +13,9 @@
   width: var(--sidebar-width);
   background: var(--tb-bg-secondary);
   transition:
-    width 0.2s ease,
-    margin 0.2s ease,
-    transform 0.2s ease;
+    width var(--tb-duration-base) var(--tb-ease-standard),
+    margin var(--tb-duration-base) var(--tb-ease-standard),
+    transform var(--tb-duration-base) var(--tb-ease-standard);
 }
 
 .sidebar[data-side='left'] {
@@ -156,6 +156,9 @@
   border-radius: var(--tb-radius-xs);
   color: var(--tb-text-secondary);
   cursor: pointer;
+  transition:
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -200,8 +203,8 @@
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -253,6 +256,9 @@
   color: var(--tb-text-secondary);
   cursor: pointer;
   transform: translateY(-50%);
+  transition:
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -297,6 +303,9 @@
   text-align: left;
   text-decoration: none;
   cursor: pointer;
+  transition:
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -370,7 +379,7 @@
 
 .chevron {
   margin-left: auto;
-  transition: transform 0.2s ease;
+  transition: transform var(--tb-duration-base) var(--tb-ease-standard);
 }
 
 .sidebar[data-state='collapsed'][data-collapsible='icon'] .menuLabel,

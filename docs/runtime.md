@@ -10,16 +10,13 @@
 | Storybook      | `npm run storybook`                 | http://localhost:6006 |
 | Собранное демо | `npm run build && npx vite preview` | http://localhost:4173 |
 
-Маршруты демо: `#/` — главная, `#/assistant` — ассистент. Учётных записей, бэкенда и тестовых пользователей нет. Весь контент лежит в `src/data`, изображения — в `public`.
+Маршруты демо: `#/` — главная, `#/assistant` — ассистент. Учётных записей, бэкенда и тестовых пользователей нет. Весь контент лежит в `src/data`, изображения — в `public`. Storybook: раздел `Patterns/Examples` — сочетания примитивов, стоит после `Primitives`.
 
 ## Темы
 
-```bash
-npm run gen:themes            # пересобрать styles/themes.css и themes.ts из списка палитр
-npm run gen:themes -- --check # упасть, если файлы расходятся с генератором
-```
+Блоки токенов рукописные: цвет и темы (`data-theme`) — `src/styles/tokens.css`, форма (`data-skin`) — `src/styles/skins.css`, список значений — `src/styles/themes.ts`. Генератора нет.
 
-`scripts/gen-themes.mjs` — единственный источник палитр. Правка `themes.css` или `themes.ts` руками не переживёт генерацию, а `--check` покажет расхождение до ревью.
+Движение: защита `prefers-reduced-motion` объявлена один раз в `src/styles/motion.css`. Проверить — DevTools → Rendering → Emulate CSS `prefers-reduced-motion: reduce`.
 
 ## Драйвер
 

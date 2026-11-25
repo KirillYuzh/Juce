@@ -12,8 +12,8 @@
   text-align: left;
   cursor: pointer;
   transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -98,7 +98,7 @@
   font: 400 13px/18px var(--tb-font-text);
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

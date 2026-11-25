@@ -29,6 +29,7 @@
   cursor: col-resize;
   outline: none;
   touch-action: none;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .handle::before {

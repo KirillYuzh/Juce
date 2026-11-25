@@ -87,8 +87,13 @@ export function Accordion({ items, defaultOpenId, className }: AccordionProps) {
                 <Icon name="chevronDown" size={20} />
               </span>
             </button>
-            <div className={styles.accordionPanel} id={`panel-${item.id}`} hidden={!open}>
-              {item.content}
+            <div
+              className={styles.accordionPanel}
+              id={`panel-${item.id}`}
+              aria-hidden={!open}
+              inert={!open}
+            >
+              <div className={styles.accordionPanelInner}>{item.content}</div>
             </div>
           </div>
         );

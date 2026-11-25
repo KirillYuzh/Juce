@@ -100,17 +100,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .line,
-  .area,
-  .dot,
-  .barVertical,
-  .barHorizontal,
-  .slice {
-    animation: none;
-  }
-}
-
 .tooltip {
   position: absolute;
   display: flex;

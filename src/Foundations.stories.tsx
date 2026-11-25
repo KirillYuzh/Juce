@@ -69,11 +69,7 @@ const themeRoles = [
   ['--tb-border', 'Border'],
 ] as const;
 
-const themeScopes = [
-  { value: 'light', title: 'Светлая', mode: 'light' },
-  { value: 'dark', title: 'Тёмная', mode: 'dark' },
-  ...THEMES,
-];
+const themeScopes = THEMES;
 
 export const Colors: Story = {
   render: () => (
@@ -122,8 +118,8 @@ export const Themes: Story = {
       </h2>
       <p className="tb-text-m" style={{ color: 'var(--tb-text-secondary)', marginBottom: 24 }}>
         Токены живут на двух ортогональных осях. Цвет задаёт <code>[data-theme]</code>: светлая,
-        тёмная и палитры wasabi. Форма задаётся отдельно через <code>[data-skin]</code> и от цвета
-        не зависит. Имена токенов на обеих осях одни и те же.
+        тёмная, HeroUI и HeroUI Dark. Форма задаётся отдельно через <code>[data-skin]</code> и от
+        цвета не зависит. Имена токенов на обеих осях одни и те же.
       </p>
       <div
         style={{
@@ -258,10 +254,10 @@ export const Skins: Story = {
         Скины — форма
       </h2>
       <p className="tb-text-m" style={{ color: 'var(--tb-text-secondary)', marginBottom: 24 }}>
-        <code>[data-skin="blueprint"]</code> меняет только форму: нулевые радиусы, моно-заголовки,
-        сетка на фоне и без теней. Примитивы цвета не трогаются, поэтому скин сочетается с любой
-        темой. Чипы, переключатели и аватары остаются круглыми. Вложенный <code>[data-theme]</code>{' '}
-        сбрасывает форму родителя.
+        <code>[data-skin="blueprint"]</code> меняет только форму: нулевые радиусы, сетка на фоне и
+        без теней. Примитивы цвета не трогаются, поэтому скин сочетается с любой темой. Чипы,
+        переключатели и аватары остаются круглыми. Вложенный <code>[data-theme]</code> сбрасывает
+        форму родителя.
       </p>
       <div
         style={{

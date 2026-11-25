@@ -19,6 +19,9 @@
   height: 28px;
   border-radius: var(--tb-radius-circle);
   color: var(--tb-text-secondary);
+  transition:
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -74,6 +77,7 @@
   color: inherit;
   text-align: left;
   font: inherit;
+  transition: color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

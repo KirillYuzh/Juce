@@ -49,6 +49,7 @@
     var(--tb-shadow-control),
     inset 0 0 0 1px var(--tb-border-control);
   transform: translateY(-50%);
+  transition: box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -106,8 +107,8 @@
   background: var(--tb-gray-300);
   cursor: pointer;
   transition:
-    width 0.2s ease,
-    background-color 0.2s ease;
+    width var(--tb-duration-base) var(--tb-ease-standard),
+    background-color var(--tb-duration-base) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

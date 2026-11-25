@@ -6,11 +6,10 @@ import './preview.css';
 
 type ThemeGlobals = { theme?: string; skin?: string };
 
-const themeItems: { value: string; title: string }[] = [
-  { value: 'light', title: 'Light' },
-  { value: 'dark', title: 'Dark' },
-  ...THEMES.map(({ value, title }) => ({ value, title })),
-];
+const themeItems: { value: string; title: string }[] = THEMES.map(({ value, title }) => ({
+  value,
+  title,
+}));
 
 const withTheme: Decorator = (Story, context) => {
   const globals = context.globals as ThemeGlobals;
@@ -65,7 +64,16 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Foundations', 'Primitives', 'Utilities', 'Chat', 'Blocks', 'Templates', 'Pages'],
+        order: [
+          'Foundations',
+          'Primitives',
+          'Patterns',
+          'Utilities',
+          'Chat',
+          'Blocks',
+          'Templates',
+          'Pages',
+        ],
       },
     },
     a11y: {

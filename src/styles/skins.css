@@ -45,6 +45,11 @@
   --tb-header-height: 64px;
 
   --tb-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --tb-duration-fast: 120ms;
+  --tb-duration-base: 180ms;
+  --tb-duration-slow: 280ms;
+  --tb-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --tb-duration-spin: 700ms;
 }
 
 [data-skin='blueprint'] {
@@ -64,7 +69,6 @@
   --tb-shadow-float: none;
 
   --tb-focus-ring: 1px solid var(--tb-text-primary);
-  --tb-font-heading: var(--tb-font-mono);
 
   --tb-surface-pattern:
     linear-gradient(

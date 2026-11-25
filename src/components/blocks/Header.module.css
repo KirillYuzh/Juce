@@ -38,6 +38,15 @@
   position: relative;
 }
 
+.navItem::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 8px;
+}
+
 .navLink {
   display: inline-flex;
   align-items: center;
@@ -47,7 +56,7 @@
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
   white-space: nowrap;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -66,7 +75,7 @@
   top: calc(100% + 8px);
   left: 0;
   z-index: 210;
-  display: none;
+  display: grid;
   grid-template-columns: repeat(2, minmax(180px, 1fr));
   gap: 4px;
   min-width: 420px;
@@ -74,15 +83,31 @@
   border-radius: var(--tb-radius-surface);
   background: var(--tb-surface);
   box-shadow: var(--tb-shadow-popover);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    opacity var(--tb-duration-fast) var(--tb-ease-standard),
+    transform var(--tb-duration-fast) var(--tb-ease-standard),
+    visibility 0s linear var(--tb-duration-fast);
 }
 
 .navItem:focus-within .dropdown {
-  display: grid;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition-delay: 0s;
 }
 
 @media (hover: hover) {
   .navItem:hover .dropdown {
-    display: grid;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    transition-delay: 0s;
   }
 }
 
@@ -91,6 +116,7 @@
   border-radius: var(--tb-radius-xs);
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -115,6 +141,7 @@
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
   white-space: nowrap;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

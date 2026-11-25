@@ -207,6 +207,7 @@
   background: var(--tb-primary);
   color: var(--tb-on-primary);
   font: 400 15px/20px var(--tb-font-text);
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

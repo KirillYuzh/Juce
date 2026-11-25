@@ -47,8 +47,9 @@
   color: var(--tb-text-primary);
   white-space: nowrap;
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard),
+    box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -157,7 +158,7 @@
   height: 100%;
   border-radius: inherit;
   background: var(--tb-accent-hover);
-  transition: width 0.3s ease;
+  transition: width var(--tb-duration-slow) var(--tb-ease-standard);
 }
 
 .progressAccent .progressBar {
@@ -196,12 +197,6 @@
   }
   100% {
     background-position: 0 50%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .skeleton {
-    animation: none;
   }
 }
 

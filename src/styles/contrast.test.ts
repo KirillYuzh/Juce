@@ -12,7 +12,7 @@ import {
   type Rule,
 } from '../../scripts/theme-color.mjs';
 
-const SOURCES = ['src/styles/themes.css', 'src/styles/skins.css', 'src/styles/tokens.css'];
+const SOURCES = ['src/styles/skins.css', 'src/styles/tokens.css'];
 
 const rules: Rule[] = SOURCES.flatMap((file) => parseTokens(fs.readFileSync(file, 'utf8')));
 
@@ -43,9 +43,7 @@ const structuralRules = rules.filter((rule) =>
   selectorParts(rule).some((part) => part === '[data-theme]' || part === '[data-skin]')
 );
 
-const structural = new Set(
-  structuralRules.flatMap((rule) => [...declarations(rule.body).keys()])
-);
+const structural = new Set(structuralRules.flatMap((rule) => [...declarations(rule.body).keys()]));
 
 function declaredBy(theme: string): Set<string> {
   const names = new Set<string>();
@@ -68,7 +66,7 @@ function colorFor(tokens: Map<string, string>, name: string): Rgb | null {
 describe('контраст токенов', () => {
   it('находит обе оси: названные темы и скин', () => {
     expect(themes, `найдены темы: ${themes.join(', ')}`).toEqual(
-      expect.arrayContaining(['light', 'dark', 'palette-wasabi', 'palette-wasabi-dark'])
+      expect.arrayContaining(['light', 'dark', 'heroui', 'heroui-dark'])
     );
     expect(
       rules.some((rule) => selectorParts(rule).includes("[data-skin='blueprint']")),

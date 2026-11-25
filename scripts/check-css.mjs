@@ -8,6 +8,12 @@ const COLOR_PROP =
   /^(color|background|background-color|background-image|border|border-color|border-top|border-right|border-bottom|border-left|outline|outline-color|fill|stroke|box-shadow)$/;
 const PALETTE_VAR =
   /var\(\s*--(ink|mist|coral|bg|bg-2|bg-3|label|label-2|label-3|label-4|separator|gray|gray-[2-6]|accent|on-accent|link|link-hover|pink|red|orange|yellow|green|mint|teal|cyan|blue|indigo|purple|brown)\s*[,)]/;
+const DURATION_LITERAL = /\d*\.?\d+m?s\b/;
+const EASE_LITERAL = /\b(ease|ease-in|ease-out|ease-in-out|linear|cubic-bezier)\b/;
+const ZERO_TIME = /\b0(?:\.0+)?m?s\b/g;
+const ZERO_STEP = /\b0(?:\.0+)?m?s\s+linear\b/g;
+const TRANSITION_ALL = /\ball\b/;
+const REDUCED_MOTION = /prefers-reduced-motion/;
 
 function cssFiles(directory) {
   if (!fs.existsSync(directory)) return [];
@@ -91,6 +97,12 @@ export function analyze(file) {
       }
     }
 
+    if (isAtRule && REDUCED_MOTION.test(rule.prelude)) {
+      problems.push(
+        `${file}:${rule.line}: локальный prefers-reduced-motion в «${rule.prelude}», защита живёт только в src/styles/motion.css`
+      );
+    }
+
     if (!isAtRule && /\[data-(theme|skin)/.test(rule.prelude)) {
       problems.push(
         `${file}:${rule.line}: компонент не может ветвиться по теме в «${rule.prelude}»`
@@ -128,6 +140,28 @@ export function analyze(file) {
           `${file}:${rule.line}: тень задана без токена «${value}», нужен --tb-shadow-*`
         );
       }
+
+      if (property.startsWith('transition') && value !== 'none') {
+        const bare = stripFunctions(value);
+
+        if (TRANSITION_ALL.test(bare)) {
+          problems.push(
+            `${file}:${rule.line}: «${property}: ${value}» перечисляет все свойства, укажи меняющиеся явно`
+          );
+        }
+
+        const timing = bare.replace(ZERO_TIME, '');
+
+        if (DURATION_LITERAL.test(timing)) {
+          problems.push(
+            `${file}:${rule.line}: время задано литералом в «${property}: ${value}», возьми --tb-duration-fast|base|slow`
+          );
+        } else if (EASE_LITERAL.test(bare.replace(ZERO_STEP, ''))) {
+          problems.push(
+            `${file}:${rule.line}: кривая задана литералом в «${property}: ${value}», возьми --tb-ease-standard|out`
+          );
+        }
+      }
     }
   }
 
@@ -139,6 +173,16 @@ function selfTest() {
     { name: 'hover', bad: 'bad.css', good: 'good.css' },
     { name: 'theme', bad: 'bad.css', good: 'good.css' },
     { name: 'literal', bad: 'bad.css', good: 'good.css' },
+    {
+      name: 'motion',
+      bad: 'bad.css',
+      good: 'good.css',
+      expect: [
+        'время задано литералом',
+        'кривая задана литералом',
+        'локальный prefers-reduced-motion',
+      ],
+    },
   ];
   let failed = 0;
 
@@ -151,6 +195,14 @@ function selfTest() {
       console.error(`✗ ${testCase.name}: ожидалось нарушение в ${testCase.bad}`);
       failed += 1;
     }
+
+    for (const expected of testCase.expect ?? []) {
+      if (!bad.join('\n').includes(expected)) {
+        console.error(`✗ ${testCase.name}: нет сообщения «${expected}» в ${testCase.bad}`);
+        failed += 1;
+      }
+    }
+
     if (good.length > 0) {
       console.error(
         `✗ ${testCase.name}: ложное срабатывание в ${testCase.good}\n${good.join('\n')}`
@@ -173,5 +225,7 @@ if (process.argv.includes('--test')) {
     process.exit(1);
   }
 
-  console.log('✓ css: hover под указателем, тема только данными, размеры только токенами');
+  console.log(
+    '✓ css: hover под указателем, тема только данными, размеры только токенами, движение на токенах, защита движения в одном месте'
+  );
 }

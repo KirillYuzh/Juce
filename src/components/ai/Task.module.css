@@ -8,6 +8,10 @@
   color: inherit;
 }
 
+.title {
+  transition: color var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
 @media (hover: hover) {
   .stepLink:hover .title {
     color: var(--tb-text-link);

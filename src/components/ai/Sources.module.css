@@ -3,6 +3,10 @@
   border-radius: var(--tb-radius-xs);
 }
 
+.title {
+  transition: color var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
 @media (hover: hover) {
   .link:hover .title {
     color: var(--tb-text-link);

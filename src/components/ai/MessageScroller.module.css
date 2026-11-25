@@ -48,8 +48,9 @@
   color: var(--tb-text-primary);
   box-shadow: var(--tb-shadow-popover);
   transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    opacity var(--tb-duration-fast) var(--tb-ease-standard),
+    transform var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

@@ -19,7 +19,7 @@
   color: var(--tb-text-link);
   font: 500 11px/14px var(--tb-font-text);
   vertical-align: baseline;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

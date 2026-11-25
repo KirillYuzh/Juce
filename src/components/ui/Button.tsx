@@ -43,7 +43,7 @@ export function Button({
   );
   const content = (
     <>
-      {loading && <span className={styles.spinner} aria-hidden="true" />}
+      {loading && <span className={cx(styles.spinner, 'tb-motion-essential')} aria-hidden="true" />}
       {!loading && iconLeft && (
         <span className={styles.icon}>
           <Icon name={iconLeft} size={size === 's' ? 16 : 20} />

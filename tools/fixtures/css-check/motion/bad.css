@@ -1,0 +1,13 @@
+.card {
+  transition: box-shadow 0.15s ease;
+}
+
+.panel {
+  transition: opacity var(--tb-duration-fast) ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

@@ -91,7 +91,7 @@ export function Progress({ value, tone = 'accent' }: { value: number; tone?: 'ac
 export function Spinner({ size = 24 }: { size?: number }) {
   return (
     <span
-      className={styles.spinner}
+      className={cx(styles.spinner, 'tb-motion-essential')}
       style={{ width: size, height: size, borderWidth: Math.max(2, Math.round(size / 10)) }}
       role="status"
       aria-label="Загрузка"

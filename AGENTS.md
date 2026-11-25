@@ -37,21 +37,20 @@
 
 ## Темы
 
-Цвет — `data-theme` (`light`, `dark`, `palette-wasabi`, `palette-wasabi-dark`), форма — `data-skin` (`default`, `blueprint`). Компоненты не ветвятся по имени темы: только `--tb-*`-роли. Класс `.dark` удалён. Контракт — `openspec/specs/theming/spec.md`.
+Цвет — `data-theme` (`light`, `dark`, `heroui`, `heroui-dark`), форма — `data-skin` (`default`, `blueprint`). Компоненты не ветвятся по имени темы: только `--tb-*`-роли. Класс `.dark` удалён. Скин `blueprint` меняет радиусы, тени, сетку и фокус, но не шрифт заголовков. Контракт — `openspec/specs/theming/spec.md`.
 
 ## Проверки
 
 ```bash
 npm run check                  # typecheck + eslint + ast-grep + фикстуры правил + тесты
-npm run gen:themes -- --check  # themes.css и themes.ts совпадают с генератором
-npm run lint:css               # hover только под указателем, тема не в компонентах, размеры только токенами
+npm run lint:css               # hover только под указателем, тема не в компонентах, размеры только токенами, transition только токенами и без all, без локальных prefers-reduced-motion
 npm run check:pack             # проверка содержимого пакета
 npm run spec:validate          # openspec validate --all --strict
 npm run test:bombadil          # property-based UI-тест чата в Storybook, нужен браузер
 ```
 
 - Правила: `tools/rules/*.yml`, фикстуры — `tools/rules/fixtures/<id>/{bad,good}`.
-- Темы и скины: единственный источник палитр — `scripts/gen-themes.mjs`; `themes.css` и `themes.ts` руками не правятся.
+- Темы и скины: блоки токенов рукописные — цвет и темы в `src/styles/tokens.css`, форма в `src/styles/skins.css`, список тем — `src/styles/themes.ts`; генератора нет.
 - Тесты: `src/**/*.test.{ts,tsx}`, базовая линия — `tools/test-baseline.json`.
 - Тестов стало меньше или появился `skip` — `npm run test` падает. Добавили тесты — `npm run test:update`, чтобы поднять базу.
 - `test:bombadil` в `check` не входит: ему нужен живой Storybook и браузер. Подробности — в `docs/runtime.md`.
@@ -59,6 +58,8 @@ npm run test:bombadil          # property-based UI-тест чата в Storyboo
 ## Рантайм
 
 Запуск, порты, драйвер Chrome и артефакты — в `docs/runtime.md`. Карта фич — `docs/features.md`.
+
+Сочетания примитивов — Storybook `Patterns/Examples` (после `Primitives`). Движение — токены `--tb-duration-*`, `--tb-ease-standard` и одна защита `prefers-reduced-motion` в `src/styles/motion.css`.
 
 Вкладка code в Storybook показывает только компоненты: `storySource` (`lib/story-source.ts`) срезает `render`, layout-обёртки и `style`. Сложный демо-компонент описывают через `docs.source.code`.
 

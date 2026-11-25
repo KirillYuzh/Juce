@@ -30,7 +30,7 @@
   border-radius: var(--tb-radius-xs);
   background: transparent;
   color: var(--tb-text-primary);
-  transition: background-color 0.15s ease;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -112,8 +112,8 @@
   color: var(--tb-text-primary);
   font: 400 14px/1 var(--tb-font-text);
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {

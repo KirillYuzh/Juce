@@ -33,8 +33,8 @@
   font: 400 15px/24px var(--tb-font-text);
   outline: none;
   transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .size-l {
@@ -95,7 +95,7 @@
   border-radius: var(--tb-radius-popover);
   background: var(--tb-gray-100);
   text-align: left;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .selectTrigger:disabled {
@@ -131,7 +131,7 @@
   display: inline-flex;
   padding-right: 4px;
   color: var(--tb-text-primary);
-  transition: transform 0.15s ease;
+  transition: transform var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .selectTrigger[aria-expanded='true'] .selectChevron {
@@ -179,7 +179,7 @@
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .selectOptionActive {
@@ -243,8 +243,8 @@
   margin-top: 0;
   background: var(--tb-field);
   transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .box {
@@ -265,7 +265,9 @@
   border: solid var(--tb-text-primary);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg) scale(0);
-  transition: transform 0.12s ease;
+  transition:
+    border-color var(--tb-duration-fast) var(--tb-ease-standard),
+    transform var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .radioCircle::after {
@@ -278,7 +280,9 @@
   border-radius: var(--tb-radius-circle);
   background: var(--tb-text-primary);
   transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.12s ease;
+  transition:
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    transform var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .choice input:checked + .box,
@@ -335,7 +339,7 @@
   height: 28px;
   border-radius: var(--tb-radius-pill);
   background: var(--tb-gray-200);
-  transition: background-color 0.15s ease;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .switchTrack::after {
@@ -348,7 +352,9 @@
   border-radius: var(--tb-radius-circle);
   background: var(--tb-white);
   box-shadow: var(--tb-shadow-control);
-  transition: transform 0.18s ease;
+  transition:
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    transform var(--tb-duration-base) var(--tb-ease-standard);
 }
 
 .switch input:checked + .switchTrack {

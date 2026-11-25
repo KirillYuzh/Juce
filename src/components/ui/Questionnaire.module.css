@@ -31,7 +31,7 @@
   height: 100%;
   border-radius: inherit;
   background: var(--tb-primary);
-  transition: width 0.25s ease;
+  transition: width var(--tb-duration-slow) var(--tb-ease-standard);
 }
 
 .item {
@@ -79,8 +79,8 @@
   box-shadow: inset 0 0 0 1px var(--tb-border-control);
   cursor: pointer;
   transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 @media (hover: hover) {
@@ -137,8 +137,8 @@
   font: 500 12px/1 var(--tb-font-text);
   color: var(--tb-text-secondary);
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .choice[data-selected] .choiceMark {
@@ -168,8 +168,8 @@
   font: 400 15px/24px var(--tb-font-text);
   outline: none;
   transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .input::placeholder {
