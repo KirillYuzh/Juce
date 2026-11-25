@@ -117,9 +117,8 @@ export const Themes: Story = {
         Темы — цвет
       </h2>
       <p className="tb-text-m" style={{ color: 'var(--tb-text-secondary)', marginBottom: 24 }}>
-        Токены живут на двух ортогональных осях. Цвет задаёт <code>[data-theme]</code>: светлая,
-        тёмная, HeroUI и HeroUI Dark. Форма задаётся отдельно через <code>[data-skin]</code> и от
-        цвета не зависит. Имена токенов на обеих осях одни и те же.
+        Токены цвета задаёт <code>[data-theme]</code>: светлая, тёмная, HeroUI, HeroUI Dark и тёмные
+        пресеты. Имена токенов во всех темах одни и те же.
       </p>
       <div
         style={{
@@ -239,114 +238,6 @@ export const Themes: Story = {
               >
                 Button
               </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  ),
-};
-
-export const Skins: Story = {
-  render: () => (
-    <div className="tb-container" style={{ paddingBlock: 32 }}>
-      <h2 className="tb-h2" style={{ marginBottom: 8 }}>
-        Скины — форма
-      </h2>
-      <p className="tb-text-m" style={{ color: 'var(--tb-text-secondary)', marginBottom: 24 }}>
-        <code>[data-skin="blueprint"]</code> меняет только форму: нулевые радиусы, сетка на фоне и
-        без теней. Примитивы цвета не трогаются, поэтому скин сочетается с любой темой. Чипы,
-        переключатели и аватары остаются круглыми. Вложенный <code>[data-theme]</code> сбрасывает
-        форму родителя.
-      </p>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: 16,
-        }}
-      >
-        {(['light', 'dark'] as const).map((theme) => (
-          <div
-            key={theme}
-            data-theme={theme}
-            data-skin="blueprint"
-            style={{
-              padding: 20,
-              borderRadius: 'var(--tb-radius-surface)',
-              background: 'var(--tb-bg)',
-              backgroundImage: 'var(--tb-surface-pattern)',
-              backgroundSize: 'var(--tb-surface-pattern-size)',
-              color: 'var(--tb-text-primary)',
-              boxShadow: 'inset 0 0 0 1px var(--tb-border)',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 8,
-                justifyContent: 'space-between',
-                marginBottom: 16,
-              }}
-            >
-              <span style={{ font: '600 18px/26px var(--tb-font-heading)' }}>Blueprint</span>
-              <code
-                style={{
-                  font: '400 12px/18px var(--tb-font-mono)',
-                  color: 'var(--tb-text-secondary)',
-                }}
-              >
-                {`data-theme="${theme}"`}
-              </code>
-            </div>
-            <div
-              style={{
-                padding: 16,
-                background: 'var(--tb-surface)',
-                border: '1px solid var(--tb-border-control)',
-              }}
-            >
-              <div style={{ font: '600 15px/22px var(--tb-font-heading)', marginBottom: 12 }}>
-                Схема запроса
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
-                <span
-                  style={{
-                    background: 'var(--tb-primary)',
-                    color: 'var(--tb-on-primary)',
-                    borderRadius: 'var(--tb-radius-control)',
-                    padding: '6px 12px',
-                    font: '500 13px/18px var(--tb-font-text)',
-                  }}
-                >
-                  Запустить
-                </span>
-                <span
-                  style={{
-                    borderRadius: 'var(--tb-radius-chip)',
-                    border: '1px solid var(--tb-border-control)',
-                    padding: '2px 10px',
-                    font: '500 12px/18px var(--tb-font-text)',
-                  }}
-                >
-                  chip
-                </span>
-                <span
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 'var(--tb-radius-avatar)',
-                    background: 'var(--tb-accent)',
-                    color: 'var(--tb-on-accent)',
-                    display: 'grid',
-                    placeItems: 'center',
-                    font: '600 13px/18px var(--tb-font-text)',
-                  }}
-                >
-                  BP
-                </span>
-              </div>
             </div>
           </div>
         ))}

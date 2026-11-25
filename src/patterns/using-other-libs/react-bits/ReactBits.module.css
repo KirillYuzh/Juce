@@ -1,0 +1,135 @@
+.scene {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: min(760px, 90vw);
+  min-height: 380px;
+  padding: var(--tb-space-10);
+  background: var(--tb-bg);
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-surface);
+  color: var(--tb-text-primary);
+  box-sizing: border-box;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: color-mix(in oklab, var(--tb-bg) 78%, transparent);
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--tb-space-3);
+  max-width: 520px;
+}
+
+.heading {
+  margin: 0;
+}
+
+.lead {
+  margin: 0;
+  color: var(--tb-text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tb-space-3);
+  margin-top: var(--tb-space-2);
+}
+
+.page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  width: min(720px, 92vw);
+  height: 420px;
+  padding: var(--tb-space-10);
+  background: var(--tb-bg-secondary);
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-surface);
+  color: var(--tb-text-primary);
+  box-sizing: border-box;
+}
+
+.pageContent {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: var(--tb-space-3);
+  max-width: 480px;
+  text-align: center;
+}
+
+.cardFrame {
+  width: min(420px, 90vw);
+}
+
+.stage {
+  position: relative;
+  height: var(--tb-space-32);
+}
+
+.stageSide {
+  position: relative;
+  height: 100%;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--tb-space-4);
+  width: min(880px, 90vw);
+}
+
+.cell {
+  display: grid;
+  gap: var(--tb-space-2);
+  margin: 0;
+}
+
+.tile {
+  position: relative;
+  overflow: hidden;
+  height: 132px;
+  background: var(--tb-bg-secondary);
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-surface);
+  box-sizing: border-box;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  margin: 0;
+  color: var(--tb-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dot {
+  width: var(--tb-space-2);
+  height: var(--tb-space-2);
+  border-radius: var(--tb-radius-pill);
+}

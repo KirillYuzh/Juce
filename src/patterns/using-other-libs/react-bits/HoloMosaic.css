@@ -1,0 +1,17 @@
+/* Vendor copy of https://reactbits.dev/backgrounds/holo-mosaic
+   Registry item: HoloMosaic-TS-CSS. License: MIT + Commons Clause. */
+
+.holo-mosaic-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.holo-mosaic-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}

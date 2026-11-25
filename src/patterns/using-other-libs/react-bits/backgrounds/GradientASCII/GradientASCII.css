@@ -1,0 +1,17 @@
+/* Vendor copy of https://reactbits.dev/backgrounds/gradient-ascii
+   Registry item: GradientASCII-TS-CSS. License: MIT + Commons Clause. */
+
+.gradient-ascii-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.gradient-ascii-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
