@@ -25,21 +25,33 @@
 .control-l {
   --tb-field-pad-inline: max(16px, var(--tb-radius, var(--tb-radius-control)));
   --tb-field-pad-block: 16px;
+  --tb-float-label-top: 6px;
+  --tb-float-label-size: 12px;
+  --tb-float-label-line: 16px;
 }
 
 .control-m {
   --tb-field-pad-inline: max(14px, var(--tb-radius, var(--tb-radius-control)));
   --tb-field-pad-block: 10px;
+  --tb-float-label-top: 2px;
+  --tb-float-label-size: 11px;
+  --tb-float-label-line: 16px;
 }
 
 .control-s {
   --tb-field-pad-inline: max(10px, var(--tb-radius, var(--tb-radius-xs)));
   --tb-field-pad-block: 6px;
+  --tb-float-label-top: 0;
+  --tb-float-label-size: 10px;
+  --tb-float-label-line: 12px;
 }
 
 .control-textarea {
   --tb-field-pad-inline: 16px;
   --tb-field-pad-block: 16px;
+  --tb-float-label-top: 6px;
+  --tb-float-label-size: 12px;
+  --tb-float-label-line: 16px;
 }
 
 .requiredMark {
@@ -50,6 +62,7 @@
 .placeholderOverlay {
   position: absolute;
   inset-inline-start: var(--tb-field-pad-inline, 16px);
+  top: 50%;
   max-width: calc(100% - var(--tb-field-pad-inline, 16px) - 40px);
   overflow: hidden;
   color: var(--tb-text-muted);
@@ -57,24 +70,37 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   pointer-events: none;
+  transform: translateY(-50%);
+  transition:
+    top var(--tb-duration-fast) var(--tb-ease-standard),
+    transform var(--tb-duration-fast) var(--tb-ease-standard),
+    font-size var(--tb-duration-fast) var(--tb-ease-standard),
+    color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
 .placeholderInput {
-  top: 50%;
-  translate: 0 -50%;
+  transform-origin: left center;
 }
 
 .placeholderTextarea {
-  inset-block-start: var(--tb-field-pad-block, 16px);
+  top: 16px;
+  transform: none;
+  transform-origin: left top;
 }
 
 .placeholderSmall {
   font: 400 13px/16px var(--tb-font-text);
 }
 
-.input:not(:placeholder-shown) + .placeholderOverlay,
-.textarea:not(:placeholder-shown) + .placeholderOverlay {
-  visibility: hidden;
+.input.float:focus + .placeholderOverlay,
+.input.float:not(:placeholder-shown) + .placeholderOverlay,
+.textarea.float:focus + .placeholderOverlay,
+.textarea.float:not(:placeholder-shown) + .placeholderOverlay {
+  top: var(--tb-float-label-top, 6px);
+  color: var(--tb-text-secondary);
+  font-size: var(--tb-float-label-size, 12px);
+  line-height: var(--tb-float-label-line, 16px);
+  transform: none;
 }
 
 .input,
@@ -112,6 +138,18 @@
   font: 400 13px/16px var(--tb-font-text);
 }
 
+.size-l.float {
+  padding-block: 24px 8px;
+}
+
+.size-m.float {
+  padding-block: 18px 2px;
+}
+
+.size-s.float {
+  padding-block: 14px 0;
+}
+
 .input::placeholder,
 .textarea::placeholder {
   color: var(--tb-text-muted);
@@ -134,6 +172,10 @@
   min-height: 120px;
   padding: 16px;
   resize: vertical;
+}
+
+.textarea.float {
+  padding-top: 24px;
 }
 
 .selectWrap {

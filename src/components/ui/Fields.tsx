@@ -92,7 +92,7 @@ export function Input({
 }: InputProps) {
   const generated = useId();
   const inputId = id ?? generated;
-  const usePlaceholderLabel = !label && required && requiredMark && Boolean(placeholder);
+  const floating = !label && Boolean(placeholder);
 
   return (
     <FieldShell
@@ -108,14 +108,14 @@ export function Input({
     >
       <input
         id={inputId}
-        className={cx(styles.input, styles[`size-${size}`], className)}
+        className={cx(styles.input, styles[`size-${size}`], floating && styles.float, className)}
         style={radiusStyle(radius, style)}
         required={required}
-        placeholder={usePlaceholderLabel ? ' ' : placeholder}
-        aria-label={label ? ariaLabel : (ariaLabel ?? placeholder)}
+        placeholder={floating ? ' ' : placeholder}
+        aria-label={label ? undefined : (ariaLabel ?? placeholder)}
         {...rest}
       />
-      {usePlaceholderLabel && (
+      {floating && (
         <span
           className={cx(
             styles.placeholderOverlay,
@@ -125,7 +125,7 @@ export function Input({
           aria-hidden="true"
         >
           {placeholder}
-          <span className={styles.requiredMark}>*</span>
+          {required && requiredMark && <span className={styles.requiredMark}>*</span>}
         </span>
       )}
       {suffixSlot && <span className={styles.suffix}>{suffixSlot}</span>}
@@ -156,7 +156,7 @@ export function Textarea({
 }: TextareaProps) {
   const generated = useId();
   const inputId = id ?? generated;
-  const usePlaceholderLabel = !label && required && requiredMark && Boolean(placeholder);
+  const floating = !label && Boolean(placeholder);
 
   return (
     <FieldShell
@@ -171,19 +171,19 @@ export function Textarea({
     >
       <textarea
         id={inputId}
-        className={cx(styles.textarea, className)}
+        className={cx(styles.textarea, floating && styles.float, className)}
         required={required}
-        placeholder={usePlaceholderLabel ? ' ' : placeholder}
-        aria-label={label ? ariaLabel : (ariaLabel ?? placeholder)}
+        placeholder={floating ? ' ' : placeholder}
+        aria-label={label ? undefined : (ariaLabel ?? placeholder)}
         {...rest}
       />
-      {usePlaceholderLabel && (
+      {floating && (
         <span
           className={cx(styles.placeholderOverlay, styles.placeholderTextarea)}
           aria-hidden="true"
         >
           {placeholder}
-          <span className={styles.requiredMark}>*</span>
+          {required && requiredMark && <span className={styles.requiredMark}>*</span>}
         </span>
       )}
     </FieldShell>

@@ -20,6 +20,14 @@ describe('поля', () => {
     expect(container.textContent).not.toContain('*');
   });
 
+  it('делает placeholder плавающим по умолчанию', () => {
+    const { container } = render(<Input placeholder="Команда" />);
+    const input = screen.getByRole('textbox', { name: 'Команда' });
+
+    expect(input.getAttribute('placeholder')).toBe(' ');
+    expect(container.textContent).toContain('Команда');
+  });
+
   it('сохраняет подпись, если передан label', () => {
     render(<Input label="Почта" placeholder="you@example.com" required />);
 
