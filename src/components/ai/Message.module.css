@@ -82,9 +82,22 @@
 }
 
 .footer button {
-  color: var(--tb-text-muted);
+  color: var(--tb-text-tertiary);
+}
+
+@media (hover: hover) {
+  .footer button:hover {
+    color: var(--tb-text-primary);
+  }
 }
 
 .message[data-align='end'] .footer {
   justify-content: flex-end;
+}
+
+@media (hover: none) {
+  .footer {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
