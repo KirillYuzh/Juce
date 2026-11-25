@@ -82,12 +82,12 @@ export function ProductShowcase({
 
         <Select aria-label="Формат разбора" options={options} defaultValue={options[0]?.value} />
 
-        <Input aria-label="Название задачи" placeholder="Название задачи*" required />
+        <Input aria-label="Название задачи" placeholder="Название задачи" required />
         <div className={styles.row}>
           <Input aria-label="Команда" placeholder="Команда" />
           <Input
             aria-label="Электронная почта"
-            placeholder="Электронная почта*"
+            placeholder="Электронная почта"
             type="email"
             required
           />

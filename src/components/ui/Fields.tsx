@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import styles from './Fields.module.css';
 import { Chip } from './Display';
 import { Icon } from './Icon';
@@ -9,20 +9,45 @@ interface FieldShellProps {
   label?: string;
   hint?: string;
   error?: string;
+  required?: boolean;
+  requiredMark?: boolean;
   id: string;
   children: ReactNode;
   className?: string;
+  controlClassName?: string;
+  controlStyle?: CSSProperties;
 }
 
-function FieldShell({ label, hint, error, id, children, className }: FieldShellProps) {
+function FieldShell({
+  label,
+  hint,
+  error,
+  required,
+  requiredMark = true,
+  id,
+  children,
+  className,
+  controlClassName,
+  controlStyle,
+}: FieldShellProps) {
   return (
     <div className={cx(styles.field, className)}>
       {label && (
         <label className={styles.label} htmlFor={id}>
           {label}
+          {required && requiredMark && (
+            <span className={styles.requiredMark} aria-hidden="true">
+              *
+            </span>
+          )}
         </label>
       )}
-      <div className={cx(styles.control, error && styles.invalid)}>{children}</div>
+      <div
+        className={cx(styles.control, controlClassName, error && styles.invalid)}
+        style={controlStyle}
+      >
+        {children}
+      </div>
       {error ? (
         <span className={styles.errorText} role="alert">
           {error}
@@ -42,6 +67,7 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   error?: string;
   size?: InputSize;
   radius?: RadiusValue;
+  requiredMark?: boolean;
   suffixSlot?: ReactNode;
   className?: string;
   fieldClassName?: string;
@@ -53,23 +79,55 @@ export function Input({
   error,
   size = 'l',
   radius,
+  requiredMark = true,
   suffixSlot,
   className,
   fieldClassName,
   id,
   style,
+  required,
+  placeholder,
+  'aria-label': ariaLabel,
   ...rest
 }: InputProps) {
   const generated = useId();
   const inputId = id ?? generated;
+  const usePlaceholderLabel = !label && required && requiredMark && Boolean(placeholder);
+
   return (
-    <FieldShell label={label} hint={hint} error={error} id={inputId} className={fieldClassName}>
+    <FieldShell
+      label={label}
+      hint={hint}
+      error={error}
+      required={required}
+      requiredMark={requiredMark}
+      id={inputId}
+      className={fieldClassName}
+      controlClassName={styles[`control-${size}`]}
+      controlStyle={radiusStyle(radius)}
+    >
       <input
         id={inputId}
         className={cx(styles.input, styles[`size-${size}`], className)}
         style={radiusStyle(radius, style)}
+        required={required}
+        placeholder={usePlaceholderLabel ? ' ' : placeholder}
+        aria-label={label ? ariaLabel : (ariaLabel ?? placeholder)}
         {...rest}
       />
+      {usePlaceholderLabel && (
+        <span
+          className={cx(
+            styles.placeholderOverlay,
+            styles.placeholderInput,
+            size === 's' && styles.placeholderSmall
+          )}
+          aria-hidden="true"
+        >
+          {placeholder}
+          <span className={styles.requiredMark}>*</span>
+        </span>
+      )}
       {suffixSlot && <span className={styles.suffix}>{suffixSlot}</span>}
     </FieldShell>
   );
@@ -79,6 +137,7 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   label?: string;
   hint?: string;
   error?: string;
+  requiredMark?: boolean;
   fieldClassName?: string;
 }
 
@@ -86,16 +145,47 @@ export function Textarea({
   label,
   hint,
   error,
+  requiredMark = true,
   fieldClassName,
   id,
   className,
+  required,
+  placeholder,
+  'aria-label': ariaLabel,
   ...rest
 }: TextareaProps) {
   const generated = useId();
   const inputId = id ?? generated;
+  const usePlaceholderLabel = !label && required && requiredMark && Boolean(placeholder);
+
   return (
-    <FieldShell label={label} hint={hint} error={error} id={inputId} className={fieldClassName}>
-      <textarea id={inputId} className={cx(styles.textarea, className)} {...rest} />
+    <FieldShell
+      label={label}
+      hint={hint}
+      error={error}
+      required={required}
+      requiredMark={requiredMark}
+      id={inputId}
+      className={fieldClassName}
+      controlClassName={styles['control-textarea']}
+    >
+      <textarea
+        id={inputId}
+        className={cx(styles.textarea, className)}
+        required={required}
+        placeholder={usePlaceholderLabel ? ' ' : placeholder}
+        aria-label={label ? ariaLabel : (ariaLabel ?? placeholder)}
+        {...rest}
+      />
+      {usePlaceholderLabel && (
+        <span
+          className={cx(styles.placeholderOverlay, styles.placeholderTextarea)}
+          aria-hidden="true"
+        >
+          {placeholder}
+          <span className={styles.requiredMark}>*</span>
+        </span>
+      )}
     </FieldShell>
   );
 }
@@ -112,6 +202,7 @@ export interface SelectProps extends Omit<
   label?: string;
   hint?: string;
   error?: string;
+  requiredMark?: boolean;
   options: SelectOption[];
   fieldClassName?: string;
   value?: string;
@@ -123,6 +214,7 @@ export function Select({
   label,
   hint,
   error,
+  requiredMark = true,
   options,
   fieldClassName,
   id,
@@ -131,6 +223,7 @@ export function Select({
   defaultValue,
   onChange,
   disabled,
+  required,
   ...rest
 }: SelectProps) {
   const generated = useId();
@@ -201,7 +294,15 @@ export function Select({
   };
 
   return (
-    <FieldShell label={label} hint={hint} error={error} id={triggerId} className={fieldClassName}>
+    <FieldShell
+      label={label}
+      hint={hint}
+      error={error}
+      required={required}
+      requiredMark={requiredMark}
+      id={triggerId}
+      className={fieldClassName}
+    >
       <div ref={wrapperRef} className={styles.selectWrap}>
         <button
           {...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)}
@@ -211,6 +312,7 @@ export function Select({
           className={cx(styles.selectTrigger, className)}
           aria-haspopup="listbox"
           aria-expanded={open}
+          aria-required={required || undefined}
           aria-controls={open ? listId : undefined}
           onClick={() => setOpen((next) => !next)}
           onKeyDown={(event) => {
@@ -223,6 +325,11 @@ export function Select({
           <span className={cx(styles.selectValue, !selected && styles.selectPlaceholder)}>
             {selected?.label ?? 'Выберите'}
           </span>
+          {!label && required && requiredMark && (
+            <span className={styles.requiredMark} aria-hidden="true">
+              *
+            </span>
+          )}
           <span className={styles.selectChevron} aria-hidden="true">
             <Icon name="chevronDown" size={20} />
           </span>

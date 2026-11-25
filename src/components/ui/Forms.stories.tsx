@@ -16,12 +16,11 @@ const column = { display: 'flex', flexDirection: 'column' as const, gap: 16, wid
 export const Inputs: Story = {
   render: () => (
     <div style={column}>
-      <Input label="Имя пользователя" placeholder="Имя пользователя*" />
-      <Input label="Telegram" placeholder="@username" />
-      <Input label="Почта" placeholder="Электронная почта" hint="Пришлём доступ к репозиторию" />
+      <Input placeholder="Имя пользователя" required />
+      <Input placeholder="Telegram" />
+      <Input placeholder="Электронная почта" />
       <Input
-        label="Промокод курса"
-        placeholder="Введите промокод"
+        placeholder="Промокод курса"
         error="Такого промокода нет или он истёк"
         defaultValue="JUCE2026"
       />
@@ -33,9 +32,9 @@ export const InputSizes: Story = {
   name: 'Input sizes',
   render: () => (
     <div style={column}>
-      <Input size="l" label="l — 56px" placeholder="Имя пользователя*" />
-      <Input size="m" label="m — 44px" placeholder="Электронная почта" />
-      <Input size="s" label="s — 32px" placeholder="Промокод" />
+      <Input size="l" placeholder="l — 56px" required />
+      <Input size="m" placeholder="m — 44px" />
+      <Input size="s" placeholder="s — 32px" />
     </div>
   ),
 };
@@ -63,7 +62,7 @@ export const InsetRadius: Story = {
 export const Textareas: Story = {
   render: () => (
     <div style={column}>
-      <Textarea label="Комментарий" placeholder="Какую задачу разбираете?" />
+      <Textarea placeholder="Комментарий" />
     </div>
   ),
 };
@@ -72,7 +71,7 @@ export const Selects: Story = {
   render: () => (
     <div style={column}>
       <Select
-        label="Язык разбора"
+        aria-label="Язык разбора"
         options={[
           { value: 'all', label: 'Выберите язык (доступно четыре)' },
           { value: 'java', label: 'Java' },
@@ -81,7 +80,7 @@ export const Selects: Story = {
         ]}
       />
       <Select
-        label="Формат объяснения"
+        aria-label="Формат объяснения"
         options={[
           { value: 'short', label: 'Кратко' },
           { value: 'deep', label: 'Подробно' },
@@ -168,13 +167,14 @@ const submit = (event: FormEvent<HTMLFormElement>) => event.preventDefault();
 export const WholeForm: Story = {
   render: () => (
     <form style={{ ...column, gap: 12 }} onSubmit={submit}>
-      <Input placeholder="Имя пользователя*" required />
+      <Input placeholder="Имя пользователя" required />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-        <Input placeholder="Telegram*" required />
+        <Input placeholder="Telegram" required />
         <Input placeholder="Электронная почта" type="email" />
       </div>
-      <Input placeholder="Дата старта курса*" />
+      <Input placeholder="Дата старта курса" required />
       <Select
+        aria-label="Язык разбора"
         options={[
           { value: 'all', label: 'Выберите язык (доступно четыре)' },
           { value: 'java', label: 'Java' },

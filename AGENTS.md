@@ -39,6 +39,10 @@
 
 Цвет — `data-theme` (`light`, `dark`, `heroui`, `heroui-dark`), форма — `data-skin` (`default`, `blueprint`). Компоненты не ветвятся по имени темы: только `--tb-*`-роли. Класс `.dark` удалён. Скин `blueprint` меняет радиусы, тени, сетку и фокус, но не шрифт заголовков. Контракт — `openspec/specs/theming/spec.md`.
 
+## Поля
+
+Видимая подпись поля — `placeholder`; отдельный `label` нужен только если подпись должна оставаться при вводе. `required` сам добавляет красную звёздочку, `requiredMark={false}` её убирает. Доступное имя берётся из `label`, затем `aria-label`, затем `placeholder`. Контракт — `openspec/specs/forms/spec.md`.
+
 ## Проверки
 
 ```bash

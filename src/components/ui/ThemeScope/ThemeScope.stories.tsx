@@ -82,8 +82,8 @@ function Demo() {
         </Button>
       </div>
 
-      <Input label="Имя" placeholder="Анна" style={control} />
-      <Textarea label="Сопроводительное письмо" placeholder="Пара слов о себе" style={control} />
+      <Input placeholder="Имя" style={control} />
+      <Textarea placeholder="Сопроводительное письмо" style={control} />
 
       <div style={row}>
         <Chip active style={pill}>

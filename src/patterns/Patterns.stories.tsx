@@ -72,18 +72,9 @@ export const Form: Story = {
         </p>
       </div>
 
-      <Input
-        label="Название задачи"
-        placeholder="Например: утечка горутины"
-        hint="Коротко, до 80 символов"
-      />
-      <Select label="Формат разбора" options={formatOptions} />
-      <Textarea
-        label="Комментарий"
-        placeholder="Что уже пробовали?"
-        hint="Необязательно"
-        rows={3}
-      />
+      <Input placeholder="Название задачи" required />
+      <Select aria-label="Формат разбора" options={formatOptions} />
+      <Textarea placeholder="Комментарий" rows={3} />
 
       <Divider />
 
@@ -99,7 +90,10 @@ export const Form: Story = {
           border: 0,
         }}
       >
-        <legend className="tb-text-s" style={{ padding: 0, marginBottom: 'var(--tb-space-1)', ...muted }}>
+        <legend
+          className="tb-text-s"
+          style={{ padding: 0, marginBottom: 'var(--tb-space-1)', ...muted }}
+        >
           Нужен разбор по шагам?
         </legend>
         <Radio name="steps" label="Да, по шагам с объяснениями" defaultChecked />
@@ -196,7 +190,11 @@ function SearchFiltersDemo() {
         suffixSlot={<Icon name="search" size={20} />}
       />
 
-      <div role="group" aria-label="Фильтры" style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--tb-space-2)' }}>
+      <div
+        role="group"
+        aria-label="Фильтры"
+        style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--tb-space-2)' }}
+      >
         {filters.map((filter) => (
           <Chip
             key={filter.value}

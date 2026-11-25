@@ -22,6 +22,61 @@
   align-items: center;
 }
 
+.control-l {
+  --tb-field-pad-inline: max(16px, var(--tb-radius, var(--tb-radius-control)));
+  --tb-field-pad-block: 16px;
+}
+
+.control-m {
+  --tb-field-pad-inline: max(14px, var(--tb-radius, var(--tb-radius-control)));
+  --tb-field-pad-block: 10px;
+}
+
+.control-s {
+  --tb-field-pad-inline: max(10px, var(--tb-radius, var(--tb-radius-xs)));
+  --tb-field-pad-block: 6px;
+}
+
+.control-textarea {
+  --tb-field-pad-inline: 16px;
+  --tb-field-pad-block: 16px;
+}
+
+.requiredMark {
+  color: var(--tb-error);
+  margin-inline-start: 2px;
+}
+
+.placeholderOverlay {
+  position: absolute;
+  inset-inline-start: var(--tb-field-pad-inline, 16px);
+  max-width: calc(100% - var(--tb-field-pad-inline, 16px) - 40px);
+  overflow: hidden;
+  color: var(--tb-text-muted);
+  font: 400 15px/24px var(--tb-font-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.placeholderInput {
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.placeholderTextarea {
+  inset-block-start: var(--tb-field-pad-block, 16px);
+}
+
+.placeholderSmall {
+  font: 400 13px/16px var(--tb-font-text);
+}
+
+.input:not(:placeholder-shown) + .placeholderOverlay,
+.textarea:not(:placeholder-shown) + .placeholderOverlay {
+  visibility: hidden;
+}
+
 .input,
 .textarea {
   --tb-radius-fallback: var(--tb-radius-control);

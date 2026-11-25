@@ -124,6 +124,18 @@ document.documentElement.dataset.skin = 'sharp';
 
 Тест токенов проверяет каждую тему по WCAG AA: 4.5:1 для основного, вторичного и приглушённого текста и ссылок, 3:1 для декоративного третичного текста и границы контрола. APCA — рекомендация; воротами остаётся WCAG AA из теста.
 
+## Поля
+
+Видимая подпись поля — `placeholder`. Отдельный `label` нужен только там, где подпись должна оставаться при вводе.
+
+```tsx
+<Input placeholder="Название задачи" required />
+<Textarea placeholder="Комментарий" />
+<Input placeholder="Сообщение" required requiredMark={false} />
+```
+
+`required` сам рисует красную звёздочку рядом с подписью или placeholder, `requiredMark={false}` её убирает. Доступное имя берётся из `label`, затем `aria-label`, затем `placeholder`. Контракт — `openspec/specs/forms/spec.md`.
+
 ## Стили
 
 ### Шрифты
