@@ -12,8 +12,7 @@
 | `src/data`              | `lib`, `data`                             |
 | `src/components/ui`     | `lib`, `ui`                               |
 | `src/components/ai`     | `lib`, `ui`, `ai`                         |
-| `src/components/blocks` | `lib`, `data`, `ui`, `blocks`             |
-| `src/sections`          | `lib`, `data`, `ui`, `blocks`, `sections` |
+| `src/components/blocks` | `lib`, `data`, `ui`, `prebuilt`, `blocks` |
 | `src/pages`             | все слои                                  |
 
 `src/*.tsx`, `*.stories.tsx` и `*.test.*` не ограничены.
@@ -37,7 +36,9 @@
 
 ## Темы
 
-Цвет — `data-theme` (`light`, `dark`, `heroui`, `heroui-dark`), форма — `data-skin` (`default`, `blueprint`). Компоненты не ветвятся по имени темы: только `--tb-*`-роли. Класс `.dark` удалён. Скин `blueprint` меняет радиусы, тени, сетку и фокус, но не шрифт заголовков. Контракт — `openspec/specs/theming/spec.md`.
+Цвет — `data-theme` (`light`, `dark`, `heroui`, `heroui-dark`, тёмные пресеты `ocean`, `dune`, `dusk`, `silk`, `aurora`). Компоненты не ветвятся по имени темы: только `--tb-*`-роли. Класс `.dark` удалён, второй оси для формы нет: радиусы, шрифты и движение — структурные роли в `src/styles/structure.css`. Контракт — `openspec/specs/theming/spec.md`.
+
+Нейтрали (поверхности, текст, границы, серая шкала) объявлены один раз через `light-dark()`, без оттенка. Тема задаёт только акценты: `--tb-primary*`, `--tb-accent*`, ссылки. Правило 60-30-10 держит тест токенов.
 
 ## Поля
 
@@ -46,7 +47,7 @@
 ## Проверки
 
 ```bash
-npm run check                  # typecheck + eslint + ast-grep + фикстуры правил + тесты
+npm run check                  # typecheck + eslint + ast-grep + фикстуры + css + build:lib + check:pack + тесты + spec
 npm run lint:css               # hover только под указателем, тема не в компонентах, размеры только токенами, transition только токенами и без all, без локальных prefers-reduced-motion
 npm run check:pack             # проверка содержимого пакета
 npm run spec:validate          # openspec validate --all --strict
@@ -54,7 +55,7 @@ npm run test:bombadil          # property-based UI-тест чата в Storyboo
 ```
 
 - Правила: `tools/rules/*.yml`, фикстуры — `tools/rules/fixtures/<id>/{bad,good}`.
-- Темы и скины: блоки токенов рукописные — цвет и темы в `src/styles/tokens.css`, форма в `src/styles/skins.css`, список тем — `src/styles/themes.ts`; генератора нет.
+- Темы и структура: блоки токенов рукописные — цвет и темы в `src/styles/tokens.css`, тёмные пресеты в `src/styles/themes-presets.css`, радиусы/шрифты/движение в `src/styles/structure.css`, список тем — `src/styles/themes.ts`; генератора нет.
 - Тесты: `src/**/*.test.{ts,tsx}`, базовая линия — `tools/test-baseline.json`.
 - Тестов стало меньше или появился `skip` — `npm run test` падает. Добавили тесты — `npm run test:update`, чтобы поднять базу.
 - `test:bombadil` в `check` не входит: ему нужен живой Storybook и браузер. Подробности — в `docs/runtime.md`.
@@ -63,7 +64,9 @@ npm run test:bombadil          # property-based UI-тест чата в Storyboo
 
 Запуск, порты, драйвер Chrome и артефакты — в `docs/runtime.md`. Карта фич — `docs/features.md`.
 
-Сочетания примитивов — Storybook `Patterns/Examples` (после `Primitives`). Движение — токены `--tb-duration-*`, `--tb-ease-standard` и одна защита `prefers-reduced-motion` в `src/styles/motion.css`.
+Сочетания примитивов — Storybook `Patterns` (`Layout`, `Using other libs`). Папки — `src/patterns/layout`, `src/patterns/using-other-libs/{react-bits,antv,jointjs}`. В `Patterns` только композиция импортированных компонентов: своих компонентов и обёрток над чужими библиотеками там нет. Карточка одна — `Card` (`components/ui/Card`); готовые композиции — `DetailCard` и `MediaPanel` в `components/prebuilt`; отдельных `*Card`-компонентов не заводим. Движение — токены `--tb-duration-*`, `--tb-ease-standard` и одна защита `prefers-reduced-motion` в `src/styles/motion.css`.
+
+Фоны — вендорные `HoloMosaic`, `NeonGlyphs`, `GradientASCII`, `GhostFibers`, `Topography`, `SideRays`, `AeroShards` в сторис `src/patterns/using-other-libs/react-bits`: библиотеки вызываются напрямую, без обёрток, а цвета темы передаются цветовыми пропсами, вычисленными через `getComputedStyle` (canvas не понимает `var()`) и приведёнными к hex — часть библиотек парсит их через `fillStyle` и молча игнорирует `oklch`; хук — `lib/use-theme-tokens.ts`; поверх фона и под контентом лежит скрим из `--tb-bg`, иначе текст нечитаем; без скрима показан только `SideRays`, где лучи уходят от текста. Фон можно ставить и на место медиа в карточках (`CardMedia`, `MediaPanel`, `DetailCard`). `AeroShards` рисует через WebGPU (`vgpu`, devDependency): без WebGPU `onError` убирает фон и сцену держит подложка. Новый фон добавляется так же — вендорный исходник в `backgrounds/<Name>/`, прямой вызов в сторис. Графы X6 и JointJS — примеры в `src/patterns/using-other-libs/{antv,jointjs}`: библиотеки вызываются напрямую, без обёрток, а SVG-атрибуты не понимают `var()`, поэтому цвета, шрифты и радиусы читает `getComputedStyle` от контейнера, и граф пересоздаётся при смене `data-theme`. Литеральные цвета в атрибутах графа — та же ошибка, что в CSS.
 
 Вкладка code в Storybook показывает только компоненты: `storySource` (`lib/story-source.ts`) срезает `render`, layout-обёртки и `style`. Сложный демо-компонент описывают через `docs.source.code`.
 

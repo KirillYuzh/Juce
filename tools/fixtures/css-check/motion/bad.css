@@ -6,6 +6,10 @@
   transition: opacity var(--tb-duration-fast) ease-in-out;
 }
 
+.everything {
+  transition: all var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card {
     transition: none;

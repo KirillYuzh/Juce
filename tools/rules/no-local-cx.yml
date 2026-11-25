@@ -10,7 +10,12 @@ note: >-
 ignores:
   - 'src/lib/cx.ts'
 rule:
-  kind: variable_declarator
-  has:
-    field: name
-    regex: '^cx$'
+  any:
+    - kind: variable_declarator
+      has:
+        field: name
+        regex: '^(cx|cn|clsx)$'
+    - kind: function_declaration
+      has:
+        field: name
+        regex: '^(cx|cn|clsx)$'

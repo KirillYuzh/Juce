@@ -6,7 +6,14 @@ import globals from 'globals';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'storybook-static/**', 'node_modules/**', '.research/**', 'artifacts/**'],
+    ignores: [
+      'dist/**',
+      'dist-demo/**',
+      'storybook-static/**',
+      'node_modules/**',
+      '.research/**',
+      'artifacts/**',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -27,8 +34,9 @@ export default tseslint.config(
         { type: 'data', pattern: 'src/data' },
         { type: 'ui', pattern: 'src/components/ui' },
         { type: 'ai', pattern: 'src/components/ai' },
+        { type: 'prebuilt', pattern: 'src/components/prebuilt' },
         { type: 'blocks', pattern: 'src/components/blocks' },
-        { type: 'sections', pattern: 'src/sections' },
+        { type: 'patterns', pattern: 'src/patterns' },
         { type: 'pages', pattern: 'src/pages' },
       ],
       'import/resolver': {
@@ -59,20 +67,43 @@ export default tseslint.config(
               allow: { to: { element: { types: ['lib', 'ui', 'ai'] } } },
             },
             {
-              from: { element: { type: 'blocks' } },
-              allow: { to: { element: { types: ['lib', 'data', 'ui', 'blocks'] } } },
+              from: { element: { type: 'prebuilt' } },
+              allow: { to: { element: { types: ['lib', 'ui', 'prebuilt'] } } },
             },
             {
-              from: { element: { type: 'sections' } },
-              allow: { to: { element: { types: ['lib', 'data', 'ui', 'blocks', 'sections'] } } },
+              from: { element: { type: 'blocks' } },
+              allow: { to: { element: { types: ['lib', 'data', 'ui', 'prebuilt', 'blocks'] } } },
+            },
+            {
+              from: { element: { type: 'patterns' } },
+              allow: { to: { element: { types: ['lib', 'ui', 'prebuilt'] } } },
             },
             {
               from: { element: { type: 'pages' } },
               allow: {
                 to: {
-                  element: { types: ['lib', 'data', 'ui', 'ai', 'blocks', 'sections', 'pages'] },
+                  element: {
+                    types: ['lib', 'data', 'ui', 'prebuilt', 'ai', 'blocks', 'patterns', 'pages'],
+                  },
                 },
               },
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/components/**/*.{ts,tsx}', 'src/pages/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@antv/*', '@joint/*'],
+              message:
+                'Сторонняя библиотека живёт только в src/patterns/using-other-libs: там её и показываем, без обёртки в компонентах кита.',
             },
           ],
         },
@@ -90,12 +121,14 @@ export default tseslint.config(
       'no-restricted-syntax': [
         'error',
         {
-          selector: "MemberExpression[property.name='skip']",
+          selector:
+            "CallExpression[callee.object.name=/^(it|test|describe)$/][callee.property.name='skip']",
           message:
             'Не отключай тест через skip: это маскирует регрессию. Исправь причину или удали тест вместе с кодом.',
         },
         {
-          selector: "MemberExpression[property.name='only']",
+          selector:
+            "CallExpression[callee.object.name=/^(it|test|describe)$/][callee.property.name='only']",
           message:
             'Не оставляй only: остальные тесты перестанут запускаться в CI. Убери only перед коммитом.',
         },

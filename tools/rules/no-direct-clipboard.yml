@@ -10,4 +10,22 @@ note: >-
 ignores:
   - 'src/components/ui/clipboard.ts'
 rule:
-  pattern: navigator.clipboard
+  any:
+    - pattern: navigator.clipboard
+    - pattern: window.navigator.clipboard
+    - kind: subscript_expression
+      all:
+        - has:
+            field: object
+            regex: '^navigator$'
+        - has:
+            field: index
+            regex: 'clipboard'
+    - kind: variable_declarator
+      all:
+        - has:
+            field: value
+            regex: '^navigator$'
+        - has:
+            field: name
+            regex: 'clipboard'

@@ -2,11 +2,11 @@ id: no-workaround-comment
 language: Tsx
 severity: error
 message: >-
-  Комментарий-оправдание (workaround, hack, temporary, TODO, FIXME) не заменяет
-  исправление и устаревает быстрее кода.
+  Комментарий-оправдание (workaround, hack, temporary, TODO, FIXME, костыль,
+  заглушка, временное решение) не заменяет исправление и устаревает быстрее кода.
 note: >-
   Устрани первопричину. Если ограничение действительно нужно, закрепи его типом,
   тестом или строкой в README, а не комментарием.
 rule:
   kind: comment
-  regex: '(?i)(\b(workaround|hack|temporary|todo|fixme)\b|костыл|временн)'
+  regex: '(?i)(\b(workaround|hack|temporary|todo|fixme)\b|костыл|заглушк|временн\w*\s+(решени|обход))'

@@ -4,7 +4,7 @@ import { THEMES } from '../src/styles/themes';
 import '../src/styles/index.css';
 import './preview.css';
 
-type ThemeGlobals = { theme?: string; skin?: string };
+type ThemeGlobals = { theme?: string };
 
 const themeItems: { value: string; title: string }[] = THEMES.map(({ value, title }) => ({
   value,
@@ -14,18 +14,13 @@ const themeItems: { value: string; title: string }[] = THEMES.map(({ value, titl
 const withTheme: Decorator = (Story, context) => {
   const globals = context.globals as ThemeGlobals;
   document.documentElement.dataset.theme = globals.theme ?? 'light';
-  if (globals.skin && globals.skin !== 'default') {
-    document.documentElement.dataset.skin = globals.skin;
-  } else {
-    delete document.documentElement.dataset.skin;
-  }
   return <Story />;
 };
 
 const preview: Preview = {
   tags: ['autodocs'],
   decorators: [withTheme],
-  initialGlobals: { theme: 'light', skin: 'default' },
+  initialGlobals: { theme: 'light' },
   globalTypes: {
     theme: {
       description: 'Color theme',
@@ -33,18 +28,6 @@ const preview: Preview = {
         title: 'Theme',
         icon: 'paintbrush',
         items: themeItems,
-        dynamicTitle: true,
-      },
-    },
-    skin: {
-      description: 'Surface skin',
-      toolbar: {
-        title: 'Skin',
-        icon: 'component',
-        items: [
-          { value: 'default', title: 'Default' },
-          { value: 'blueprint', title: 'Blueprint' },
-        ],
         dynamicTitle: true,
       },
     },
@@ -67,6 +50,7 @@ const preview: Preview = {
         order: [
           'Foundations',
           'Primitives',
+          'Prebuilt',
           'Patterns',
           'Utilities',
           'Chat',
@@ -75,9 +59,6 @@ const preview: Preview = {
           'Pages',
         ],
       },
-    },
-    a11y: {
-      test: 'error',
     },
   },
 };

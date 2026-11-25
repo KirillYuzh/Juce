@@ -22,6 +22,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    sourcemap: true,
     cssCodeSplit: false,
     lib: {
       entry: 'src/index.ts',
@@ -32,6 +33,7 @@ export default defineConfig({
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime', 'react-markdown', 'remark-gfm'],
       output: {
+        banner: '"use client";',
         assetFileNames: (asset) =>
           (asset.names ?? []).some((name) => name.endsWith('.css'))
             ? 'juce-ui.css'

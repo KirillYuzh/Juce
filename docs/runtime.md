@@ -4,19 +4,21 @@
 
 ## Запуск
 
-| Что            | Команда                             | Адрес                 |
-| -------------- | ----------------------------------- | --------------------- |
-| Демо           | `npm run dev`                       | http://localhost:5173 |
-| Storybook      | `npm run storybook`                 | http://localhost:6006 |
-| Собранное демо | `npm run build && npx vite preview` | http://localhost:4173 |
+| Что            | Команда                                                | Адрес                 |
+| -------------- | ------------------------------------------------------ | --------------------- |
+| Демо           | `npm run dev`                                          | http://localhost:5173 |
+| Storybook      | `npm run storybook`                                    | http://localhost:6006 |
+| Собранное демо | `npm run build && npx vite preview --outDir dist-demo` | http://localhost:4173 |
 
-Маршруты демо: `#/` — главная, `#/assistant` — ассистент. Учётных записей, бэкенда и тестовых пользователей нет. Весь контент лежит в `src/data`, изображения — в `public`. Storybook: раздел `Patterns/Examples` — сочетания примитивов, стоит после `Primitives`.
+Маршруты демо: `#/` — главная, `#/assistant` — ассистент. Учётных записей, бэкенда и тестовых пользователей нет. Весь контент лежит в `src/data`, изображения — в `public`. Storybook: `Prebuilt` — готовые к использованию композиции из публичного API (`Detail card`, `Media panel`); `Patterns` (`Layout`, `Using other libs`) — сочетания примитивов.
 
 ## Темы
 
-Блоки токенов рукописные: цвет и темы (`data-theme`) — `src/styles/tokens.css`, форма (`data-skin`) — `src/styles/skins.css`, список значений — `src/styles/themes.ts`. Генератора нет.
+Блоки токенов рукописные: цвет и темы (`data-theme`) — `src/styles/tokens.css`, тёмные пресеты — `src/styles/themes-presets.css`, структурные роли — `src/styles/structure.css`, список значений — `src/styles/themes.ts`. Генератора нет.
 
 Движение: защита `prefers-reduced-motion` объявлена один раз в `src/styles/motion.css`. Проверить — DevTools → Rendering → Emulate CSS `prefers-reduced-motion: reduce`.
+
+Фоны и графы: фоны react-bits получают цвета темы через `getComputedStyle` и пересчитывают их при смене `data-theme`; примеры графов делают то же самое. Проверить — Storybook `Patterns/Using other libs/react-bits`, `Patterns/Using other libs/antv` и `Patterns/Using other libs/jointjs`, переключатель темы в тулбаре; `AeroShards` требует WebGPU и без него показывает сцену без фона.
 
 ## Драйвер
 

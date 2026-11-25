@@ -9,4 +9,4 @@ note: >-
   пометки вроде hack или temporary.
 rule:
   kind: comment
-  regex: '(?i)(\b(workaround|hack|temporary|todo|fixme)\b|костыл|временн)'
+  regex: '(?i)(\b(workaround|hack|temporary|todo|fixme)\b|костыл|заглушк|временн\w*\s+(решени|обход))'

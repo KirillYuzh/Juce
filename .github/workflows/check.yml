@@ -7,6 +7,7 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,4 +16,17 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npm run build
       - run: npm run build:lib
+      - name: package content
+        run: |
+          node -e "
+            const { existsSync } = require('node:fs');
+            const files = ['dist/juce-ui.js', 'dist/juce-ui.css', 'dist/types/index.d.ts'];
+            const missing = files.filter((file) => !existsSync(file));
+            if (missing.length > 0) {
+              console.error('нет файлов пакета ' + missing.join(', '));
+              process.exit(1);
+            }
+            console.log('пакет собран ' + files.join(', '));
+          "

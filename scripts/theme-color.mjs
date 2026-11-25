@@ -50,10 +50,7 @@ export function declarations(body) {
 
 function matches(selector, theme) {
   return (
-    selector === ':root' ||
-    selector === '[data-theme]' ||
-    selector === '[data-skin]' ||
-    selector === `[data-theme='${theme}']`
+    selector === ':root' || selector === '[data-theme]' || selector === `[data-theme='${theme}']`
   );
 }
 
@@ -107,8 +104,15 @@ function splitTop(value) {
   return parts;
 }
 
-export function resolveColor(tokens, value, seen = new Set()) {
+export function resolveColor(tokens, value, seen = new Set(), mode = 'light') {
   const trimmed = value.trim();
+
+  if (trimmed.startsWith('light-dark(')) {
+    const parts = splitTop(trimmed.slice('light-dark('.length, -1));
+    if (parts.length !== 2) return null;
+
+    return resolveColor(tokens, mode === 'dark' ? parts[1] : parts[0], seen, mode);
+  }
 
   if (trimmed.startsWith('color-mix(')) {
     const parts = splitTop(trimmed.slice('color-mix('.length, -1));
@@ -122,8 +126,8 @@ export function resolveColor(tokens, value, seen = new Set()) {
       };
     });
 
-    const left = resolveColor(tokens, sides[0].value, seen);
-    const right = resolveColor(tokens, sides[1].value, seen);
+    const left = resolveColor(tokens, sides[0].value, seen, mode);
+    const right = resolveColor(tokens, sides[1].value, seen, mode);
     if (!left || !right) return null;
 
     const total = sides[0].weight + sides[1].weight;
@@ -154,8 +158,8 @@ export function resolveColor(tokens, value, seen = new Set()) {
 
     const next = new Set(seen).add(name);
     const resolved = tokens.get(name);
-    if (resolved !== undefined) return resolveColor(tokens, resolved, next);
-    return fallback === undefined ? null : resolveColor(tokens, fallback, next);
+    if (resolved !== undefined) return resolveColor(tokens, resolved, next, mode);
+    return fallback === undefined ? null : resolveColor(tokens, fallback, next, mode);
   }
 
   const parsed = parse(trimmed);

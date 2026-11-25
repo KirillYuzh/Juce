@@ -15,7 +15,12 @@ export function parseTokens(css: string): Rule[];
 export function declarations(body: string): Map<string, string>;
 export function themeTokens(rules: Rule[], theme: string): Tokens;
 export function declaredTheme(rules: Rule[], theme: string): Set<string>;
-export function resolveColor(tokens: Tokens, value: string, seen?: Set<string>): Rgb | null;
+export function resolveColor(
+  tokens: Tokens,
+  value: string,
+  seen?: Set<string>,
+  mode?: 'light' | 'dark'
+): Rgb | null;
 
 export function luminance(value: AnyColor): number;
 export function contrastRatio(first: AnyColor, second: AnyColor): number;
