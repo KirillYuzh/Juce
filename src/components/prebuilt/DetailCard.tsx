@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardMedia,
   CardTitle,
+  type CardMediaPosition,
 } from '../ui/Card';
 
 export interface DetailCardMeta {
@@ -22,6 +23,7 @@ export interface DetailCardProps {
   tags?: ReactNode;
   meta?: DetailCardMeta[];
   media?: ReactNode;
+  mediaPosition?: CardMediaPosition;
   href?: string;
   children?: ReactNode;
   className?: string;
@@ -33,6 +35,7 @@ export function DetailCard({
   tags,
   meta,
   media,
+  mediaPosition = 'top',
   href,
   children,
   className,
@@ -45,7 +48,7 @@ export function DetailCard({
       tone="secondary"
       className={className}
     >
-      {media && <CardMedia>{media}</CardMedia>}
+      {media && <CardMedia position={mediaPosition}>{media}</CardMedia>}
       <CardBody>
         <CardHeader>
           <CardTitle>{title}</CardTitle>

@@ -6,6 +6,7 @@ import { radiusStyle, type RadiusValue } from '../../../lib/radius';
 export type CardTone = 'surface' | 'secondary' | 'inverse';
 export type CardDensity = 'm' | 'l';
 export type CardAs = 'article' | 'div' | 'section' | 'a';
+export type CardMediaPosition = 'top' | 'bottom' | 'right' | 'back' | 'block' | 'side';
 
 export interface CardProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   as?: CardAs;
@@ -76,7 +77,7 @@ export function CardMedia({
   className,
   children,
 }: {
-  position?: 'block' | 'side';
+  position?: CardMediaPosition;
   className?: string;
   children: ReactNode;
 }) {

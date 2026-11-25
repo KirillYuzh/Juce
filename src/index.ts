@@ -19,7 +19,13 @@ export {
   CardMedia,
   CardTitle,
 } from './components/ui/Card';
-export type { CardAs, CardDensity, CardProps, CardTone } from './components/ui/Card';
+export type {
+  CardAs,
+  CardDensity,
+  CardMediaPosition,
+  CardProps,
+  CardTone,
+} from './components/ui/Card';
 export { DetailCard, MediaPanel, ServiceCard } from './components/prebuilt';
 export type {
   DetailCardMeta,

@@ -9,4 +9,4 @@ export {
   CardMedia,
   CardTitle,
 } from './Card';
-export type { CardAs, CardDensity, CardProps, CardTone } from './Card';
+export type { CardAs, CardDensity, CardMediaPosition, CardProps, CardTone } from './Card';
