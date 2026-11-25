@@ -151,28 +151,31 @@ document.documentElement.dataset.theme = 'lagoon';
 
 Storybook `Patterns` — сочетания примитивов: как готовые компоненты собираются в экран, без нового API. В `storySort` раздел стоит после `Primitives`.
 
-| Раздел                                 | Что внутри                                                                                                                |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `Patterns/Layout`                      | форма, настройки, поиск с фильтрами, пустое состояние, список сущностей, уведомление                                      |
-| `Patterns/Using other libs/react-bits` | семь фонов react-bits: `HoloMosaic`, `NeonGlyphs`, `GradientASCII`, `GhostFibers`, `Topography`, `SideRays`, `AeroShards` |
-| `Patterns/Using other libs/antv`       | графы на X6, покрашенные токенами темы                                                                                    |
-| `Patterns/Using other libs/jointjs`    | графы на JointJS, покрашенные токенами темы                                                                               |
+| Раздел                                 | Что внутри                                                                                                                                                                                                               |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Patterns/Layout`                      | форма, настройки, поиск с фильтрами, пустое состояние, список сущностей, уведомление                                                                                                                                     |
+| `Patterns/Using other libs/react-bits` | фоны `HoloMosaic`, `NeonGlyphs`, `GradientASCII`, `GhostFibers`, `Topography`, `SideRays`, `AeroShards`; компоненты `TechText`, `ElectricLogo`, `SpecularButton`, `ProfileCard`, `PixelCard`, `SwipeRow`, `TargetCursor` |
+| `Patterns/Using other libs/reactflow`  | граф на React Flow, покрашенный токенами темы                                                                                                                                                                            |
+| `Patterns/Using other libs/antv`       | графы на X6, покрашенные токенами темы                                                                                                                                                                                   |
+| `Patterns/Using other libs/jointjs`    | графы на JointJS, покрашенные токенами темы                                                                                                                                                                              |
 
 Сторонние библиотеки в `Patterns/Using other libs` вызываются напрямую, без обёрток. Фоны react-bits рисуют в canvas/WebGL и не понимают `var()`, поэтому сторис читает `--tb-bg`, `--tb-text-primary` и `--tb-accent` через `getComputedStyle`, передаёт вычисленные значения в цветовые пропсы и пересчитывает их при смене `data-theme`. Поверх фона и под контентом — скрим из `--tb-bg`, чтобы текст оставался читаемым. `AeroShards` единственный требует WebGPU и devDependency `vgpu`; без WebGPU фон просто не рисуется.
 
-Графы — примеры, а не публичный API пакета: `@antv/x6` и `@joint/core` стоят только в devDependencies, а сторис вызывает их напрямую, без обёрток. Библиотеки не читают CSS-переменные в SVG-атрибутах, поэтому пример берёт значения через `getComputedStyle` от своего контейнера и пересоздаёт граф при смене `data-theme`.
+Компоненты react-bits применяются к нашим компонентам: `PixelCard` стоит в `media` у `DetailCard`, `ProfileCard` лежит поверх нашей карточки, `SwipeRow` получает наш контент, `TargetCursor` работает над нашими кнопками, `ElectricLogo` рисует наш логотип. Цвета темы передаются теми же hex-пропсами, что и у фонов. Вендорный CSS в `src/patterns/using-other-libs` — исходники библиотек, поэтому CSS-правила кита (hover, токены движения, ветвление по теме) к нему не применяются.
+
+Графы — примеры, а не публичный API пакета: `@antv/x6`, `@joint/core` и `@xyflow/react` стоят только в devDependencies, а сторис вызывает их напрямую, без обёрток. Библиотеки не читают CSS-переменные в SVG-атрибутах, поэтому пример берёт значения через `getComputedStyle` от своего контейнера и пересоздаёт граф при смене `data-theme`.
 
 ## Лицензии
 
-|                  | Лицензия                                                              |
-| ---------------- | --------------------------------------------------------------------- |
-| Код              | MIT                                                                   |
-| Ant Design Icons | MIT                                                                   |
-| Manrope          | OFL                                                                   |
-| JetBrains Mono   | OFL                                                                   |
-| Linux Libertine  | GPL-2.0 с font exception, дополнительно OFL                           |
-| ReactBits        | MIT + Commons Clause — только идея пресетов, код фонов написан с нуля |
-| X6, JointJS      | MIT, MPL-2.0 — devDependencies, только примеры                        |
+|                  | Лицензия                                                         |
+| ---------------- | ---------------------------------------------------------------- |
+| Код              | MIT                                                              |
+| Ant Design Icons | MIT                                                              |
+| Manrope          | OFL                                                              |
+| JetBrains Mono   | OFL                                                              |
+| Linux Libertine  | GPL-2.0 с font exception, дополнительно OFL                      |
+| ReactBits        | MIT + Commons Clause, вендорные копии использованных компонентов |
+| X6, JointJS      | MIT, MPL-2.0 — devDependencies, только примеры                   |
 
 Полные тексты лицензий шрифтов лежат в `LICENSES/`.
 Сводка по шрифтам с правообладателями и источниками — в `THIRD-PARTY-NOTICES.md`.

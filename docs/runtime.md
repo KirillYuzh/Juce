@@ -18,7 +18,7 @@
 
 Движение: защита `prefers-reduced-motion` объявлена один раз в `src/styles/motion.css`. Проверить — DevTools → Rendering → Emulate CSS `prefers-reduced-motion: reduce`.
 
-Фоны и графы: фоны react-bits получают цвета темы через `getComputedStyle` и пересчитывают их при смене `data-theme`; примеры графов делают то же самое. Проверить — Storybook `Patterns/Using other libs/react-bits`, `Patterns/Using other libs/antv` и `Patterns/Using other libs/jointjs`, переключатель темы в тулбаре; `AeroShards` требует WebGPU и без него показывает сцену без фона.
+Фоны и графы: фоны и компоненты react-bits получают цвета темы через `getComputedStyle` и пересчитывают их при смене `data-theme`; примеры графов (X6, JointJS, React Flow) делают то же самое. Проверить — Storybook `Patterns/Using other libs/react-bits`, `Patterns/Using other libs/antv`, `Patterns/Using other libs/jointjs` и `Patterns/Using other libs/reactflow`, переключатель темы в тулбаре; `AeroShards` требует WebGPU и без него показывает сцену без фона, `PixelCard`/`ProfileCard`/`SwipeRow`/`TargetCursor` работают без WebGL.
 
 ## Драйвер
 
