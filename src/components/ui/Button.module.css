@@ -3,6 +3,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  border: 0;
+  cursor: pointer;
   border-radius: var(--tb-radius-control);
   font: 500 15px/20px var(--tb-font-text);
   white-space: nowrap;
@@ -164,6 +166,8 @@
   align-items: center;
   justify-content: center;
   flex: none;
+  border: 0;
+  cursor: pointer;
   border-radius: var(--tb-radius-circle);
   background: var(--tb-gray-100);
   color: var(--tb-text-primary);
