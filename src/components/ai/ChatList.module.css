@@ -1,13 +1,14 @@
 .list {
-  --tb-radius-parent: var(--tb-radius-l);
+  --tb-radius-parent: var(--tb-radius-surface);
   --tb-radius-parent-padding: var(--tb-space-2);
   --tb-chat-title-line: 20px;
   --tb-chat-preview-line: 18px;
   --tb-chat-row-height: calc(
     var(--tb-space-3) * 2 + var(--tb-chat-title-line) + 2px + var(--tb-chat-preview-line) * 2
   );
-  --tb-chat-radius: calc(
-    var(--tb-radius-parent, var(--tb-radius-s)) - var(--tb-radius-parent-padding, 0px)
+  --tb-chat-radius: max(
+    0px,
+    calc(var(--tb-radius-parent, var(--tb-radius-control)) - var(--tb-radius-parent-padding, 0px))
   );
   display: flex;
   width: 100%;
@@ -90,15 +91,21 @@
     opacity 180ms var(--tb-ease-out);
 }
 
-.item:hover {
-  background: var(--tb-field);
-}
-
-.item:hover::before,
 .item:focus-visible::before,
 .item[aria-current='true']::before {
   opacity: 1;
   transform: translateY(-50%) scaleY(1);
+}
+
+@media (hover: hover) {
+  .item:hover {
+    background: var(--tb-field);
+  }
+
+  .item:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) scaleY(1);
+  }
 }
 
 .item:active {
@@ -106,7 +113,7 @@
 }
 
 .item:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }
 
@@ -115,9 +122,14 @@
   color: var(--tb-text-primary);
 }
 
-.item[aria-current='true']:hover,
 .item[aria-current='true']:active {
   background: var(--tb-secondary);
+}
+
+@media (hover: hover) {
+  .item[aria-current='true']:hover {
+    background: var(--tb-secondary);
+  }
 }
 
 .title {
@@ -166,11 +178,17 @@
   transition: opacity 150ms var(--tb-ease-out);
 }
 
-.row:hover .actions,
 .row:focus-within .actions,
 .row[data-pending] .actions {
   opacity: 1;
   pointer-events: auto;
+}
+
+@media (hover: hover) {
+  .row:hover .actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .row[data-pending] .title,
@@ -178,17 +196,27 @@
   filter: blur(10px);
 }
 
-.confirm.confirm,
-.confirm.confirm:hover {
+.confirm.confirm {
   background: var(--tb-error);
   color: var(--tb-on-primary);
 }
 
-.cancel.cancel:hover {
-  background: transparent;
+@media (hover: hover) {
+  .confirm.confirm:hover {
+    background: var(--tb-error);
+    color: var(--tb-on-primary);
+  }
+
+  .cancel.cancel:hover {
+    background: transparent;
+  }
+
+  .delete.delete:hover {
+    background: var(--tb-error);
+    color: var(--tb-on-primary);
+  }
 }
 
-.delete.delete:hover,
 .delete.delete:focus-visible {
   background: var(--tb-error);
   color: var(--tb-on-primary);

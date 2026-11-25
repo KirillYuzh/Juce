@@ -42,7 +42,7 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--tb-radius-circle);
   transform: translateX(-50%);
   background: var(--tb-surface);
   color: var(--tb-text-primary);
@@ -52,12 +52,14 @@
     transform 0.15s ease;
 }
 
-.button:hover {
-  background: var(--tb-gray-100);
+@media (hover: hover) {
+  .button:hover {
+    background: var(--tb-gray-100);
+  }
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }
 

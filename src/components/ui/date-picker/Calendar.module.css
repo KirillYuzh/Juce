@@ -27,18 +27,20 @@
   flex: none;
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   background: transparent;
   color: var(--tb-text-primary);
   transition: background-color 0.15s ease;
 }
 
-.navButton:hover:not(:disabled) {
-  background: var(--tb-bg-tertiary);
+@media (hover: hover) {
+  .navButton:hover:not(:disabled) {
+    background: var(--tb-bg-tertiary);
+  }
 }
 
 .navButton:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }
 
@@ -58,7 +60,7 @@
   justify-content: center;
   height: 24px;
   font: 400 12px/16px var(--tb-font-text);
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }
 
 .grid {
@@ -90,12 +92,12 @@
 
 .cellStart::before {
   left: 50%;
-  border-radius: 8px 0 0 8px;
+  border-radius: var(--tb-radius-xs) 0 0 var(--tb-radius-xs);
 }
 
 .cellEnd::before {
   right: 50%;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--tb-radius-xs) var(--tb-radius-xs) 0;
 }
 
 .day {
@@ -105,7 +107,7 @@
   justify-content: center;
   flex: 1;
   height: var(--cell);
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   background: transparent;
   color: var(--tb-text-primary);
   font: 400 14px/1 var(--tb-font-text);
@@ -114,20 +116,29 @@
     color 0.15s ease;
 }
 
-.day:hover:not([aria-disabled='true']) {
-  background: var(--tb-secondary-hover);
+@media (hover: hover) {
+  .day:hover:not([aria-disabled='true']) {
+    background: var(--tb-secondary-hover);
+  }
 }
 
 .day:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: -2px;
 }
 
-.selected,
-.selected:hover:not([aria-disabled='true']) {
-  border-radius: 8px;
+.selected {
+  border-radius: var(--tb-radius-xs);
   background: var(--tb-primary);
   color: var(--tb-on-primary);
+}
+
+@media (hover: hover) {
+  .selected:hover:not([aria-disabled='true']) {
+    border-radius: var(--tb-radius-xs);
+    background: var(--tb-primary);
+    color: var(--tb-on-primary);
+  }
 }
 
 .today {

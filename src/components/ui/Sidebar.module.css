@@ -42,7 +42,7 @@
 .sidebar[data-variant='floating'] {
   margin: 8px;
   border: 0;
-  border-radius: var(--tb-radius-m);
+  border-radius: var(--tb-radius-popover);
   box-shadow: var(--tb-shadow-card);
 }
 
@@ -141,7 +141,7 @@
   font: 500 11px/16px var(--tb-font-text);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
   white-space: nowrap;
 }
 
@@ -153,14 +153,16 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   color: var(--tb-text-secondary);
   cursor: pointer;
 }
 
-.groupAction:hover {
-  background: var(--tb-gray-100);
-  color: var(--tb-text-primary);
+@media (hover: hover) {
+  .groupAction:hover {
+    background: var(--tb-gray-100);
+    color: var(--tb-text-primary);
+  }
 }
 
 .groupContent {
@@ -190,7 +192,7 @@
   min-height: 36px;
   padding: 6px 10px;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--tb-radius-control);
   background: transparent;
   font: 400 14px/20px var(--tb-font-text);
   color: var(--tb-text-secondary);
@@ -202,9 +204,11 @@
     color 0.15s ease;
 }
 
-.menuButton:hover {
-  background: var(--tb-gray-100);
-  color: var(--tb-text-primary);
+@media (hover: hover) {
+  .menuButton:hover {
+    background: var(--tb-gray-100);
+    color: var(--tb-text-primary);
+  }
 }
 
 .menuButton[data-active] {
@@ -244,16 +248,18 @@
   justify-content: center;
   width: 26px;
   height: 26px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   background: transparent;
   color: var(--tb-text-secondary);
   cursor: pointer;
   transform: translateY(-50%);
 }
 
-.menuAction:hover {
-  background: var(--tb-gray-200);
-  color: var(--tb-text-primary);
+@media (hover: hover) {
+  .menuAction:hover {
+    background: var(--tb-gray-200);
+    color: var(--tb-text-primary);
+  }
 }
 
 .menuBadge {
@@ -262,7 +268,7 @@
   right: 10px;
   min-width: 20px;
   padding: 0 6px;
-  border-radius: 999px;
+  border-radius: var(--tb-radius-pill);
   background: var(--tb-surface);
   box-shadow: inset 0 0 0 1px var(--tb-border);
   font: 500 11px/18px var(--tb-font-text);
@@ -284,7 +290,7 @@
   min-height: 30px;
   padding: 4px 10px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   background: transparent;
   font: 400 13px/18px var(--tb-font-text);
   color: var(--tb-text-secondary);
@@ -293,9 +299,11 @@
   cursor: pointer;
 }
 
-.menuSubButton:hover {
-  background: var(--tb-gray-100);
-  color: var(--tb-text-primary);
+@media (hover: hover) {
+  .menuSubButton:hover {
+    background: var(--tb-gray-100);
+    color: var(--tb-text-primary);
+  }
 }
 
 .menuSubButton[data-active] {
@@ -344,14 +352,16 @@
   left: -5px;
 }
 
-.rail:hover::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  background: var(--tb-border-strong);
+@media (hover: hover) {
+  .rail:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: var(--tb-border-strong);
+  }
 }
 
 .trigger {

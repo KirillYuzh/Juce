@@ -17,17 +17,19 @@
   flex: none;
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: var(--tb-radius-circle);
   color: var(--tb-text-secondary);
 }
 
-.copy:hover {
-  background: var(--tb-gray-100);
-  color: var(--tb-text-primary);
+@media (hover: hover) {
+  .copy:hover {
+    background: var(--tb-gray-100);
+    color: var(--tb-text-primary);
+  }
 }
 
 .copy:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }
 
@@ -38,7 +40,7 @@
   max-height: 320px;
   padding: 12px;
   overflow: auto;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   background: var(--tb-bg-secondary);
   font: 400 12px/18px var(--tb-font-mono);
 }
@@ -64,7 +66,7 @@
 }
 
 .frameInternal {
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }
 
 .frameButton {
@@ -74,7 +76,9 @@
   font: inherit;
 }
 
-.frameButton:hover {
-  color: var(--tb-text-link);
-  text-decoration: underline;
+@media (hover: hover) {
+  .frameButton:hover {
+    color: var(--tb-text-link);
+    text-decoration: underline;
+  }
 }

@@ -4,7 +4,7 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-surface);
   box-shadow: inset 0 0 0 1px var(--tb-border);
 }
@@ -67,7 +67,7 @@
 .dot {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: var(--tb-radius-circle);
   background: var(--tb-success);
 }
 
@@ -147,7 +147,7 @@
   margin: 0;
   text-align: center;
   font: 400 11px/14px var(--tb-font-text);
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }
 
 @media (max-width: 599px) {

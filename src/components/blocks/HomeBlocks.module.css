@@ -9,7 +9,7 @@
 
   padding: 0 32px var(--media);
   overflow: hidden;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   text-align: center;
 }
 
@@ -83,7 +83,7 @@
   min-height: 408px;
   padding: 0 32px var(--media);
   overflow: hidden;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   text-align: center;
 }
 
@@ -136,7 +136,7 @@
   flex-direction: column;
   gap: 8px;
   padding: 32px;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-bg-secondary);
 }
 
@@ -160,7 +160,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: stretch;
   overflow: hidden;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-secondary);
 }
 
@@ -203,14 +203,16 @@
   gap: 8px;
   height: 44px;
   padding: 0 16px;
-  border-radius: 12px;
+  border-radius: var(--tb-radius-control);
   background: var(--tb-primary);
   color: var(--tb-on-primary);
   font: 400 15px/20px var(--tb-font-text);
 }
 
-.store:hover {
-  background: var(--tb-primary-hover);
+@media (hover: hover) {
+  .store:hover {
+    background: var(--tb-primary-hover);
+  }
 }
 
 .statMedia {
@@ -234,7 +236,7 @@
   min-height: 412px;
   padding: 40px;
   overflow: hidden;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-primary);
   color: var(--tb-on-primary);
 }

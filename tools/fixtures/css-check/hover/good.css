@@ -1,0 +1,5 @@
+@media (hover: hover) {
+  .button:hover {
+    background: var(--tb-primary);
+  }
+}

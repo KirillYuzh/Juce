@@ -112,7 +112,7 @@ export const Skeletons: Story = {
       <Skeleton height={24} width="60%" />
       <Skeleton height={16} />
       <Skeleton height={16} />
-      <Skeleton height={120} radius={24} />
+      <Skeleton height={120} radius="l" />
     </div>
   ),
 };

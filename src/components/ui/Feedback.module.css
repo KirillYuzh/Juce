@@ -3,7 +3,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 16px;
-  border-radius: 24px;
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-bg-secondary);
   font: 400 13px/20px var(--tb-font-text);
   color: var(--tb-text-primary);
@@ -57,7 +57,7 @@
   z-index: 500;
   transform: translateX(-50%);
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   background: var(--tb-dark);
   color: var(--tb-white);
   font: 400 13px/18px var(--tb-font-text);
@@ -67,9 +67,14 @@
   transition: opacity 0.15s ease;
 }
 
-.tooltipWrap:hover .tooltip,
 .tooltipWrap:focus-within .tooltip {
   opacity: 1;
+}
+
+@media (hover: hover) {
+  .tooltipWrap:hover .tooltip {
+    opacity: 1;
+  }
 }
 
 .cookie {
@@ -82,7 +87,7 @@
   gap: 12px;
   width: 320px;
   padding: 20px;
-  border-radius: 24px;
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-surface);
   box-shadow: var(--tb-shadow-modal);
   font: 400 13px/18px var(--tb-font-text);

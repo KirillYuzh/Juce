@@ -15,7 +15,7 @@
 }
 
 .viewport:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 4px;
 }
 
@@ -47,15 +47,17 @@
   background: var(--tb-surface);
   box-shadow:
     var(--tb-shadow-control),
-    inset 0 0 0 1px var(--tb-border);
+    inset 0 0 0 1px var(--tb-border-control);
   transform: translateY(-50%);
 }
 
-.nav.nav:hover:not(:disabled) {
-  background: var(--tb-surface);
-  box-shadow:
-    0 4px 12px rgb(0 0 0 / 0.14),
-    inset 0 0 0 1px var(--tb-border-strong);
+@media (hover: hover) {
+  .nav.nav:hover:not(:disabled) {
+    background: var(--tb-surface);
+    box-shadow:
+      var(--tb-shadow-card),
+      inset 0 0 0 1px var(--tb-border-strong);
+  }
 }
 
 .nav.nav:disabled {
@@ -100,7 +102,7 @@
   height: 6px;
   padding: 0;
   border: 0;
-  border-radius: 50%;
+  border-radius: var(--tb-radius-circle);
   background: var(--tb-gray-300);
   cursor: pointer;
   transition:
@@ -108,18 +110,27 @@
     background-color 0.2s ease;
 }
 
-.dot:hover {
-  background: var(--tb-gray-500);
+@media (hover: hover) {
+  .dot:hover {
+    background: var(--tb-gray-500);
+  }
 }
 
-.dotActive,
-.dotActive:hover {
+.dotActive {
   width: 18px;
-  border-radius: 3px;
+  border-radius: var(--tb-radius-xxs);
   background: var(--tb-primary);
 }
 
+@media (hover: hover) {
+  .dotActive:hover {
+    width: 18px;
+    border-radius: var(--tb-radius-xxs);
+    background: var(--tb-primary);
+  }
+}
+
 .dot:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }

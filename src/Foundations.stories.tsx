@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Icon, type IconName } from './components/ui/Icon';
 import { antdIcons } from './components/ui/icons';
+import { THEMES } from './styles/themes';
 
 const meta: Meta = {
   title: 'Foundations/Tokens',
@@ -68,6 +69,12 @@ const themeRoles = [
   ['--tb-border', 'Border'],
 ] as const;
 
+const themeScopes = [
+  { value: 'light', title: 'Светлая', mode: 'light' },
+  { value: 'dark', title: 'Тёмная', mode: 'dark' },
+  ...THEMES,
+];
+
 export const Colors: Story = {
   render: () => (
     <div className="tb-container" style={{ paddingBlock: 32 }}>
@@ -111,42 +118,49 @@ export const Themes: Story = {
   render: () => (
     <div className="tb-container" style={{ paddingBlock: 32 }}>
       <h2 className="tb-h2" style={{ marginBottom: 8 }}>
-        Темы
+        Темы — цвет
       </h2>
       <p className="tb-text-m" style={{ color: 'var(--tb-text-secondary)', marginBottom: 24 }}>
-        <code>data-theme="dark"</code> на любом контейнере переключает палитру. Имена токенов не
-        меняются.
+        Токены живут на двух ортогональных осях. Цвет задаёт <code>[data-theme]</code>: светлая,
+        тёмная и палитры wasabi. Форма задаётся отдельно через <code>[data-skin]</code> и от цвета
+        не зависит. Имена токенов на обеих осях одни и те же.
       </p>
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
           gap: 16,
         }}
       >
-        {(['light', 'dark'] as const).map((theme) => (
+        {themeScopes.map((scope) => (
           <div
-            key={theme}
-            data-theme={theme}
+            key={scope.value}
+            data-theme={scope.value}
             style={{
               padding: 20,
-              borderRadius: 24,
+              borderRadius: 'var(--tb-radius-surface)',
               background: 'var(--tb-bg)',
               color: 'var(--tb-text-primary)',
               boxShadow: 'inset 0 0 0 1px var(--tb-border)',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-              <span style={{ font: '500 15px/24px var(--tb-font-text)' }}>
-                {theme === 'dark' ? 'Тёмная' : 'Светлая'}
-              </span>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 8,
+                justifyContent: 'space-between',
+                marginBottom: 16,
+              }}
+            >
+              <span style={{ font: '500 15px/24px var(--tb-font-text)' }}>{scope.title}</span>
               <code
                 style={{
                   font: '400 12px/18px var(--tb-font-mono)',
                   color: 'var(--tb-text-secondary)',
                 }}
               >
-                {`data-theme="${theme}"`}
+                {`data-theme="${scope.value}"`}
               </code>
             </div>
             <div
@@ -163,20 +177,56 @@ export const Themes: Story = {
                   title={`${label} · ${token}`}
                   style={{
                     height: 40,
-                    borderRadius: 10,
+                    borderRadius: 'var(--tb-radius-s)',
                     background: `var(${token})`,
                     boxShadow: 'inset 0 0 0 1px var(--tb-border)',
                   }}
                 />
               ))}
             </div>
+            <div style={{ display: 'grid', gap: 4, marginBottom: 16 }}>
+              <span
+                style={{
+                  color: 'var(--tb-text-primary)',
+                  font: '400 13px/18px var(--tb-font-text)',
+                }}
+              >
+                Primary — читаемый текст
+              </span>
+              <span
+                style={{
+                  color: 'var(--tb-text-secondary)',
+                  font: '400 13px/18px var(--tb-font-text)',
+                }}
+              >
+                Secondary — подпись
+              </span>
+              <span
+                style={{ color: 'var(--tb-text-muted)', font: '400 13px/18px var(--tb-font-text)' }}
+              >
+                Muted — служебная метка
+              </span>
+              <span
+                style={{
+                  color: 'var(--tb-text-tertiary)',
+                  font: '400 13px/18px var(--tb-font-text)',
+                }}
+              >
+                Tertiary — только декор
+              </span>
+              <span
+                style={{ color: 'var(--tb-text-link)', font: '400 13px/18px var(--tb-font-text)' }}
+              >
+                Ссылка
+              </span>
+            </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
               <span
                 style={{
                   background: 'var(--tb-accent)',
                   color: 'var(--tb-on-accent)',
-                  borderRadius: 8,
-                  padding: '2px 8px',
+                  borderRadius: 'var(--tb-radius-chip)',
+                  padding: '2px 10px',
                   font: '500 13px/18px var(--tb-font-text)',
                 }}
               >
@@ -186,21 +236,121 @@ export const Themes: Story = {
                 style={{
                   background: 'var(--tb-primary)',
                   color: 'var(--tb-on-primary)',
-                  borderRadius: 8,
+                  borderRadius: 'var(--tb-radius-control)',
                   padding: '6px 12px',
                   font: '500 13px/18px var(--tb-font-text)',
                 }}
               >
                 Button
               </span>
-              <span
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+};
+
+export const Skins: Story = {
+  render: () => (
+    <div className="tb-container" style={{ paddingBlock: 32 }}>
+      <h2 className="tb-h2" style={{ marginBottom: 8 }}>
+        Скины — форма
+      </h2>
+      <p className="tb-text-m" style={{ color: 'var(--tb-text-secondary)', marginBottom: 24 }}>
+        <code>[data-skin="blueprint"]</code> меняет только форму: нулевые радиусы, моно-заголовки,
+        сетка на фоне и без теней. Примитивы цвета не трогаются, поэтому скин сочетается с любой
+        темой. Чипы, переключатели и аватары остаются круглыми. Вложенный <code>[data-theme]</code>{' '}
+        сбрасывает форму родителя.
+      </p>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: 16,
+        }}
+      >
+        {(['light', 'dark'] as const).map((theme) => (
+          <div
+            key={theme}
+            data-theme={theme}
+            data-skin="blueprint"
+            style={{
+              padding: 20,
+              borderRadius: 'var(--tb-radius-surface)',
+              background: 'var(--tb-bg)',
+              backgroundImage: 'var(--tb-surface-pattern)',
+              backgroundSize: 'var(--tb-surface-pattern-size)',
+              color: 'var(--tb-text-primary)',
+              boxShadow: 'inset 0 0 0 1px var(--tb-border)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 8,
+                justifyContent: 'space-between',
+                marginBottom: 16,
+              }}
+            >
+              <span style={{ font: '600 18px/26px var(--tb-font-heading)' }}>Blueprint</span>
+              <code
                 style={{
+                  font: '400 12px/18px var(--tb-font-mono)',
                   color: 'var(--tb-text-secondary)',
-                  font: '400 13px/18px var(--tb-font-text)',
                 }}
               >
-                Secondary text
-              </span>
+                {`data-theme="${theme}"`}
+              </code>
+            </div>
+            <div
+              style={{
+                padding: 16,
+                background: 'var(--tb-surface)',
+                border: '1px solid var(--tb-border-control)',
+              }}
+            >
+              <div style={{ font: '600 15px/22px var(--tb-font-heading)', marginBottom: 12 }}>
+                Схема запроса
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+                <span
+                  style={{
+                    background: 'var(--tb-primary)',
+                    color: 'var(--tb-on-primary)',
+                    borderRadius: 'var(--tb-radius-control)',
+                    padding: '6px 12px',
+                    font: '500 13px/18px var(--tb-font-text)',
+                  }}
+                >
+                  Запустить
+                </span>
+                <span
+                  style={{
+                    borderRadius: 'var(--tb-radius-chip)',
+                    border: '1px solid var(--tb-border-control)',
+                    padding: '2px 10px',
+                    font: '500 12px/18px var(--tb-font-text)',
+                  }}
+                >
+                  chip
+                </span>
+                <span
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 'var(--tb-radius-avatar)',
+                    background: 'var(--tb-accent)',
+                    color: 'var(--tb-on-accent)',
+                    display: 'grid',
+                    placeItems: 'center',
+                    font: '600 13px/18px var(--tb-font-text)',
+                  }}
+                >
+                  BP
+                </span>
+              </div>
             </div>
           </div>
         ))}

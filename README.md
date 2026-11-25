@@ -21,15 +21,40 @@ export function App() {
 
 ## Темы
 
-В пакете две готовые темы: светлая ('light', по умолчанию) и тёмная ('dark'). Переключаются атрибутом
-`data-theme` на любом контейнере (обычно `<html>`) или классом `.dark`:
+Цвет и форма — независимые оси:
+
+| Ось   | Атрибут      | Что задаёт                                                 | Значения                                                                |
+| ----- | ------------ | ---------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Цвет  | `data-theme` | цветовые роли `--tb-*` и `color-scheme`                    | `light` (по умолчанию), `dark`, `palette-wasabi`, `palette-wasabi-dark` |
+| Форма | `data-skin`  | радиусы `--tb-radius-*`, фон поверхности, отключение теней | `default` (по умолчанию), `blueprint`                                   |
+
+Оси не связаны: `blueprint` есть и в светлой, и в тёмной теме. Атрибуты ставятся на любой контейнер, обычно на `<html>`:
 
 ```ts
-document.documentElement.dataset.theme = 'dark';
+document.documentElement.dataset.theme = 'palette-wasabi-dark';
+document.documentElement.dataset.skin = 'blueprint';
 ```
 
-`data-theme="light"` на вложенном контейнере возвращает светлую тему внутри тёмной.
-Имена токенов в обеих темах одинаковые, компоненты менять не нужно.
+Контейнер с атрибутами — это scope: он красит свою поверхность и сбрасывает обе оси целиком. Поэтому две половины страницы могут жить в разных темах:
+
+```tsx
+import { ThemeScope } from 'juce-ui';
+
+export function Split() {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+      <ThemeScope theme="light" skin="default">
+        <Preview />
+      </ThemeScope>
+      <ThemeScope theme="palette-wasabi-dark" skin="blueprint">
+        <Preview />
+      </ThemeScope>
+    </div>
+  );
+}
+```
+
+`ThemeScope` всегда ставит `data-theme` и `data-skin` (для default — `default`), поэтому вложенный блок сбрасывает и цвет, и форму. Класс `.dark` удалён: тёмная тема задаётся только `data-theme="dark"`.
 
 Системная тема:
 
@@ -42,31 +67,17 @@ mq.addEventListener('change', apply);
 apply();
 ```
 
-## Стили
+### Своя тема
 
-| Шрифт           | Домен                           | Лицензия |
-| --------------- | ------------------------------- | -------- |
-| Manrope         | база интерфейса и заголовков    | OFL      |
-| Linux Libertine | цитаты и длинный научный текст  | OFL      |
-| JetBrains Mono  | код, стек-трейсы и номера строк | GPL-2.0  |
-
-| Цвет      | Hex     | HSLA   |
-| --------- | ------- | ------ |
-| primary   | #222526 | hsla() |
-| secondary | #ccdcef | hsla() |
-| accent    | #ff6574 | hsla() |
-
-#### Своя тема
-
-Скопируйте блок токенов из `src/styles/tokens.css` (`:root` — светлая тема,
-`[data-theme='dark']` — тёмная), поменяйте значения и дайте теме имя:
+Тема — один блок цветовых ролей. Палитры `palette-*` собирает генератор `scripts/gen-themes.mjs` в `src/styles/themes.css` и `src/styles/themes.ts`; свою тему можно положить рядом руками:
 
 ```css
 [data-theme='ocean'] {
+  color-scheme: light;
   --tb-bg: #0b1a26;
   --tb-surface: #102431;
   --tb-text-primary: #e6f1f8;
-  /* ...остальные --tb-* роли */
+  /* остальные цветовые роли: тексты, действия, статусы, границы, данные */
 }
 ```
 
@@ -74,16 +85,56 @@ apply();
 document.documentElement.dataset.theme = 'ocean';
 ```
 
-Минимум, который стоит задать: `--tb-bg`, `--tb-surface`, `--tb-bg-secondary`,
-`--tb-bg-tertiary`, `--tb-text-primary/secondary/tertiary`, `--tb-primary` (+ hover,
-active, on-primary), `--tb-secondary` (+ hover), `--tb-accent` (+ hover, soft, text,
-on-accent), `--tb-success/error/warning` (+ text и soft), `--tb-border`,
-`--tb-border-strong`, `--tb-field`, `--tb-shadow-*`.
+Блок обязан объявить весь цветовой набор: тест токенов назовёт пропущенные роли. Радиусы — ось скина. Тени задаёт тема (у `dark` свои значения), а скин может их отключить; минимальный набор темы включает `--tb-shadow-*`.
 
-Проверка контраста: пары «текст × реальная поверхность» должны проходить WCAG AA
-(4.5:1 для текста, 3:1 для границ) и APCA Lc ≥ 60 для основного текста. В тёмной
-теме не берите чистый чёрный фон и чистый белый текст — берите подтон нейтрали
-светлой темы и ≈ 91 % белого для основного текста.
+### Свой скин
+
+Скин — один блок структурных ролей. Цвет он не задаёт и работает с любой темой:
+
+```css
+[data-skin='sharp'] {
+  --tb-radius-control: 4px;
+  --tb-radius-surface: 8px;
+  --tb-radius-popover: 8px;
+  --tb-radius-chip: 4px;
+  --tb-radius-switch: 2px;
+  --tb-radius-avatar: 50%;
+  --tb-shadow-card: none;
+}
+```
+
+```ts
+document.documentElement.dataset.skin = 'sharp';
+```
+
+Скин переопределяет то, что меняет: базовую форму объявляет каждый scope, поэтому форма внешнего scope внутрь не протекает.
+
+### Радиусы и тени
+
+Радиусы берутся только по роли или по шагу шкалы, числа в компоненты не передаются:
+
+- роли: `--tb-radius-control`, `--tb-radius-surface`, `--tb-radius-popover`, `--tb-radius-chip`, `--tb-radius-switch`, `--tb-radius-avatar`;
+- шкала: `--tb-radius-xxs`, `--tb-radius-xs`, `--tb-radius-s`, `--tb-radius-m`, `--tb-radius-l`, `--tb-radius-pill`, `--tb-radius-circle`.
+
+Проп `radius` принимает `'inset' | 'xxs' | 'xs' | 's' | 'm' | 'l' | 'pill'`. `inset` — радиус родителя минус его padding, с клампом от нуля.
+
+Тени: `--tb-shadow-control`, `--tb-shadow-card`, `--tb-shadow-popover`, `--tb-shadow-modal`, `--tb-shadow-float`.
+
+### Контраст
+
+Тест токенов проверяет каждую тему по WCAG AA: 4.5:1 для основного, вторичного и приглушённого текста и ссылок, 3:1 для декоративного третичного текста и границы контрола. APCA — рекомендация; воротами остаётся WCAG AA из теста.
+
+## Стили
+
+### Шрифты
+
+| Шрифт           | Домен                           | Лицензия |
+| --------------- | ------------------------------- | -------- |
+| Manrope         | база интерфейса и заголовков    | OFL      |
+| Linux Libertine | цитаты и длинный научный текст  | OFL      |
+| JetBrains Mono  | код, стек-трейсы и номера строк | OFL 1.1  |
+
+Цвета живут в `src/styles/tokens.css`, формы скинов — в `src/styles/skins.css`. README не дублирует значения: единственный источник правды — токены.
 
 ## Лицензии
 

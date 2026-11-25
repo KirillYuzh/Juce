@@ -313,9 +313,9 @@ export const Loading: Story = {
         <SidebarInset>
           <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
             <SidebarTrigger />
-            <Skeleton width="45%" height={28} radius={10} />
-            <Skeleton width="70%" height={16} radius={8} />
-            <Skeleton width="60%" height={16} radius={8} />
+            <Skeleton width="45%" height={28} radius="s" />
+            <Skeleton width="70%" height={16} radius="xs" />
+            <Skeleton width="60%" height={16} radius="xs" />
           </div>
         </SidebarInset>
       </SidebarProvider>

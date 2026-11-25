@@ -2,7 +2,7 @@
   display: inline-flex;
   gap: 4px;
   padding: 4px;
-  border-radius: 16px;
+  border-radius: var(--tb-radius-popover);
   background: var(--tb-gray-100);
   max-width: 100%;
   overflow-x: auto;
@@ -11,7 +11,7 @@
 .tab {
   flex: none;
   padding: 10px 16px;
-  border-radius: 12px;
+  border-radius: var(--tb-radius-control);
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
   transition:
@@ -19,18 +19,26 @@
     box-shadow 0.15s ease;
 }
 
-.tab:hover {
-  background: var(--tb-option-hover);
+@media (hover: hover) {
+  .tab:hover {
+    background: var(--tb-option-hover);
+  }
 }
 
-.tabActive,
-.tabActive:hover {
+.tabActive {
   background: var(--tb-option-selected);
   box-shadow: var(--tb-shadow-control);
 }
 
+@media (hover: hover) {
+  .tabActive:hover {
+    background: var(--tb-option-selected);
+    box-shadow: var(--tb-shadow-control);
+  }
+}
+
 .tab:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }
 
@@ -59,9 +67,9 @@
 }
 
 .accordionButton:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
 }
 
 .accordionChevron {

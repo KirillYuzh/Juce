@@ -1,29 +1,50 @@
 import type { Decorator, Preview } from '@storybook/react-vite';
 import { storySource } from '../src/lib/story-source';
-import '../src/styles/fonts.css';
-import '../src/styles/tokens.css';
-import '../src/styles/global.css';
-import '../src/styles/utilities.css';
+import { THEMES } from '../src/styles/themes';
+import '../src/styles/index.css';
 import './preview.css';
 
+type ThemeGlobals = { theme?: string; skin?: string };
+
+const themeItems: { value: string; title: string }[] = [
+  { value: 'light', title: 'Light' },
+  { value: 'dark', title: 'Dark' },
+  ...THEMES.map(({ value, title }) => ({ value, title })),
+];
+
 const withTheme: Decorator = (Story, context) => {
-  document.documentElement.dataset.theme = context.globals.theme === 'dark' ? 'dark' : 'light';
+  const globals = context.globals as ThemeGlobals;
+  document.documentElement.dataset.theme = globals.theme ?? 'light';
+  if (globals.skin && globals.skin !== 'default') {
+    document.documentElement.dataset.skin = globals.skin;
+  } else {
+    delete document.documentElement.dataset.skin;
+  }
   return <Story />;
 };
 
 const preview: Preview = {
   tags: ['autodocs'],
   decorators: [withTheme],
-  initialGlobals: { theme: 'light' },
+  initialGlobals: { theme: 'light', skin: 'default' },
   globalTypes: {
     theme: {
       description: 'Color theme',
       toolbar: {
         title: 'Theme',
         icon: 'paintbrush',
+        items: themeItems,
+        dynamicTitle: true,
+      },
+    },
+    skin: {
+      description: 'Surface skin',
+      toolbar: {
+        title: 'Skin',
+        icon: 'component',
         items: [
-          { value: 'light', title: 'Light' },
-          { value: 'dark', title: 'Dark' },
+          { value: 'default', title: 'Default' },
+          { value: 'blueprint', title: 'Blueprint' },
         ],
         dynamicTitle: true,
       },
@@ -48,7 +69,7 @@ const preview: Preview = {
       },
     },
     a11y: {
-      test: 'todo',
+      test: 'error',
     },
   },
 };

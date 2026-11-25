@@ -1,13 +1,15 @@
 .link {
   display: block;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
 }
 
-.link:hover .title {
-  color: var(--tb-text-link);
+@media (hover: hover) {
+  .link:hover .title {
+    color: var(--tb-text-link);
+  }
 }
 
 .external {
   flex: none;
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }

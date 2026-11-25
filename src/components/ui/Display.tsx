@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import styles from './Display.module.css';
 import { Icon, type IconName } from './Icon';
 import { cx } from '../../lib/cx';
+import { radiusStyle, type RadiusValue } from '../../lib/radius';
 
 export type BadgeTone = 'neutral' | 'accent' | 'success' | 'error' | 'warning';
 
@@ -106,13 +107,13 @@ export function Skeleton({
 }: {
   width?: number | string;
   height?: number | string;
-  radius?: number;
+  radius?: RadiusValue;
   className?: string;
 }) {
   return (
     <span
       className={cx(styles.skeleton, className)}
-      style={{ display: 'block', width, height, borderRadius: radius }}
+      style={radiusStyle(radius, { display: 'block', width, height })}
     />
   );
 }

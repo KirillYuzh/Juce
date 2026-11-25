@@ -31,7 +31,7 @@ const initial: DemoMessage[] = Array.from({ length: 10 }, (_, index) => ({
 function ScrollState() {
   const { start, end } = useMessageScrollerScrollable();
   return (
-    <span style={{ font: '400 12px/18px var(--tb-font-text)', color: 'var(--tb-text-tertiary)' }}>
+    <span style={{ font: '400 12px/18px var(--tb-font-text)', color: 'var(--tb-text-muted)' }}>
       {start ? 'выше есть' : 'начало'} · {end ? 'ниже есть' : 'конец'}
     </span>
   );
@@ -64,7 +64,7 @@ function Demo() {
           style={{
             height: 420,
             overflow: 'hidden',
-            borderRadius: 24,
+            borderRadius: 'var(--tb-radius-surface)',
             border: '1px solid var(--tb-border)',
             background: 'var(--tb-white)',
           }}
@@ -138,7 +138,7 @@ export const OpeningAtStart: Story = {
         height: 360,
         width: 520,
         overflow: 'hidden',
-        borderRadius: 24,
+        borderRadius: 'var(--tb-radius-surface)',
         border: '1px solid var(--tb-border)',
       }}
     >

@@ -35,12 +35,12 @@
 .bubble {
   max-width: 100%;
   padding: 10px 16px;
-  border-radius: 16px;
+  border-radius: var(--tb-radius-popover);
   background: var(--tb-secondary-soft);
 }
 
 .bubble[data-align='end'] {
-  border-bottom-right-radius: 6px;
+  border-bottom-right-radius: var(--tb-radius-xxs);
   background: var(--tb-secondary);
 }
 
@@ -69,14 +69,20 @@
   transition: opacity 150ms var(--tb-ease-out);
 }
 
-.message:hover .footer,
 .message:has(:focus-visible) .footer {
   opacity: 1;
   pointer-events: auto;
 }
 
+@media (hover: hover) {
+  .message:hover .footer {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .footer button {
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }
 
 .message[data-align='end'] .footer {

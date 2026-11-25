@@ -3,7 +3,7 @@
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   font: 500 13px/18px var(--tb-font-text);
   white-space: nowrap;
 }
@@ -40,9 +40,9 @@
   gap: 6px;
   height: 40px;
   padding: 0 16px;
-  border-radius: 12px;
+  border-radius: var(--tb-radius-chip);
   background: var(--tb-surface);
-  box-shadow: inset 0 0 0 1px var(--tb-border);
+  box-shadow: inset 0 0 0 1px var(--tb-border-control);
   font: 400 15px/20px var(--tb-font-text);
   color: var(--tb-text-primary);
   white-space: nowrap;
@@ -51,8 +51,10 @@
     color 0.15s ease;
 }
 
-.chip:hover {
-  background: var(--tb-bg-hover);
+@media (hover: hover) {
+  .chip:hover {
+    background: var(--tb-bg-hover);
+  }
 }
 
 .chipActive {
@@ -61,8 +63,10 @@
   box-shadow: none;
 }
 
-.chipActive:hover {
-  background: var(--tb-primary-hover);
+@media (hover: hover) {
+  .chipActive:hover {
+    background: var(--tb-primary-hover);
+  }
 }
 
 .chipDark {
@@ -71,21 +75,25 @@
   box-shadow: none;
 }
 
-.chipDark:hover {
-  background: var(--tb-secondary);
-  color: var(--tb-primary);
+@media (hover: hover) {
+  .chipDark:hover {
+    background: var(--tb-secondary);
+    color: var(--tb-primary);
+  }
 }
 
 .chipOutline {
   background: transparent;
   color: var(--tb-text-secondary);
-  box-shadow: inset 0 0 0 1px var(--tb-border);
+  box-shadow: inset 0 0 0 1px var(--tb-border-control);
 }
 
-.chipOutline:hover {
-  background: transparent;
-  color: var(--tb-text-primary);
-  box-shadow: inset 0 0 0 1px var(--tb-border-strong);
+@media (hover: hover) {
+  .chipOutline:hover {
+    background: transparent;
+    color: var(--tb-text-primary);
+    box-shadow: inset 0 0 0 1px var(--tb-border-strong);
+  }
 }
 
 .chipOutline.chipActive {
@@ -94,14 +102,16 @@
   box-shadow: inset 0 0 0 1px var(--tb-primary);
 }
 
-.chipOutline.chipActive:hover {
-  background: var(--tb-bg-hover);
-  color: var(--tb-primary);
-  box-shadow: inset 0 0 0 1px var(--tb-primary);
+@media (hover: hover) {
+  .chipOutline.chipActive:hover {
+    background: var(--tb-bg-hover);
+    color: var(--tb-primary);
+    box-shadow: inset 0 0 0 1px var(--tb-primary);
+  }
 }
 
 .chipOutline:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }
 
@@ -111,7 +121,7 @@
   justify-content: center;
   flex: none;
   overflow: hidden;
-  border-radius: 50%;
+  border-radius: var(--tb-radius-avatar);
   background: var(--tb-bg-tertiary);
   color: var(--tb-text-secondary);
   font: 500 15px/20px var(--tb-font-text);
@@ -138,7 +148,7 @@
 .progress {
   width: 100%;
   height: 4px;
-  border-radius: 999px;
+  border-radius: var(--tb-radius-pill);
   background: var(--tb-gray-200);
   overflow: hidden;
 }
@@ -156,7 +166,7 @@
 
 .spinner {
   display: inline-block;
-  border-radius: 50%;
+  border-radius: var(--tb-radius-circle);
   border: 2px solid currentColor;
   border-right-color: transparent;
   animation: spin 0.7s linear infinite;
@@ -169,7 +179,7 @@
 }
 
 .skeleton {
-  border-radius: 12px;
+  border-radius: var(--tb-radius, var(--tb-radius-xxs));
   background: linear-gradient(
     90deg,
     var(--tb-skeleton) 25%,

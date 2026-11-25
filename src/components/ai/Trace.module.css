@@ -23,7 +23,7 @@
   justify-content: center;
   width: 18px;
   height: 18px;
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }
 
 .title {
@@ -36,7 +36,7 @@
 .description {
   flex: none;
   font-size: 12px;
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }
 
 .line[data-status='running'] .title {
@@ -62,17 +62,19 @@
   width: 100%;
   margin-left: -6px;
   padding: 2px 6px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   text-align: left;
   transition: background-color 0.15s ease;
 }
 
-.trigger:hover {
-  background: var(--tb-gray-100);
+@media (hover: hover) {
+  .trigger:hover {
+    background: var(--tb-gray-100);
+  }
 }
 
 .trigger:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }
 

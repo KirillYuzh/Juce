@@ -46,7 +46,7 @@
   font: 400 11px/14px var(--tb-font-text);
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }
 
 .column {
@@ -73,8 +73,10 @@
   color: var(--tb-text-secondary);
 }
 
-.link:hover {
-  color: var(--tb-text-link);
+@media (hover: hover) {
+  .link:hover {
+    color: var(--tb-text-link);
+  }
 }
 
 .bottom {
@@ -107,7 +109,7 @@
   gap: 12px;
   max-width: 720px;
   font: 400 11px/16px var(--tb-font-text);
-  color: var(--tb-text-tertiary);
+  color: var(--tb-text-muted);
 }
 
 .copyright {
@@ -172,8 +174,10 @@
   color: var(--tb-text-inverse);
 }
 
-.socials a:hover {
-  color: var(--tb-accent-on-inverse);
+@media (hover: hover) {
+  .socials a:hover {
+    color: var(--tb-accent-on-inverse);
+  }
 }
 
 @media (max-width: 1023px) {

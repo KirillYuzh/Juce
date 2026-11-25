@@ -1,17 +1,17 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+
+const fontsPath = fileURLToPath(new URL('./src/styles/fonts.css', import.meta.url));
 
 const libCss = (): Plugin => ({
   name: 'lib-css',
   enforce: 'pre',
   transform(code, id) {
-    if (id.endsWith('/src/index.ts')) {
-      return { code: `import './styles/fonts.css';\n${code}`, map: null };
-    }
-    if (id.endsWith('/src/styles/fonts.css')) {
-      return { code: code.replace(/\.woff2(?=['"]?\s*\))/g, (m) => m + '?no-inline'), map: null };
-    }
-    return null;
+    if (!id.endsWith('/src/styles/index.css')) return null;
+    const fonts = readFileSync(fontsPath, 'utf8').replace(/\.woff2(?=['"]?\s*\))/g, '$&?no-inline');
+    return { code: `${code.replace("@import './fonts.css';", '')}\n${fonts}`, map: null };
   },
 });
 

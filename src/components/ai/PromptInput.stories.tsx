@@ -30,7 +30,7 @@ function Demo({ initialStatus = 'ready' as PromptInputStatus }) {
           style={{
             margin: 0,
             padding: 12,
-            borderRadius: 12,
+            borderRadius: 'var(--tb-radius-control)',
             background: 'var(--tb-bg-secondary)',
             font: '400 12px/18px var(--tb-font-mono)',
             whiteSpace: 'pre-wrap',
@@ -68,7 +68,7 @@ export const WithActions: Story = {
             style={{
               height: 32,
               padding: '0 10px',
-              borderRadius: 8,
+              borderRadius: 'var(--tb-radius-xs)',
               background: 'var(--tb-secondary-soft)',
               font: '500 12px/18px var(--tb-font-text)',
             }}

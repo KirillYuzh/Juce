@@ -6,7 +6,7 @@
   min-height: 520px;
   padding: 32px;
   overflow: hidden;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-secondary);
   text-align: center;
 }
@@ -54,7 +54,7 @@
   min-height: 260px;
   padding: 32px;
   overflow: hidden;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-bg-secondary);
 }
 
@@ -133,7 +133,7 @@
   margin-top: 48px;
   height: 176px;
   overflow: hidden;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-secondary);
 }
 
@@ -169,7 +169,7 @@
   flex-direction: column;
   min-height: 308px;
   padding: 32px;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
 }
 
 .trackGray {

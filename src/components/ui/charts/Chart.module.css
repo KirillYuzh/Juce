@@ -21,7 +21,7 @@
 
 .tick {
   font: 400 11px/14px var(--tb-font-text);
-  fill: var(--tb-text-tertiary);
+  fill: var(--tb-text-muted);
 }
 
 .line {
@@ -118,7 +118,7 @@
   gap: 6px;
   min-width: 132px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: var(--tb-radius-xs);
   background: var(--tb-surface);
   box-shadow:
     var(--tb-shadow-card),
@@ -146,14 +146,14 @@
 .indicator-dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: var(--tb-radius-circle);
   background: var(--indicator-color);
 }
 
 .indicator-line {
   width: 3px;
   height: 12px;
-  border-radius: 999px;
+  border-radius: var(--tb-radius-pill);
   background: var(--indicator-color);
 }
 
@@ -197,7 +197,7 @@
 .legendDot {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: var(--tb-radius-circle);
 }
 
 .center {

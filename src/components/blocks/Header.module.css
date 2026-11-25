@@ -43,19 +43,21 @@
   align-items: center;
   gap: 4px;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
   white-space: nowrap;
   transition: background-color 0.15s ease;
 }
 
-.navLink:hover {
-  background: var(--tb-gray-100);
+@media (hover: hover) {
+  .navLink:hover {
+    background: var(--tb-gray-100);
+  }
 }
 
 .navLink:focus-visible {
-  outline: 2px solid var(--tb-text-link);
+  outline: var(--tb-focus-ring);
   outline-offset: 2px;
 }
 
@@ -69,25 +71,32 @@
   gap: 4px;
   min-width: 420px;
   padding: 16px;
-  border-radius: var(--tb-radius-l);
+  border-radius: var(--tb-radius-surface);
   background: var(--tb-surface);
   box-shadow: var(--tb-shadow-popover);
 }
 
-.navItem:hover .dropdown,
 .navItem:focus-within .dropdown {
   display: grid;
 }
 
+@media (hover: hover) {
+  .navItem:hover .dropdown {
+    display: grid;
+  }
+}
+
 .dropdownLink {
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--tb-radius-xs);
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
 }
 
-.dropdownLink:hover {
-  background: var(--tb-gray-100);
+@media (hover: hover) {
+  .dropdownLink:hover {
+    background: var(--tb-gray-100);
+  }
 }
 
 .actions {
@@ -102,14 +111,16 @@
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-radius: var(--tb-radius-s);
+  border-radius: var(--tb-radius-control);
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
   white-space: nowrap;
 }
 
-.login:hover {
-  background: var(--tb-gray-100);
+@media (hover: hover) {
+  .login:hover {
+    background: var(--tb-gray-100);
+  }
 }
 
 .desktopActions {

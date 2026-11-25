@@ -1,0 +1,5 @@
+.card {
+  border-radius: var(--tb-radius-surface);
+  color: var(--tb-text-primary);
+  box-shadow: var(--tb-shadow-card);
+}

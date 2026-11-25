@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Проект: React UI-кит «Juce». Всё, что можно проверить автоматически, проверяется в `npm run check`.
+Проект: React UI-кит «Juce». Всё, что можно проверить автоматически, закрыто командами из раздела «Проверки».
 
 ## Слои
 
@@ -31,16 +31,27 @@
 
 ## Радиусы
 
-`radius="inset"` у компонента = радиус родителя минус его padding. Родитель задаёт `--tb-radius-parent` и `--tb-radius-parent-padding`, компонент — фолбэк `--tb-radius-fallback`. Хелпер — `radiusStyle` из `lib/radius`.
+Проп `radius` типизирован: `'inset' | 'xxs' | 'xs' | 's' | 'm' | 'l' | 'pill'`. Число не принимается — только токен. Роли: `--tb-radius-control`, `--tb-radius-surface`, `--tb-radius-popover`, `--tb-radius-chip`, `--tb-radius-switch`, `--tb-radius-avatar`; шкала — `--tb-radius-xxs|xs|s|m|l|pill`.
+
+`radius="inset"` = радиус родителя минус его padding, с клампом от нуля: `max(0px, calc(var(--tb-radius-parent, var(--tb-radius-fallback, var(--tb-radius-m))) - var(--tb-radius-parent-padding, 0px)))`. Родитель задаёт `--tb-radius-parent` и `--tb-radius-parent-padding`, компонент — фолбэк `--tb-radius-fallback`. Хелпер — `radiusStyle` из `lib/radius`.
+
+## Темы
+
+Цвет — `data-theme` (`light`, `dark`, `palette-wasabi`, `palette-wasabi-dark`), форма — `data-skin` (`default`, `blueprint`). Компоненты не ветвятся по имени темы: только `--tb-*`-роли. Класс `.dark` удалён. Контракт — `openspec/specs/theming/spec.md`.
 
 ## Проверки
 
 ```bash
-npm run check         # typecheck + eslint + ast-grep + фикстуры правил + тесты
-npm run test:bombadil # property-based UI-тест чата в Storybook, нужен браузер
+npm run check                  # typecheck + eslint + ast-grep + фикстуры правил + тесты
+npm run gen:themes -- --check  # themes.css и themes.ts совпадают с генератором
+npm run lint:css               # hover только под указателем, тема не в компонентах, размеры только токенами
+npm run check:pack             # проверка содержимого пакета
+npm run spec:validate          # openspec validate --all --strict
+npm run test:bombadil          # property-based UI-тест чата в Storybook, нужен браузер
 ```
 
 - Правила: `tools/rules/*.yml`, фикстуры — `tools/rules/fixtures/<id>/{bad,good}`.
+- Темы и скины: единственный источник палитр — `scripts/gen-themes.mjs`; `themes.css` и `themes.ts` руками не правятся.
 - Тесты: `src/**/*.test.{ts,tsx}`, базовая линия — `tools/test-baseline.json`.
 - Тестов стало меньше или появился `skip` — `npm run test` падает. Добавили тесты — `npm run test:update`, чтобы поднять базу.
 - `test:bombadil` в `check` не входит: ему нужен живой Storybook и браузер. Подробности — в `docs/runtime.md`.

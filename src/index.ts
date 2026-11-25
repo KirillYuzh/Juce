@@ -1,5 +1,4 @@
-import './styles/tokens.css';
-import './styles/utilities.css';
+import './styles/index.css';
 
 export { Button, IconButton, TextLink } from './components/ui/Button';
 export { Icon } from './components/ui/Icon';
@@ -72,6 +71,8 @@ export type { TaskStep } from './components/ai/Task';
 export { Trace, TraceDescription, TraceIcon, TraceLine, TraceTitle } from './components/ai/Trace';
 export { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './components/ui/Resizable';
 export type { ResizableOrientation } from './components/ui/Resizable';
+export { ThemeScope } from './components/ui/ThemeScope';
+export type { ThemeScopeProps } from './components/ui/ThemeScope';
 export {
   SIDEBAR_WIDTH,
   SIDEBAR_WIDTH_ICON,
