@@ -81,20 +81,6 @@
   text-align: center;
 }
 
-.cardFrame {
-  width: min(420px, 90vw);
-}
-
-.stage {
-  position: relative;
-  height: var(--tb-space-32);
-}
-
-.stageSide {
-  position: relative;
-  height: 100%;
-}
-
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
