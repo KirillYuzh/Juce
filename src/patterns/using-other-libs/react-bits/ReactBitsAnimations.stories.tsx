@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button } from '../../../components/ui/Button';
 
@@ -16,7 +16,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Вендорные TechText, ElectricLogo, SpecularButton и TargetCursor вызываются напрямую, без обёрток, но работают с нашими токенами и компонентами: цели курсора — Button, логотип — favicon.svg, текст — гарнитура кита. Canvas/WebGL не понимает var(), поэтому роли --tb-text-primary, --tb-primary и --tb-accent разрешаются в hex хуком useThemeTokens; dark выбирает режим ElectricLogo.',
+          'Вендорные TechText, ElectricLogo, SpecularButton и TargetCursor вызываются напрямую, без обёрток, но работают с нашими токенами и компонентами: цели курсора — Button, логотип — словесный знак из шапки, отрисованный её гарнитурой, текст — гарнитура кита. Canvas/WebGL не понимает var(), поэтому роли --tb-text-primary, --tb-primary и --tb-accent разрешаются в hex хуком useThemeTokens; dark выбирает режим ElectricLogo.',
       },
     },
   },
@@ -25,6 +25,36 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+const LOGO_TEXT = 'Джус';
+
+function useNavbarLogoSrc(host: HTMLElement | null): string {
+  const [src, setSrc] = useState('');
+
+  useEffect(() => {
+    if (!host) return;
+    let alive = true;
+    const font = getComputedStyle(host).getPropertyValue('--tb-font-heading').trim();
+    document.fonts.load('700 160px Manrope', LOGO_TEXT).then(() => {
+      if (!alive) return;
+      const canvas = document.createElement('canvas');
+      canvas.width = 720;
+      canvas.height = 240;
+      const context = canvas.getContext('2d');
+      if (!context) return;
+      context.fillStyle = 'white';
+      context.font = `700 160px ${font}`;
+      context.textBaseline = 'middle';
+      context.fillText(LOGO_TEXT, 16, 120);
+      setSrc(canvas.toDataURL('image/png'));
+    });
+    return () => {
+      alive = false;
+    };
+  }, [host]);
+
+  return src;
+}
 
 const TechTextScene = () => {
   const [host, setHost] = useState<HTMLElement | null>(null);
@@ -69,15 +99,18 @@ export const TechTextAnimation: Story = {
 const ElectricLogoScene = () => {
   const [host, setHost] = useState<HTMLElement | null>(null);
   const { accent, primary, dark } = useThemeTokens(host);
+  const logoSrc = useNavbarLogoSrc(host);
 
   return (
     <div ref={setHost} className={styles.stage}>
-      <ElectricLogo
-        src="/favicon.svg"
-        color={primary}
-        glowColor={accent}
-        theme={dark ? 'dark' : 'light'}
-      />
+      {logoSrc && (
+        <ElectricLogo
+          src={logoSrc}
+          color={primary}
+          glowColor={accent}
+          theme={dark ? 'dark' : 'light'}
+        />
+      )}
     </div>
   );
 };
@@ -87,13 +120,46 @@ export const ElectricLogoAnimation: Story = {
   parameters: {
     docs: {
       source: {
-        code: `const Scene = () => {
+        code: `const LOGO_TEXT = 'Джус';
+
+function useNavbarLogoSrc(host: HTMLElement | null): string {
+  const [src, setSrc] = useState('');
+
+  useEffect(() => {
+    if (!host) return;
+    let alive = true;
+    const font = getComputedStyle(host).getPropertyValue('--tb-font-heading').trim();
+    document.fonts.load('700 160px Manrope', LOGO_TEXT).then(() => {
+      if (!alive) return;
+      const canvas = document.createElement('canvas');
+      canvas.width = 720;
+      canvas.height = 240;
+      const context = canvas.getContext('2d');
+      if (!context) return;
+      context.fillStyle = 'white';
+      context.font = \`700 160px \${font}\`;
+      context.textBaseline = 'middle';
+      context.fillText(LOGO_TEXT, 16, 120);
+      setSrc(canvas.toDataURL('image/png'));
+    });
+    return () => {
+      alive = false;
+    };
+  }, [host]);
+
+  return src;
+}
+
+const Scene = () => {
   const [host, setHost] = useState<HTMLElement | null>(null);
   const { accent, primary, dark } = useThemeTokens(host);
+  const logoSrc = useNavbarLogoSrc(host);
 
   return (
     <div ref={setHost} className={styles.stage}>
-      <ElectricLogo src="/favicon.svg" color={primary} glowColor={accent} theme={dark ? 'dark' : 'light'} />
+      {logoSrc && (
+        <ElectricLogo src={logoSrc} color={primary} glowColor={accent} theme={dark ? 'dark' : 'light'} />
+      )}
     </div>
   );
 };`,
