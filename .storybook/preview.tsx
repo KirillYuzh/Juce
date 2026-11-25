@@ -2,6 +2,7 @@ import type { Decorator, Preview } from '@storybook/react-vite';
 import { storySource } from '../src/lib/story-source';
 import { THEMES } from '../src/styles/themes';
 import '../src/styles/index.css';
+import '../src/styles/reset.css';
 import './preview.css';
 
 type ThemeGlobals = { theme?: string };
