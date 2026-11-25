@@ -1,0 +1,31 @@
+.scene {
+  width: min(880px, 92vw);
+  height: 520px;
+  overflow: hidden;
+  background: var(--tb-bg-secondary);
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-surface);
+  color: var(--tb-text-primary);
+  --xy-handle-background-color: var(--tb-text-primary);
+  --xy-handle-border-color: var(--tb-surface);
+}
+
+/* у .react-flow свой color-scheme: light dark — без этого dark-пресеты проваливаются в системную тему */
+.scene :global(.react-flow) {
+  color-scheme: inherit;
+}
+
+/* reset.css держит svg в display: block и max-width: 100%, поэтому слой рёбер нуждается в явном боксе */
+.scene :global(.react-flow__edges) {
+  inset: 0;
+}
+
+.label {
+  display: grid;
+  justify-items: center;
+  gap: var(--tb-space-1);
+}
+
+.title {
+  font-weight: 600;
+}
