@@ -177,8 +177,6 @@ function SearchFiltersDemo() {
       current.includes(value) ? current.filter((item) => item !== value) : [...current, value]
     );
 
-  const count = active.length === 0 ? 128 : active.length * 14;
-
   return (
     <div style={card}>
       <Input
@@ -207,11 +205,7 @@ function SearchFiltersDemo() {
         ))}
       </div>
 
-      <div style={{ ...row, justifyContent: 'space-between' }}>
-        <span className="tb-text-s" style={{ ...row, gap: 'var(--tb-space-2)', ...muted }}>
-          Найдено задач
-          <Badge tone="accent">{count}</Badge>
-        </span>
+      <div style={{ ...row, justifyContent: 'flex-end' }}>
         <Button
           variant="ghost"
           size="m"
