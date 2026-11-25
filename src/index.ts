@@ -1,8 +1,35 @@
 import './styles/index.css';
 
 export { Button, IconButton, TextLink } from './components/ui/Button';
+export type {
+  ButtonProps,
+  ButtonSize,
+  ButtonVariant,
+  IconButtonProps,
+  TextLinkProps,
+} from './components/ui/Button';
+export {
+  Card,
+  CardAction,
+  CardBody,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardMedia,
+  CardTitle,
+} from './components/ui/Card';
+export type { CardAs, CardDensity, CardProps, CardTone } from './components/ui/Card';
+export { DetailCard, MediaPanel, ServiceCard } from './components/prebuilt';
+export type {
+  DetailCardMeta,
+  DetailCardProps,
+  MediaPanelLink,
+  MediaPanelProps,
+  ServiceCardProps,
+} from './components/prebuilt';
 export { Icon } from './components/ui/Icon';
-export type { IconName } from './components/ui/Icon';
+export type { IconName, IconProps } from './components/ui/Icon';
 export {
   Avatar,
   Badge,
@@ -14,6 +41,7 @@ export {
   Skeleton,
   Spinner,
 } from './components/ui/Display';
+export type { AvatarProps, BadgeTone, ChipProps, ChipVariant } from './components/ui/Display';
 export {
   Checkbox,
   ChipSelect,
@@ -23,8 +51,23 @@ export {
   Switch,
   Textarea,
 } from './components/ui/Fields';
+export type {
+  ChoiceProps,
+  ChipSelectOption,
+  ChipSelectProps,
+  InputProps,
+  InputSize,
+  SelectOption,
+  SelectProps,
+  SwitchProps,
+  TextareaProps,
+} from './components/ui/Fields';
 export { Alert, CookieNotice, Tooltip } from './components/ui/Feedback';
+export type { AlertProps, AlertTone, CookieNoticeProps } from './components/ui/Feedback';
+export { AlertDialog } from './components/ui/AlertDialog';
+export type { AlertDialogProps } from './components/ui/AlertDialog';
 export { Accordion, Tabs } from './components/ui/Navigation';
+export type { AccordionItem, AccordionProps, TabItem, TabsProps } from './components/ui/Navigation';
 export { Collapsible, CollapsibleContent, CollapsibleTrigger } from './components/ui/Collapsible';
 export type { CollapsibleProps } from './components/ui/Collapsible';
 export { HoverCard, HoverCardContent, HoverCardTrigger } from './components/ui/HoverCard';
@@ -48,6 +91,7 @@ export {
   MessageContent,
   MessageFooter,
 } from './components/ai/Message';
+export type { BubbleVariant, MessageAlign } from './components/ai/Message';
 export {
   InlineCitation,
   InlineCitationCard,
@@ -59,18 +103,29 @@ export {
 } from './components/ai/InlineCitation';
 export type { CitationSource } from './components/ai/InlineCitation';
 export { PromptInput } from './components/ai/PromptInput';
-export type { PromptInputPayload, PromptInputStatus } from './components/ai/PromptInput';
+export type {
+  PromptInputPayload,
+  PromptInputProps,
+  PromptInputStatus,
+} from './components/ai/PromptInput';
 export { Reasoning } from './components/ai/Reasoning';
+export type { ReasoningProps } from './components/ai/Reasoning';
 export { Sources } from './components/ai/Sources';
-export type { SourceItem } from './components/ai/Sources';
+export type { SourceItem, SourcesProps } from './components/ai/Sources';
 export { StackTrace, parseStackTrace } from './components/ai/StackTrace';
-export type { StackFrame } from './components/ai/StackTrace';
+export type { StackFrame, StackTraceProps } from './components/ai/StackTrace';
 export { Suggestion, Suggestions } from './components/ai/Suggestion';
 export { Task, TaskItem, TaskItemFile } from './components/ai/Task';
-export type { TaskStep } from './components/ai/Task';
+export type { TaskProps, TaskStatus, TaskStep } from './components/ai/Task';
 export { Trace, TraceDescription, TraceIcon, TraceLine, TraceTitle } from './components/ai/Trace';
+export type { TraceStatus } from './components/ai/Trace';
 export { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './components/ui/Resizable';
-export type { ResizableOrientation } from './components/ui/Resizable';
+export type {
+  ResizableHandleProps,
+  ResizableOrientation,
+  ResizablePanelGroupProps,
+  ResizablePanelProps,
+} from './components/ui/Resizable';
 export { ThemeScope } from './components/ui/ThemeScope';
 export type { ThemeScopeProps } from './components/ui/ThemeScope';
 export {
@@ -102,7 +157,11 @@ export {
   SidebarTrigger,
   useSidebar,
 } from './components/ui/Sidebar';
-export type { SidebarProps, SidebarProviderProps } from './components/ui/Sidebar';
+export type {
+  SidebarMenuButtonProps,
+  SidebarProps,
+  SidebarProviderProps,
+} from './components/ui/Sidebar';
 export {
   Carousel,
   CarouselContent,
@@ -111,7 +170,14 @@ export {
   CarouselNext,
   CarouselPrevious,
 } from './components/ui/Carousel';
-export type { CarouselApi, CarouselOptions, CarouselOrientation } from './components/ui/Carousel';
+export type {
+  CarouselApi,
+  CarouselContentProps,
+  CarouselItemProps,
+  CarouselOptions,
+  CarouselOrientation,
+  CarouselProps,
+} from './components/ui/Carousel';
 export {
   Questionnaire,
   QuestionnaireActions,
@@ -131,7 +197,11 @@ export {
 export type {
   QuestionnaireAnswers,
   QuestionnaireChoiceConfig,
+  QuestionnaireChoiceProps,
+  QuestionnaireInputProps,
   QuestionnaireItemConfig,
+  QuestionnaireItemProps,
+  QuestionnaireProps,
 } from './components/ui/Questionnaire';
 export { Markdown } from './components/ai/Markdown';
 export type { MarkdownProps } from './components/ai/Markdown';
@@ -142,25 +212,11 @@ export type { RadiusValue } from './lib/radius';
 export { ChatList, ChatListItemSkeleton } from './components/ai/ChatList';
 export type { ChatListItem, ChatListProps } from './components/ai/ChatList';
 export { ChatLayout, ChatSidebarToggle, useChatLayout } from './components/ai/ChatLayout';
-export type { ChatLayoutProps } from './components/ai/ChatLayout';
+export type { ChatLayoutProps, ChatSidebarSide } from './components/ai/ChatLayout';
 
 export { Header } from './components/blocks/Header';
+export type { HeaderProps } from './components/blocks/Header';
 export { Footer } from './components/blocks/Footer';
-export type { FooterSection, FooterGroup } from './data/footer';
+export type { FooterProps } from './components/blocks/Footer';
+export type { FooterGroup, FooterSection } from './data/footer';
 export type { NavItem } from './data/home';
-export {
-  ProductCard,
-  PromoCard,
-  StatPanel,
-  TextCard,
-  WideBanner,
-} from './components/blocks/HomeBlocks';
-export {
-  Recognition,
-  DirectionCard,
-  StartCards,
-  VacancyCards,
-  ValuesGrid,
-} from './components/blocks/ResearcherBlocks';
-export { HomePage } from './pages/HomePage';
-export { AssistantPage } from './pages/AssistantPage';

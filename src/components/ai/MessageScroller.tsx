@@ -48,6 +48,7 @@ export interface MessageScrollerProviderProps {
   scrollEdgeThreshold?: number;
   scrollMargin?: number;
   scrollPreviousItemPeek?: number;
+  resetKey?: string;
   children: ReactNode;
 }
 
@@ -57,6 +58,7 @@ export function MessageScrollerProvider({
   scrollEdgeThreshold = 8,
   scrollMargin = 0,
   scrollPreviousItemPeek = 64,
+  resetKey = '',
   children,
 }: MessageScrollerProviderProps) {
   const [viewport, setViewport] = useState<HTMLDivElement | null>(null);
@@ -69,7 +71,10 @@ export function MessageScrollerProvider({
   const preserveRef = useRef(true);
   const lastMetrics = useRef({ scrollHeight: 0, scrollTop: 0 });
   const autoscrollTimer = useRef<number | null>(null);
-  const initializedViewport = useRef<HTMLDivElement | null>(null);
+  const initialized = useRef<{ viewport: HTMLDivElement | null; key: string | null }>({
+    viewport: null,
+    key: null,
+  });
 
   const registerViewport = useCallback((element: HTMLDivElement | null, preserve: boolean) => {
     preserveRef.current = preserve;
@@ -103,7 +108,7 @@ export function MessageScrollerProvider({
   const scrollToEnd = useCallback(
     (options: ScrollCommandOptions = {}) => {
       if (!viewport) return false;
-      const behavior = options.behavior ?? 'auto';
+      const behavior = options.behavior ?? 'instant';
       flashAutoscrolling();
       viewport.scrollTo({ top: viewport.scrollHeight, behavior });
       followRef.current = autoScroll;
@@ -115,7 +120,7 @@ export function MessageScrollerProvider({
   const scrollToStart = useCallback(
     (options: ScrollCommandOptions = {}) => {
       if (!viewport) return false;
-      const behavior = options.behavior ?? 'auto';
+      const behavior = options.behavior ?? 'instant';
       flashAutoscrolling();
       viewport.scrollTo({ top: 0, behavior });
       followRef.current = false;
@@ -130,7 +135,7 @@ export function MessageScrollerProvider({
       const node = viewport.querySelector<HTMLElement>(`[data-message-id="${CSS.escape(id)}"]`);
       if (!node) return false;
       const align = options.align ?? 'start';
-      const behavior = options.behavior ?? 'auto';
+      const behavior = options.behavior ?? 'smooth';
       const margin = options.scrollMargin ?? scrollMargin;
       flashAutoscrolling();
       if (margin) {
@@ -150,11 +155,13 @@ export function MessageScrollerProvider({
   );
 
   useEffect(() => {
-    if (!viewport || initializedViewport.current === viewport) return;
+    if (!viewport) return;
+    if (initialized.current.viewport === viewport && initialized.current.key === resetKey) return;
     let frame = 0;
     let second = 0;
+    setPendingScroll(defaultScrollPosition !== 'start');
     const apply = () => {
-      initializedViewport.current = viewport;
+      initialized.current = { viewport, key: resetKey };
       if (defaultScrollPosition === 'end') {
         viewport.scrollTop = viewport.scrollHeight;
       } else if (defaultScrollPosition === 'last-anchor') {
@@ -171,6 +178,8 @@ export function MessageScrollerProvider({
         } else {
           viewport.scrollTop = viewport.scrollHeight;
         }
+      } else {
+        viewport.scrollTop = 0;
       }
       followRef.current = autoScroll;
       setPendingScroll(false);
@@ -186,6 +195,7 @@ export function MessageScrollerProvider({
   }, [
     autoScroll,
     defaultScrollPosition,
+    resetKey,
     scrollMargin,
     scrollPreviousItemPeek,
     updateScrollState,
@@ -236,7 +246,7 @@ export function MessageScrollerProvider({
       const grew = scrollHeight > previous.scrollHeight;
       const atEnd = scrollHeight - scrollTop - clientHeight <= scrollEdgeThreshold;
       if (followRef.current && grew) {
-        viewport.scrollTo({ top: scrollHeight, behavior: 'auto' });
+        viewport.scrollTo({ top: scrollHeight, behavior: 'instant' });
       } else if (
         preserveRef.current &&
         grew &&
@@ -256,7 +266,7 @@ export function MessageScrollerProvider({
 
   useEffect(() => {
     if (!viewport) return;
-    const elements = viewport.querySelectorAll<HTMLElement>('[data-message-id]');
+    const observed = new Set<HTMLElement>();
     const observer = new IntersectionObserver(
       (entries) => {
         setVisibleIds((previous) => {
@@ -272,12 +282,29 @@ export function MessageScrollerProvider({
       },
       { root: viewport, threshold: 0 }
     );
-    elements.forEach((element) => observer.observe(element));
-    const mutation = new MutationObserver(() => {
-      viewport
-        .querySelectorAll<HTMLElement>('[data-message-id]')
-        .forEach((element) => observer.observe(element));
-    });
+    const sync = () => {
+      const live = new Set(viewport.querySelectorAll<HTMLElement>('[data-message-id]'));
+      for (const element of observed) {
+        if (live.has(element)) continue;
+        observer.unobserve(element);
+        observed.delete(element);
+      }
+      const ids = new Set<string>();
+      for (const element of live) {
+        if (!observed.has(element)) {
+          observer.observe(element);
+          observed.add(element);
+        }
+        const id = element.dataset.messageId;
+        if (id) ids.add(id);
+      }
+      setVisibleIds((previous) => {
+        const next = previous.filter((id) => ids.has(id));
+        return next.length === previous.length ? previous : next;
+      });
+    };
+    sync();
+    const mutation = new MutationObserver(sync);
     mutation.observe(viewport, { childList: true, subtree: true });
     return () => {
       observer.disconnect();

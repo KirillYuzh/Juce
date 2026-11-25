@@ -7,11 +7,7 @@ import { cx } from '../../lib/cx';
 export type TraceStatus = 'running' | 'error';
 
 export function Trace({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <div role="list" className={cx(styles.trace, className)}>
-      {children}
-    </div>
-  );
+  return <div className={cx(styles.trace, className)}>{children}</div>;
 }
 
 export function TraceLine({
@@ -24,7 +20,7 @@ export function TraceLine({
   className?: string;
 }) {
   return (
-    <span role="listitem" className={cx(styles.line, className)} data-status={status}>
+    <span className={cx(styles.line, className)} data-status={status}>
       {children}
     </span>
   );

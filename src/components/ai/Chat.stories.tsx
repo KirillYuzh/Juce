@@ -4,6 +4,7 @@ import { Chat, type ChatMessage } from './Chat';
 import { ChatLayout, ChatSidebarToggle } from './ChatLayout';
 import { ChatList, type ChatListItem } from './ChatList';
 import type { PromptInputPayload, PromptInputStatus } from './PromptInput';
+import { demoAssistantMessage, demoChatReplyDelay } from './chat-demo';
 
 const meta: Meta = {
   title: 'Chat/Conversation',
@@ -72,13 +73,20 @@ const threads: Record<string, ChatMessage[]> = {
   c3: [],
 };
 
-function WorkspaceDemo({ initialOpen = true }: { initialOpen?: boolean }) {
+function WorkspaceDemo({
+  initialOpen = true,
+  side = 'right',
+}: {
+  initialOpen?: boolean;
+  side?: 'left' | 'right';
+}) {
   const [items, setItems] = useState(chats);
   const [activeId, setActiveId] = useState(chats[0].id);
   const [open, setOpen] = useState(initialOpen);
   const [messages, setMessages] = useState(threads);
 
   const active = items.find((chat) => chat.id === activeId);
+  const toggle = <ChatSidebarToggle />;
 
   const create = () => {
     const id = `c-${Date.now()}`;
@@ -116,6 +124,7 @@ function WorkspaceDemo({ initialOpen = true }: { initialOpen?: boolean }) {
       <ChatLayout
         sidebarOpen={open}
         onSidebarOpenChange={setOpen}
+        sidebarSide={side}
         sidebar={
           <ChatList
             chats={items}
@@ -128,9 +137,11 @@ function WorkspaceDemo({ initialOpen = true }: { initialOpen?: boolean }) {
       >
         <Chat
           framed={false}
-          headerLeading={<ChatSidebarToggle />}
+          headerLeading={side === 'left' ? toggle : undefined}
+          headerTrailing={side === 'left' ? undefined : toggle}
           title={active?.title ?? 'Диалог'}
           subtitle="ИИ-ассистент по Java, Go и математике"
+          conversationKey={activeId}
           messages={messages[activeId] ?? []}
           onSend={send}
           suggestions={activeId === 'c1' ? emptySuggestions : []}
@@ -154,7 +165,7 @@ const workspaceSource = `<ChatLayout
   <Chat
     messages={messages}
     onSend={handleSend}
-    headerLeading={<ChatSidebarToggle />}
+    headerTrailing={<ChatSidebarToggle />}
   />
 </ChatLayout>`;
 
@@ -162,12 +173,16 @@ function ChatDemo({
   initial = startMessages,
   suggestions = [],
   withSimulation = true,
-  showAuthor = true,
+  showAuthor = false,
+  showReasoning = false,
+  showSources = false,
 }: {
   initial?: ChatMessage[];
   suggestions?: string[];
   withSimulation?: boolean;
   showAuthor?: boolean;
+  showReasoning?: boolean;
+  showSources?: boolean;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initial);
   const [status, setStatus] = useState<PromptInputStatus>('ready');
@@ -185,21 +200,10 @@ function ChatDemo({
     if (!withSimulation) return;
     setStatus('streaming');
     timer.current = window.setTimeout(() => {
-      setMessages((current) => [
-        ...current,
-        {
-          id: `a-${Date.now()}`,
-          role: 'assistant',
-          content:
-            'Это демонстрационный ответ. В реальном приложении сюда приходит поток от модели.\n\nМожно передать reasoning, источники и действия под сообщением.',
-          reasoning: 'Проверяю контекст и подбираю подходящий раздел документации.',
-          reasoningDuration: 2,
-          sources: [{ url: 'https://dev.java/', title: 'dev.java: документация JDK' }],
-        },
-      ]);
+      setMessages((current) => [...current, demoAssistantMessage(`a-${Date.now()}`)]);
       setStatus('ready');
       timer.current = null;
-    }, 900);
+    }, demoChatReplyDelay);
   };
 
   const stop = () => {
@@ -217,6 +221,8 @@ function ChatDemo({
         status={status}
         suggestions={suggestions}
         showAuthor={showAuthor}
+        showReasoning={showReasoning}
+        showSources={showSources}
         onRetry={(id) => setMessages((current) => current.filter((message) => message.id !== id))}
       />
     </div>
@@ -240,6 +246,21 @@ export const SidebarCollapsed: Story = {
   name: 'Sidebar collapsed',
   render: () => <WorkspaceDemo initialOpen={false} />,
   parameters: { layout: 'fullscreen' },
+};
+
+export const SidebarLeft: Story = {
+  name: 'Sidebar left',
+  render: () => <WorkspaceDemo side="left" />,
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      source: {
+        code: `<ChatLayout sidebarSide="left" sidebar={<ChatList ... />}>
+  <Chat messages={messages} onSend={handleSend} headerLeading={<ChatSidebarToggle />} />
+</ChatLayout>`,
+      },
+    },
+  },
 };
 
 export const SingleChat: Story = {
@@ -274,13 +295,19 @@ export const WithoutSimulation: Story = {
   },
 };
 
-export const WithoutAuthor: Story = {
-  name: 'Without author',
-  render: () => <ChatDemo withSimulation={false} showAuthor={false} />,
+export const WithDetails: Story = {
+  name: 'With author, reasoning and sources',
+  render: () => <ChatDemo withSimulation={false} showAuthor showReasoning showSources />,
   parameters: {
     docs: {
       source: {
-        code: `<Chat messages={messages} onSend={handleSend} showAuthor={false} />`,
+        code: `<Chat
+  messages={messages}
+  onSend={handleSend}
+  showAuthor
+  showReasoning
+  showSources
+/>`,
       },
     },
   },
@@ -303,11 +330,11 @@ const markdownMessages: ChatMessage[] = [
 
 export const MarkdownAnswer: Story = {
   name: 'Markdown answer',
-  render: () => <ChatDemo initial={markdownMessages} withSimulation={false} showAuthor={false} />,
+  render: () => <ChatDemo initial={markdownMessages} withSimulation={false} />,
   parameters: {
     docs: {
       source: {
-        code: `<Chat messages={messages} onSend={handleSend} showAuthor={false} />`,
+        code: `<Chat messages={messages} onSend={handleSend} />`,
       },
     },
   },

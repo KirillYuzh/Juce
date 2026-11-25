@@ -50,7 +50,7 @@
 
 .error {
   margin: 0;
-  color: var(--tb-accent-text);
+  color: var(--tb-error-text);
   overflow-wrap: anywhere;
 }
 

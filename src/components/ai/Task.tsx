@@ -12,6 +12,7 @@ import {
 import { Icon, type IconName } from '../ui/Icon';
 import { Spinner } from '../ui/Display';
 import { cx } from '../../lib/cx';
+import { safeHref } from '../../lib/url';
 
 export type TaskStatus = 'running' | 'error' | 'done' | 'pending';
 
@@ -78,9 +79,10 @@ export function TaskItem({ step, className }: { step: TaskStep; className?: stri
     </TraceLine>
   );
 
-  if (step.href) {
+  const href = step.href ? safeHref(step.href) : undefined;
+  if (href) {
     return (
-      <a className={styles.stepLink} href={step.href}>
+      <a className={styles.stepLink} href={href}>
         {content}
       </a>
     );

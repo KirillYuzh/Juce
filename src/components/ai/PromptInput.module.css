@@ -12,7 +12,7 @@
   border: 0;
   border-radius: var(--tb-radius-popover);
   background: var(--tb-surface);
-  box-shadow: inset 0 0 0 1px var(--tb-border-control);
+  box-shadow: inset 0 0 0 1px var(--tb-border);
   cursor: text;
   transition: box-shadow var(--tb-duration-fast) var(--tb-ease-standard);
 }
@@ -145,7 +145,7 @@
 
 .stop {
   background: var(--tb-accent);
-  color: var(--tb-text-primary);
+  color: var(--tb-on-accent);
   transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
 }
 

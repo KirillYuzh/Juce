@@ -1,8 +1,11 @@
-import { useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import styles from './ChatList.module.css';
 import { IconButton } from '../ui/Button';
+import { Icon, type IconName } from '../ui/Icon';
 import { Skeleton } from '../ui/Display';
 import { Input } from '../ui/Fields';
+import { AlertDialog } from '../ui/AlertDialog';
+import { useCopy } from '../ui/clipboard';
 import { cx } from '../../lib/cx';
 
 export interface ChatListItem {
@@ -17,17 +20,155 @@ export interface ChatListProps {
   onSelect?: (id: string) => void;
   onCreate?: () => void;
   onDelete?: (id: string) => void;
+  onCopy?: (chat: ChatListItem) => void;
+  onDownload?: (chat: ChatListItem) => void;
   loading?: boolean;
   searchable?: boolean;
   searchPlaceholder?: string;
   newChatLabel?: string;
   emptyText?: string;
-  deleteLabel?: (chat: ChatListItem) => string;
   className?: string;
   'aria-label'?: string;
 }
 
-const defaultDeleteLabel = (chat: ChatListItem) => `Удалить диалог «${chat.title}»`;
+const chatText = (chat: ChatListItem) => [chat.title, chat.preview].filter(Boolean).join('\n\n');
+
+const downloadChat = (chat: ChatListItem) => {
+  const url = URL.createObjectURL(new Blob([chatText(chat)], { type: 'text/plain;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${chat.title}.txt`;
+  link.rel = 'noopener';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+interface ChatActionsProps {
+  chat: ChatListItem;
+  onCopy?: (chat: ChatListItem) => void;
+  onDownload?: (chat: ChatListItem) => void;
+  onDelete?: (chat: ChatListItem, trigger: HTMLButtonElement | null) => void;
+}
+
+function ChatActions({ chat, onCopy, onDownload, onDelete }: ChatActionsProps) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<Array<HTMLButtonElement | null>>([]);
+  const { copy } = useCopy(chatText(chat));
+
+  const trigger = () =>
+    rootRef.current?.querySelector<HTMLButtonElement>('[data-chat-actions-trigger]');
+
+  const close = (restoreFocus = true) => {
+    setOpen(false);
+    if (restoreFocus) trigger()?.focus();
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    itemsRef.current[0]?.focus();
+    const onPointer = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointer);
+    return () => document.removeEventListener('pointerdown', onPointer);
+  }, [open]);
+
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const items = itemsRef.current.filter((item): item is HTMLButtonElement => item !== null);
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      close();
+      return;
+    }
+    if (event.key === 'Tab') {
+      close(false);
+      return;
+    }
+    if (items.length === 0) return;
+    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+      event.preventDefault();
+      const current = items.indexOf(document.activeElement as HTMLButtonElement);
+      const index =
+        event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? items.length - 1
+            : (current + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+      items[index]?.focus();
+    }
+  };
+
+  const actions: Array<{
+    id: string;
+    label: string;
+    icon: IconName;
+    danger?: boolean;
+    run: () => void;
+  }> = [
+    {
+      id: 'copy',
+      label: 'Скопировать',
+      icon: 'copy',
+      run: () => (onCopy ? onCopy(chat) : void copy()),
+    },
+    {
+      id: 'download',
+      label: 'Скачать',
+      icon: 'download',
+      run: () => (onDownload ? onDownload(chat) : downloadChat(chat)),
+    },
+  ];
+
+  if (onDelete) {
+    actions.push({
+      id: 'delete',
+      label: 'Удалить',
+      icon: 'trash',
+      danger: true,
+      run: () => onDelete(chat, trigger() ?? null),
+    });
+  }
+
+  return (
+    <div className={styles.actions} ref={rootRef} onKeyDown={onKeyDown}>
+      <IconButton
+        icon="more"
+        size="xs"
+        variant="ghost"
+        label={`Действия с чатом «${chat.title}»`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        data-chat-actions-trigger
+        onClick={() => setOpen((value) => !value)}
+      />
+      {open && (
+        <div className={styles.menu} role="menu" aria-label={`Действия с чатом «${chat.title}»`}>
+          {actions.map((action, index) => (
+            <button
+              key={action.id}
+              type="button"
+              role="menuitem"
+              ref={(element) => {
+                itemsRef.current[index] = element;
+              }}
+              className={cx(styles.menuItem, action.danger && styles.menuItemDanger)}
+              onClick={() => {
+                close(false);
+                action.run();
+              }}
+            >
+              <Icon name={action.icon} size={16} />
+              {action.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function ChatList({
   chats,
@@ -35,17 +176,19 @@ export function ChatList({
   onSelect,
   onCreate,
   onDelete,
+  onCopy,
+  onDownload,
   loading = false,
   searchable = true,
   searchPlaceholder = 'Поиск',
   newChatLabel = 'Новый диалог',
   emptyText = 'Здесь будут диалоги с помощником',
-  deleteLabel = defaultDeleteLabel,
   className,
   'aria-label': ariaLabel = 'Диалоги',
 }: ChatListProps) {
   const [query, setQuery] = useState('');
-  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<ChatListItem | null>(null);
+  const deleteTrigger = useRef<HTMLButtonElement | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<Array<HTMLButtonElement | null>>([]);
@@ -63,9 +206,17 @@ export function ChatList({
   };
 
   const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
       if (filtered.length === 0) return;
       event.preventDefault();
+      if (event.key === 'Home') {
+        focusItem(0);
+        return;
+      }
+      if (event.key === 'End') {
+        focusItem(filtered.length - 1);
+        return;
+      }
       const step = event.key === 'ArrowDown' ? 1 : -1;
       const next =
         activeIndex === null
@@ -80,6 +231,12 @@ export function ChatList({
   };
 
   const handleItemKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    if (event.key === 'Home' || event.key === 'End') {
+      event.preventDefault();
+      focusItem(event.key === 'Home' ? 0 : filtered.length - 1);
+      return;
+    }
+
     if (event.key === 'ArrowDown' && index + 1 < filtered.length) {
       event.preventDefault();
       focusItem(index + 1);
@@ -149,11 +306,7 @@ export function ChatList({
         ) : (
           <ul className={styles.items}>
             {filtered.map((chat, index) => (
-              <li
-                key={chat.id}
-                className={styles.row}
-                data-pending={pendingDelete === chat.id || undefined}
-              >
+              <li key={chat.id} className={styles.row}>
                 <button
                   type="button"
                   ref={(element) => {
@@ -164,56 +317,52 @@ export function ChatList({
                   aria-current={chat.id === activeId ? 'true' : undefined}
                   onFocus={() => setActiveIndex(index)}
                   onKeyDown={(event) => handleItemKeyDown(event, index)}
-                  onClick={() => {
-                    setPendingDelete(null);
-                    onSelect?.(chat.id);
-                  }}
+                  onClick={() => onSelect?.(chat.id)}
                 >
                   <span className={styles.title}>{chat.title}</span>
                   {chat.preview && <span className={styles.preview}>{chat.preview}</span>}
                 </button>
 
-                {onDelete && (
-                  <div className={styles.actions}>
-                    {pendingDelete === chat.id ? (
-                      <>
-                        <IconButton
-                          icon="check"
-                          size="xs"
-                          variant="plain"
-                          label="Подтвердить удаление"
-                          className={cx(styles.action, styles.confirm)}
-                          onClick={() => {
-                            setPendingDelete(null);
-                            onDelete(chat.id);
-                          }}
-                        />
-                        <IconButton
-                          icon="close"
-                          size="xs"
-                          variant="plain"
-                          label="Отменить удаление"
-                          className={cx(styles.action, styles.cancel)}
-                          onClick={() => setPendingDelete(null)}
-                        />
-                      </>
-                    ) : (
-                      <IconButton
-                        icon="trash"
-                        size="xs"
-                        variant="ghost"
-                        label={deleteLabel(chat)}
-                        className={cx(styles.action, styles.delete)}
-                        onClick={() => setPendingDelete(chat.id)}
-                      />
-                    )}
-                  </div>
-                )}
+                <ChatActions
+                  chat={chat}
+                  onCopy={onCopy}
+                  onDownload={onDownload}
+                  onDelete={
+                    onDelete
+                      ? (target, trigger) => {
+                          deleteTrigger.current = trigger;
+                          setPendingDelete(target);
+                        }
+                      : undefined
+                  }
+                />
               </li>
             ))}
           </ul>
         )}
       </div>
+
+      <AlertDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => {
+          if (open) return;
+          setPendingDelete(null);
+          const trigger = deleteTrigger.current;
+          deleteTrigger.current = null;
+          if (trigger) {
+            requestAnimationFrame(() => {
+              if (trigger.isConnected) trigger.focus();
+            });
+          }
+        }}
+        title={pendingDelete ? `Удалить чат «${pendingDelete.title}»?` : ''}
+        description="История переписки удалится без возможности восстановления."
+        cancelLabel="Оставить"
+        confirmLabel="Удалить"
+        onConfirm={() => {
+          if (pendingDelete) onDelete?.(pendingDelete.id);
+        }}
+      />
     </aside>
   );
 }

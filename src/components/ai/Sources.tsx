@@ -9,18 +9,11 @@ import {
   TraceTitle,
 } from './Trace';
 import { Icon } from '../ui/Icon';
+import { hostOf, safeHref } from '../../lib/url';
 
 export interface SourceItem {
   url: string;
   title?: string;
-}
-
-function hostOf(url: string) {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
 }
 
 function plural(count: number) {
@@ -39,7 +32,7 @@ export interface SourcesProps {
 
 export function Sources({ sources, defaultOpen = false, className }: SourcesProps) {
   const unique = sources.filter(
-    (source, index, all) => all.findIndex((other) => other.url === source.url) === index,
+    (source, index, all) => all.findIndex((other) => other.url === source.url) === index
   );
 
   return (
@@ -57,28 +50,43 @@ export function Sources({ sources, defaultOpen = false, className }: SourcesProp
         </TraceCollapsibleTrigger>
         <TraceCollapsibleContent>
           <Trace>
-            {unique.map((source) => (
-              <a
-                className={styles.link}
-                key={source.url}
-                href={source.url}
-                target="_blank"
-                rel="noreferrer"
-              >
+            {unique.map((source) => {
+              const href = safeHref(source.url);
+              const line = (
                 <TraceLine>
                   <TraceIcon>
                     <Icon name="globe" size={16} />
                   </TraceIcon>
                   <TraceTitle className={styles.title}>
                     {source.title ?? hostOf(source.url)}
-                    <span className="tb-visually-hidden"> (открывается в новой вкладке)</span>
+                    {href && (
+                      <span className="tb-visually-hidden"> (открывается в новой вкладке)</span>
+                    )}
                   </TraceTitle>
-                  <TraceIcon className={styles.external}>
-                    <Icon name="arrowUpRight" size={14} />
-                  </TraceIcon>
+                  {href && (
+                    <TraceIcon className={styles.external}>
+                      <Icon name="arrowUpRight" size={14} />
+                    </TraceIcon>
+                  )}
                 </TraceLine>
-              </a>
-            ))}
+              );
+
+              return href ? (
+                <a
+                  className={styles.link}
+                  key={source.url}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {line}
+                </a>
+              ) : (
+                <div className={styles.link} key={source.url}>
+                  {line}
+                </div>
+              );
+            })}
           </Trace>
         </TraceCollapsibleContent>
       </TraceCollapsible>

@@ -46,12 +46,33 @@ export function MessageFooter({
 export interface MessageReactionsProps {
   content: string;
   onRetry?: () => void;
+  retryOnly?: boolean;
   className?: string;
 }
 
-export function MessageReactions({ content, onRetry, className }: MessageReactionsProps) {
+export function MessageReactions({
+  content,
+  onRetry,
+  retryOnly = false,
+  className,
+}: MessageReactionsProps) {
   const [vote, setVote] = useState<'up' | 'down' | null>(null);
   const { copied, copy } = useCopy(content);
+
+  if (retryOnly) {
+    if (!onRetry) return null;
+    return (
+      <MessageFooter className={className}>
+        <IconButton
+          icon="refresh"
+          label="Повторить ответ"
+          size="xs"
+          variant="ghost"
+          onClick={onRetry}
+        />
+      </MessageFooter>
+    );
+  }
 
   return (
     <MessageFooter className={className}>

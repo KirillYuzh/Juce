@@ -1,127 +1,97 @@
+import type { ReactNode } from 'react';
+import styles from './HomePage.module.css';
 import { Header } from '../components/blocks/Header';
 import { Footer } from '../components/blocks/Footer';
+import { Button } from '../components/ui/Button';
 import { CookieNotice } from '../components/ui/Feedback';
-import {
-  ArticlesSection,
-  Hero,
-  JournalBanner,
-  MoreSection,
-  ProductsSection,
-  ResearchPromoSection,
-  ServicesSection,
-  ShowcaseSection,
-} from '../sections/HomeSections';
-import {
-  articles,
-  homeNav,
-  moreLinks,
-  products,
-  projectTemplates,
-  researchPromos,
-  reviewFormats,
-  services,
-} from '../data/home';
+import { MediaPanel, ServiceCard } from '../components/prebuilt';
+import { homeNav, products, researchPromos, services } from '../data/home';
 
-const hypothesisFormats = [
-  { value: 'quick', label: 'Быстрый разбор' },
-  { value: 'deep', label: 'Разбор с примерами кода' },
-  { value: 'peer', label: 'С ревью команды' },
-];
-
-const dataFormats = [
-  { value: 'task', label: 'Задача с интервью' },
-  { value: 'proof', label: 'Доказательство по шагам' },
-  { value: 'export', label: 'Выгрузка в Jupyter' },
-];
+function Section({ title, children }: { title?: string; children: ReactNode }) {
+  return (
+    <section className={styles.section}>
+      <div className="tb-container">
+        {title && <h2 className={styles.title}>{title}</h2>}
+        {children}
+      </div>
+    </section>
+  );
+}
 
 export function HomePage() {
   return (
     <>
-      <Header nav={homeNav} variant="home" />
+      <Header nav={homeNav} />
 
       <main>
-        <Hero
-          title="Ассистент, который разбирает код и формулы вместе с вами"
-          text="Джупсик объясняет Java и Go"
-          cta="Открыть чат"
-          href="#/assistant"
-          image="/image.png"
-          imageAlt="Команда разработчиков за работой"
-        />
+        <section className={styles.hero}>
+          <div className="tb-container">
+            <div className={styles.heroInner}>
+              <h1 className={styles.heroTitle}>
+                Ассистент, который разбирает код и формулы вместе с вами
+              </h1>
+              <p className={styles.heroText}>Джупсик объясняет Java и Go</p>
+              <div className={styles.actions}>
+                <Button href="#/assistant">Открыть чат</Button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        <ShowcaseSection
-          title="Соберите проект под свою задачу"
-          tabs={[
-            {
-              id: 'review',
-              label: 'Разбор кода',
-              title: 'Разбор кода',
-              designs: projectTemplates,
-              options: reviewFormats,
-            },
-            {
-              id: 'hypothesis',
-              label: 'Алгоритмы',
-              title: 'Алгоритмы и сложность',
-              designs: projectTemplates,
-              options: hypothesisFormats,
-            },
-            {
-              id: 'data',
-              label: 'Математика',
-              title: 'Линейная алгебра и дискретка',
-              designs: projectTemplates,
-              options: dataFormats,
-            },
-          ]}
-        />
+        <Section title="Кому помогает Джупсик">
+          <div className={styles.grid}>
+            {products.map((product) => (
+              <MediaPanel
+                key={product.id}
+                title={product.title}
+                text={product.description}
+                media={<img src={product.image} alt="" loading="lazy" />}
+                links={[{ label: product.cta, href: product.href }]}
+              />
+            ))}
+          </div>
+        </Section>
 
-        <ProductsSection
-          title="Кому помогает Джупсик"
-          groups={[products.slice(0, 2), products.slice(2)]}
-        />
+        <Section title="Что умеет Джупсик">
+          <div className={styles.gridThree}>
+            {services.map((service) => (
+              <ServiceCard
+                key={service.id}
+                title={service.title}
+                description={service.text}
+                link={service.link}
+              />
+            ))}
+          </div>
+        </Section>
 
-        <ServicesSection
-          title="Что умеет Джупсик"
-          cards={services}
-          promos={[
-            {
-              title: 'Разбор за вечер',
-              text: 'Ассистент соберёт объяснение темы с примерами на Java, Go и ссылками на документацию',
-              image: '/image.png',
-              cta: 'Попробовать',
-              href: '#/assistant',
-              tone: 'light',
-            },
-            {
-              title: 'Граф зависимостей в проекте',
-              text: 'Показывает, какой модуль на кого ссылается и где цикл мешает сборке',
-              image: '/image.png',
-              cta: 'Посмотреть',
-              href: '#/assistant',
-              tone: 'dark',
-            },
-          ]}
-        />
+        <Section title="Разбор за вечер">
+          <div className={styles.grid}>
+            {researchPromos.map((promo) => (
+              <MediaPanel
+                key={promo.id}
+                title={promo.title}
+                text={promo.text}
+                media={<img src={promo.image} alt="" loading="lazy" />}
+                links={[{ label: promo.cta, href: promo.href }]}
+              />
+            ))}
+          </div>
+        </Section>
 
-        <ArticlesSection title="Из блога" articles={articles} moreHref="#" />
-
-        <ResearchPromoSection title="Командам и группам" items={researchPromos} />
-
-        <JournalBanner
-          title="Как разобрать чужой код за вечер"
-          source="Блог Джус"
-          image="/image.png"
-          cta="Читать"
-          href="#"
-        />
-
-        <MoreSection title="Дополнительно" items={moreLinks} />
+        <section className={styles.section}>
+          <div className="tb-container">
+            <MediaPanel
+              title="Как разобрать чужой код за вечер"
+              text="Блог Джус"
+              media={<img src="/image.png" alt="" loading="lazy" />}
+              links={[{ label: 'Читать', href: '#' }]}
+            />
+          </div>
+        </section>
       </main>
 
-      <div>
-        <Footer />
-      </div>
+      <Footer />
 
       <CookieNotice />
     </>

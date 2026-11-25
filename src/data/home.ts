@@ -57,8 +57,6 @@ export interface Product {
   image: string;
   cta: string;
   href: string;
-  size: 'large' | 'small';
-  tone: 'dark' | 'steel' | 'lavender' | 'ice' | 'mint' | 'sand';
 }
 
 export const products: Product[] = [
@@ -68,9 +66,7 @@ export const products: Product[] = [
     description: 'Generics, байткод и JVM-настройки на понятных примерах',
     image: '/image.png',
     cta: 'Начать',
-    href: '#/researchers',
-    size: 'large',
-    tone: 'ice',
+    href: '#/assistant',
   },
   {
     id: 'go',
@@ -78,9 +74,7 @@ export const products: Product[] = [
     description: 'Разбор горутин, каналов и аллокаций без лишней теории',
     image: '/image.png',
     cta: 'Подробнее',
-    href: '#/researchers',
-    size: 'large',
-    tone: 'sand',
+    href: '#/assistant',
   },
   {
     id: 'math',
@@ -88,9 +82,7 @@ export const products: Product[] = [
     description: 'Линейная алгебра и дискретка: доказательства шаг за шагом',
     image: '/image.png',
     cta: 'Подробнее',
-    href: '#/researchers',
-    size: 'small',
-    tone: 'steel',
+    href: '#/assistant',
   },
   {
     id: 'ml',
@@ -98,23 +90,8 @@ export const products: Product[] = [
     description: 'От градиентов до тюнинга: формулы и код рядом',
     image: '/image.png',
     cta: 'Подробнее',
-    href: '#/researchers',
-    size: 'small',
-    tone: 'dark',
+    href: '#/assistant',
   },
-];
-
-export const projectTemplates = [
-  { id: 'blank', image: '/image.png', label: 'Пустая задача' },
-  { id: 'review', image: '/image.png', label: 'Разбор кода' },
-  { id: 'hypothesis', image: '/image.png', label: 'Доказательство' },
-  { id: 'data', image: '/image.png', label: 'Эксперимент' },
-];
-
-export const reviewFormats = [
-  { value: 'full', label: 'Полный разбор темы' },
-  { value: 'short', label: 'Краткий конспект' },
-  { value: 'steps', label: 'Разбор по шагам' },
 ];
 
 export const services = [
@@ -143,27 +120,6 @@ export const services = [
   link: { label: string; href: string };
 }>;
 
-export const articles = [
-  {
-    id: 'stacktrace',
-    title: 'Как Джупсик читает stack trace',
-    text: 'Разбираем, как ассистент идёт от строки ошибки к причине и объясняет, при чём тут обёртки.',
-    href: '#',
-  },
-  {
-    id: 'records',
-    title: 'Java records: что изменилось в 21',
-    text: 'Короткие value-классы, pattern matching и что теперь не нужно писать руками.',
-    href: '#',
-  },
-  {
-    id: 'channels',
-    title: 'Go: когда каналы вредят',
-    text: 'Три задачи, где мьютекс проще, читаемее и быстрее канала.',
-    href: '#',
-  },
-];
-
 export const researchPromos = [
   {
     id: 'team',
@@ -171,7 +127,7 @@ export const researchPromos = [
     text: 'Общая библиотека заметок, история запросов и один контекст для всей команды',
     image: '/image.png',
     cta: 'Подключить команду',
-    href: '#/researchers',
+    href: '#/assistant',
   },
   {
     id: 'exam',
@@ -179,26 +135,6 @@ export const researchPromos = [
     text: 'Разбор задач по линейной алгебре и дискретке с полными выкладками, а не только ответом',
     image: '/image.png',
     cta: 'Узнать больше',
-    href: '#/researchers',
+    href: '#/assistant',
   },
 ];
-
-export const moreLinks = [
-  {
-    id: 'api',
-    title: 'API платформы',
-    text: 'Подключите ассистента к своим инструментам: REST, вебхуки, экспорт в Markdown и LaTeX.',
-    link: { label: 'Документация', href: '#' },
-  },
-  {
-    id: 'ethics',
-    title: 'Как мы работаем с данными',
-    text: 'Что попадает в контекст, сколько живут запросы и как отключить сохранение истории.',
-    link: { label: 'Политика', href: '#' },
-  },
-] satisfies Array<{
-  id: string;
-  title: string;
-  text: string;
-  link: { label: string; href: string };
-}>;

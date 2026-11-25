@@ -68,11 +68,12 @@ export function PromptInput({
     element.style.height = `${Math.min(element.scrollHeight, 200)}px`;
   }, [text]);
 
-  const canSend = text.trim().length > 0 && status !== 'streaming' && !disabled;
+  const blocked = status === 'streaming' || status === 'submitted';
+  const canSend = text.trim().length > 0 && !blocked && !disabled;
 
   const submit = () => {
     const trimmed = text.trim();
-    if (!trimmed || disabled) return;
+    if (!trimmed || disabled || blocked) return;
     onSubmit?.({ text: trimmed, files });
     if (!controlled) setInner('');
     setFiles([]);
@@ -163,7 +164,7 @@ export function PromptInput({
 
           {hint && <span className={styles.status}>{hint}</span>}
 
-          {status === 'streaming' ? (
+          {status === 'streaming' && onStop ? (
             <button
               type="button"
               className={cx(styles.send, styles.stop)}

@@ -44,7 +44,7 @@
 }
 
 .line[data-status='error'] {
-  color: var(--tb-accent-text);
+  color: var(--tb-error-text);
 }
 
 .line[data-status='error'] .icon {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { ChatList, type ChatListItem } from './ChatList';
 
 const chats: ChatListItem[] = [
@@ -34,13 +34,82 @@ describe('ChatList', () => {
     expect(screen.queryByText('Первый диалог')).toBeNull();
   });
 
-  it('deletes a chat only after confirmation', () => {
+  it('opens the actions menu and copies a chat', () => {
+    const onCopy = vi.fn();
+    render(<ChatList chats={chats} onCopy={onCopy} />);
+    fireEvent.click(screen.getByLabelText('Действия с чатом «Второй диалог»'));
+    expect(screen.getByRole('menu')).toBeTruthy();
+    fireEvent.click(screen.getByRole('menuitem', { name: /Скопировать/ }));
+    expect(onCopy).toHaveBeenCalledWith(chats[1]);
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('downloads a chat from the menu', () => {
+    const onDownload = vi.fn();
+    render(<ChatList chats={chats} onDownload={onDownload} />);
+    fireEvent.click(screen.getByLabelText('Действия с чатом «Второй диалог»'));
+    fireEvent.click(screen.getByRole('menuitem', { name: /Скачать/ }));
+    expect(onDownload).toHaveBeenCalledWith(chats[1]);
+  });
+
+  it('closes the actions menu on a pointer down outside', () => {
+    render(<ChatList chats={chats} />);
+    fireEvent.click(screen.getByLabelText('Действия с чатом «Второй диалог»'));
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('moves focus with Home and End in the actions menu', () => {
+    render(<ChatList chats={chats} />);
+    const trigger = screen.getByLabelText('Действия с чатом «Второй диалог»');
+    fireEvent.click(trigger);
+
+    const menu = screen.getByRole('menu');
+    const items = within(menu).getAllByRole('menuitem');
+    expect(document.activeElement).toBe(items[0]);
+
+    fireEvent.keyDown(menu, { key: 'End' });
+    expect(document.activeElement).toBe(items[items.length - 1]);
+    fireEvent.keyDown(menu, { key: 'Home' });
+    expect(document.activeElement).toBe(items[0]);
+
+    fireEvent.keyDown(menu, { key: 'Escape' });
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('moves focus with Home and End in the chat list', () => {
+    render(<ChatList chats={chats} />);
+    const search = screen.getByLabelText('Поиск по диалогам');
+    fireEvent.keyDown(search, { key: 'End' });
+    expect(document.activeElement).toBe(items()[1]);
+    fireEvent.keyDown(items()[1], { key: 'Home' });
+    expect(document.activeElement).toBe(items()[0]);
+  });
+
+  it('deletes a chat only after the alert dialog is confirmed', () => {
     const onDelete = vi.fn();
     render(<ChatList chats={chats} onDelete={onDelete} />);
-    fireEvent.click(screen.getByLabelText('Удалить диалог «Второй диалог»'));
+    fireEvent.click(screen.getByLabelText('Действия с чатом «Второй диалог»'));
+    fireEvent.click(screen.getByRole('menuitem', { name: /Удалить/ }));
     expect(onDelete).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByLabelText('Подтвердить удаление'));
+    expect(document.querySelector('dialog')?.open).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Удалить' }));
     expect(onDelete).toHaveBeenCalledWith('b');
+    expect(document.querySelector('dialog')?.open).toBe(false);
+  });
+
+  it('keeps the chat when deletion is cancelled', async () => {
+    const onDelete = vi.fn();
+    render(<ChatList chats={chats} onDelete={onDelete} />);
+    const trigger = screen.getByLabelText('Действия с чатом «Второй диалог»');
+    fireEvent.click(trigger);
+    fireEvent.click(screen.getByRole('menuitem', { name: /Удалить/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Оставить' }));
+    expect(onDelete).not.toHaveBeenCalled();
+    expect(document.querySelector('dialog')?.open).toBe(false);
+    expect(screen.getByText('Второй диалог')).toBeTruthy();
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
   });
 
   it('shows skeleton rows while loading', () => {
@@ -49,15 +118,6 @@ describe('ChatList', () => {
     expect(items()).toHaveLength(0);
     expect(screen.queryByText('Здесь будут диалоги с помощником')).toBeNull();
     expect(document.querySelector('[data-chat-list]')?.getAttribute('aria-busy')).toBe('true');
-  });
-
-  it('cancels deletion without removing the chat', () => {
-    const onDelete = vi.fn();
-    render(<ChatList chats={chats} onDelete={onDelete} />);
-    fireEvent.click(screen.getByLabelText('Удалить диалог «Второй диалог»'));
-    fireEvent.click(screen.getByLabelText('Отменить удаление'));
-    expect(onDelete).not.toHaveBeenCalled();
-    expect(screen.getByLabelText('Удалить диалог «Второй диалог»')).toBeTruthy();
   });
 
   it('moves focus with the arrow keys', () => {

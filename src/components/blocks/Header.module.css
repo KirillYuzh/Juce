@@ -79,9 +79,9 @@
   grid-template-columns: repeat(2, minmax(180px, 1fr));
   gap: 4px;
   min-width: 420px;
-  padding: 16px;
-  border-radius: var(--tb-radius-surface);
-  background: var(--tb-surface);
+  padding: 4px;
+  border-radius: var(--tb-radius-popover);
+  background: var(--tb-gray-100);
   box-shadow: var(--tb-shadow-popover);
   opacity: 0;
   visibility: hidden;
@@ -91,6 +91,13 @@
     opacity var(--tb-duration-fast) var(--tb-ease-standard),
     transform var(--tb-duration-fast) var(--tb-ease-standard),
     visibility 0s linear var(--tb-duration-fast);
+}
+
+.dropdown::before {
+  content: '';
+  position: absolute;
+  inset: -8px 0 auto;
+  height: 8px;
 }
 
 .navItem:focus-within .dropdown {
@@ -112,8 +119,8 @@
 }
 
 .dropdownLink {
-  padding: 10px 12px;
-  border-radius: var(--tb-radius-xs);
+  padding: 10px 16px;
+  border-radius: var(--tb-radius-control);
   font: 400 15px/24px var(--tb-font-text);
   color: var(--tb-text-primary);
   transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
@@ -121,7 +128,7 @@
 
 @media (hover: hover) {
   .dropdownLink:hover {
-    background: var(--tb-gray-100);
+    background: var(--tb-option-hover);
   }
 }
 

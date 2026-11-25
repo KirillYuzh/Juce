@@ -28,17 +28,22 @@ export function Reasoning({
   isStreaming = false,
   duration = null,
   open,
-  defaultOpen = true,
+  defaultOpen,
   onOpenChange,
   className,
 }: ReasoningProps) {
-  const [innerOpen, setInnerOpen] = useState(defaultOpen);
+  const [innerOpen, setInnerOpen] = useState(() => defaultOpen ?? isStreaming);
   const touched = useRef(false);
+  const wasStreaming = useRef(isStreaming);
   const current = open ?? innerOpen;
 
   useEffect(() => {
-    if (touched.current || open !== undefined) return;
-    setInnerOpen(isStreaming);
+    if (open !== undefined) {
+      wasStreaming.current = isStreaming;
+      return;
+    }
+    if (isStreaming && !wasStreaming.current && !touched.current) setInnerOpen(true);
+    wasStreaming.current = isStreaming;
   }, [isStreaming, open]);
 
   const change = (next: boolean) => {

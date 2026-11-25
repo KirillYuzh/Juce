@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 import styles from './Chat.module.css';
 import { MessageScroller } from './MessageScroller';
 import { Bubble, BubbleContent, Message, MessageContent, MessageReactions } from './Message';
@@ -7,7 +7,7 @@ import { Suggestions, Suggestion } from './Suggestion';
 import { Reasoning } from './Reasoning';
 import { Sources, type SourceItem } from './Sources';
 import { Markdown } from './Markdown';
-import { Avatar, Spinner } from '../ui/Display';
+import { Avatar } from '../ui/Display';
 import { cx } from '../../lib/cx';
 
 export interface ChatMessage {
@@ -20,6 +20,7 @@ export interface ChatMessage {
   sources?: SourceItem[];
   streaming?: boolean;
   error?: boolean;
+  errorText?: string;
 }
 
 export interface ChatProps {
@@ -37,16 +38,15 @@ export interface ChatProps {
   className?: string;
   footnote?: string;
   headerLeading?: ReactNode;
+  headerTrailing?: ReactNode;
   framed?: boolean;
   showAuthor?: boolean;
+  showReasoning?: boolean;
+  showSources?: boolean;
+  authorName?: string;
+  authorInitials?: string;
+  conversationKey?: string;
 }
-
-const statusLabel: Record<PromptInputStatus, string> = {
-  ready: 'Готов',
-  submitted: 'Отправлено',
-  streaming: 'Печатает…',
-  error: 'Ошибка',
-};
 
 export function Chat({
   messages,
@@ -63,9 +63,17 @@ export function Chat({
   className,
   footnote = 'Джупсик может ошибаться. Проверяйте код и выкладки по первоисточникам.',
   headerLeading,
+  headerTrailing,
   framed = true,
-  showAuthor = true,
+  showAuthor = false,
+  showReasoning = false,
+  showSources = false,
+  authorName = 'Джупсик',
+  authorInitials = 'Дж',
+  conversationKey,
 }: ChatProps) {
+  const scrollKey = conversationKey ?? messages[0]?.id ?? '';
+
   return (
     <div className={cx(styles.chat, !framed && styles.plain, className)}>
       <div className={styles.header}>
@@ -76,23 +84,11 @@ export function Chat({
             <span className={styles.subtitle}>{subtitle}</span>
           </div>
         </div>
-        <span className={styles.status} aria-live="polite">
-          {status === 'streaming' && <Spinner size={12} />}
-          {status !== 'streaming' && (
-            <span
-              className={cx(
-                styles.dot,
-                status === 'error' && styles.dotError,
-                status === 'ready' && styles.dot
-              )}
-            />
-          )}
-          {statusLabel[status]}
-        </span>
+        {headerTrailing}
       </div>
 
       <div className={styles.body}>
-        <MessageScroller.Provider autoScroll defaultScrollPosition="end">
+        <MessageScroller.Provider autoScroll defaultScrollPosition="end" resetKey={scrollKey}>
           <MessageScroller.Root className={styles.scroller}>
             <MessageScroller.Viewport className={styles.viewport}>
               <MessageScroller.Content className={styles.content}>
@@ -114,7 +110,11 @@ export function Chat({
                         <AssistantMessage
                           message={message}
                           showAuthor={showAuthor}
-                          onRetry={onRetry ? () => onRetry(message.id) : undefined}
+                          showReasoning={showReasoning}
+                          showSources={showSources}
+                          onRetry={onRetry}
+                          authorName={authorName}
+                          authorInitials={authorInitials}
                         />
                       )}
                     </MessageScroller.Item>
@@ -148,7 +148,7 @@ export function Chat({
   );
 }
 
-function UserMessage({ message }: { message: ChatMessage }) {
+const UserMessage = memo(function UserMessage({ message }: { message: ChatMessage }) {
   return (
     <Message align="end">
       <MessageContent>
@@ -158,27 +158,35 @@ function UserMessage({ message }: { message: ChatMessage }) {
       </MessageContent>
     </Message>
   );
-}
+});
 
-function AssistantMessage({
+const AssistantMessage = memo(function AssistantMessage({
   message,
   showAuthor,
+  showReasoning,
+  showSources,
   onRetry,
+  authorName,
+  authorInitials,
 }: {
   message: ChatMessage;
   showAuthor: boolean;
-  onRetry?: () => void;
+  showReasoning: boolean;
+  showSources: boolean;
+  onRetry?: (id: string) => void;
+  authorName: string;
+  authorInitials: string;
 }) {
   return (
     <Message>
       {showAuthor && (
         <span className={styles.author}>
-          <Avatar initials="Дж" size="s" />
-          Джупсик
+          <Avatar initials={authorInitials} size="s" />
+          {authorName}
         </span>
       )}
       <MessageContent>
-        {message.reasoning !== undefined && (
+        {showReasoning && message.reasoning !== undefined && (
           <Reasoning
             text={message.reasoning}
             isStreaming={message.reasoningStreaming}
@@ -189,11 +197,21 @@ function AssistantMessage({
           <Markdown streaming={message.streaming}>{message.content}</Markdown>
         )}
         {message.error && (
-          <span className={styles.subtitle}>Не удалось получить ответ. Попробуйте ещё раз.</span>
+          <span role="alert" className={styles.subtitle}>
+            {message.errorText ?? 'Не удалось получить ответ. Попробуйте ещё раз.'}
+          </span>
         )}
-        {message.sources && message.sources.length > 0 && <Sources sources={message.sources} />}
-        <MessageReactions content={message.content} onRetry={onRetry} />
+        {showSources && message.sources && message.sources.length > 0 && (
+          <Sources sources={message.sources} />
+        )}
+        {!message.streaming && (
+          <MessageReactions
+            content={message.content}
+            onRetry={onRetry ? () => onRetry(message.id) : undefined}
+            retryOnly={message.error}
+          />
+        )}
       </MessageContent>
     </Message>
   );
-}
+});

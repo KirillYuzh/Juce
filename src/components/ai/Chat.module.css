@@ -55,37 +55,6 @@
   color: var(--tb-text-secondary);
 }
 
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex: none;
-  font: 500 12px/18px var(--tb-font-text);
-  color: var(--tb-text-secondary);
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: var(--tb-radius-circle);
-  background: var(--tb-success);
-}
-
-.dotStreaming {
-  background: var(--tb-accent);
-  animation: tb-pulse 1.2s ease infinite;
-}
-
-.dotError {
-  background: var(--tb-error);
-}
-
-@keyframes tb-pulse {
-  50% {
-    opacity: 0.35;
-  }
-}
-
 .scroller {
   flex: 1;
   min-height: 0;

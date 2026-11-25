@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import styles from './Header.module.css';
 import { Logo } from '../ui/Display';
 import { Icon } from '../ui/Icon';
@@ -8,7 +8,6 @@ import { cx } from '../../lib/cx';
 
 export interface HeaderProps {
   nav: NavItem[];
-  variant?: 'home' | 'researchers';
   loginLabel?: string;
   loginHref?: string;
   homeHref?: string;
@@ -19,7 +18,6 @@ export interface HeaderProps {
 
 export function Header({
   nav,
-  variant = 'home',
   loginLabel,
   loginHref = '#',
   homeHref = '#',
@@ -29,6 +27,7 @@ export function Header({
 }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuId = `mobile-menu-${useId().replace(/:/g, '')}`;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
@@ -46,23 +45,23 @@ export function Header({
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  const label = loginLabel ?? (variant === 'researchers' ? 'Войти' : 'Личный кабинет');
+  const label = loginLabel ?? 'Личный кабинет';
 
   return (
     <header className={cx(styles.header, scrolled && styles.scrolled, className)}>
       <div className={cx('tb-container', styles.inner)}>
-        <a
-          className={styles.logo}
-          href={variant === 'researchers' ? '#/researchers' : homeHref}
-          aria-label={brand}
-        >
+        <a className={styles.logo} href={homeHref} aria-label={brand}>
           <Logo label={brand} />
         </a>
 
         <nav className={styles.nav} aria-label="Основное меню">
           {nav.map((item) => (
             <div className={styles.navItem} key={item.title}>
-              <a className={styles.navLink} href={item.href}>
+              <a
+                className={styles.navLink}
+                href={item.href}
+                aria-haspopup={item.children ? 'menu' : undefined}
+              >
                 {item.title}
               </a>
               {item.children && (
@@ -80,21 +79,13 @@ export function Header({
 
         <div className={styles.actions}>
           <div className={styles.desktopActions}>
-            {variant === 'researchers' ? (
-              <Button variant="secondary" size="l" href={loginHref}>
-                {label}
-              </Button>
-            ) : (
-              <>
-                {onSearch && (
-                  <IconButton icon="search" label="Поиск" variant="plain" onClick={onSearch} />
-                )}
-                <a className={styles.login} href={loginHref}>
-                  <Icon name="user" size={24} />
-                  {label}
-                </a>
-              </>
+            {onSearch && (
+              <IconButton icon="search" label="Поиск" variant="plain" onClick={onSearch} />
             )}
+            <a className={styles.login} href={loginHref}>
+              <Icon name="user" size={24} />
+              {label}
+            </a>
           </div>
 
           <div className={styles.mobileActions}>
@@ -107,7 +98,7 @@ export function Header({
               label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
               size="s"
               aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
+              aria-controls={menuId}
               onClick={() => setMenuOpen((open) => !open)}
             />
           </div>
@@ -115,7 +106,7 @@ export function Header({
       </div>
 
       {menuOpen && (
-        <div className={styles.mobileMenu} id="mobile-menu">
+        <div className={styles.mobileMenu} id={menuId}>
           <div className="tb-container">
             <nav aria-label="Мобильное меню">
               {nav.map((item) => (
@@ -127,6 +118,21 @@ export function Header({
                   >
                     {item.title}
                   </a>
+                  {item.children && (
+                    <ul aria-label={`Подразделы: ${item.title}`}>
+                      {item.children.map((child) => (
+                        <li key={child.title}>
+                          <a
+                            className={styles.mobileNavLink}
+                            href={child.href}
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            {child.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               ))}
             </nav>
