@@ -4,6 +4,7 @@ export interface ThemeTokens {
   bg: string;
   text: string;
   accent: string;
+  primary: string;
   dark: boolean;
 }
 
@@ -11,9 +12,10 @@ const ROLES = {
   bg: '--tb-bg',
   text: '--tb-text-primary',
   accent: '--tb-accent',
+  primary: '--tb-primary',
 } as const;
 
-const EMPTY: ThemeTokens = { bg: '', text: '', accent: '', dark: false };
+const EMPTY: ThemeTokens = { bg: '', text: '', accent: '', primary: '', dark: false };
 
 const PROBE_STYLE =
   'position:absolute;width:0;height:0;overflow:hidden;visibility:hidden;pointer-events:none';
@@ -51,6 +53,7 @@ function read(element: HTMLElement): ThemeTokens {
     bg: color(ROLES.bg),
     text: color(ROLES.text),
     accent: color(ROLES.accent),
+    primary: color(ROLES.primary),
     dark: style.colorScheme === 'dark',
   };
   probe.remove();

@@ -12,9 +12,21 @@ ignores:
 rule:
   any:
     - kind: variable_declarator
-      has:
-        field: name
-        regex: '^(cx|cn|clsx)$'
+      all:
+        - has:
+            field: name
+            regex: '^(cx|cn|clsx)$'
+        - has:
+            field: value
+            kind: arrow_function
+    - kind: variable_declarator
+      all:
+        - has:
+            field: name
+            regex: '^(cx|cn|clsx)$'
+        - has:
+            field: value
+            kind: function_expression
     - kind: function_declaration
       has:
         field: name

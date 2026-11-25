@@ -1,0 +1,25 @@
+.stage,
+.stageCentered {
+  position: relative;
+  width: min(760px, 90vw);
+  height: 420px;
+  overflow: hidden;
+  background: var(--tb-bg);
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-surface);
+  color: var(--tb-text-primary);
+  box-sizing: border-box;
+}
+
+.stageCentered {
+  display: grid;
+  place-items: center;
+}
+
+.targets {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--tb-space-3);
+  max-width: 520px;
+}

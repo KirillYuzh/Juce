@@ -7,3 +7,9 @@
 | Manrope         | Copyright 2018 The Manrope Project Authors                                                                                   | SIL Open Font License 1.1                                      | [`LICENSES/Manrope-OFL.txt`](LICENSES/Manrope-OFL.txt)                        | https://github.com/googlefonts/manrope                                                 |
 | JetBrains Mono  | Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)                                | SIL Open Font License 1.1                                      | [`LICENSES/JetBrainsMono-OFL.txt`](LICENSES/JetBrainsMono-OFL.txt)            | https://github.com/JetBrains/JetBrainsMono                                             |
 | Linux Libertine | Copyright © 2012-2024 The Libertinus Project Authors, Reserved Font Names Linux Libertine, Biolinum, STIX Fonts               | Двойное лицензирование: GPL-2.0 с font exception и OFL 1.1     | [`LICENSES/LinuxLibertine-GPL-2.0-with-font-exception.txt`](LICENSES/LinuxLibertine-GPL-2.0-with-font-exception.txt), [`LICENSES/GPL-2.0.txt`](LICENSES/GPL-2.0.txt), [`LICENSES/LinuxLibertine-OFL.txt`](LICENSES/LinuxLibertine-OFL.txt) | https://github.com/khaledhosny/libertine, Debian `fonts-linuxlibertine`                |
+
+## Компоненты интерфейса
+
+| Компонент | Источник | Лицензия | Файл лицензии |
+| --------- | -------- | -------- | ------------- |
+| ReactBits (TechText, ElectricLogo, SpecularButton, TargetCursor, ProfileCard, PixelCard, SwipeRow) | https://github.com/DavidHDev/react-bits | MIT + Commons Clause | [`LICENSES/ReactBits-MIT-Commons-Clause.txt`](LICENSES/ReactBits-MIT-Commons-Clause.txt) |

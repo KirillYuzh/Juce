@@ -9,6 +9,14 @@ const THEME_FILES = new Set([
   'src/styles/motion.css',
 ]);
 const LITERAL_FILES = new Set(['src/styles/utilities.css']);
+const VENDOR_CSS = [
+  'src/patterns/using-other-libs/react-bits/Animations/',
+  'src/patterns/using-other-libs/react-bits/Components/',
+  'src/patterns/using-other-libs/react-bits/Micro/',
+  'src/patterns/using-other-libs/react-bits/TextAnimations/',
+  'src/patterns/using-other-libs/react-bits/backgrounds/',
+  'src/patterns/using-other-libs/react-bits/HoloMosaic.css',
+];
 const HOVER_MEDIA = /^@media\s*\(\s*hover\s*:\s*hover\s*\)/;
 const SHADOW_PROP = /^box-shadow$/;
 const COLOR_PROP =
@@ -141,11 +149,13 @@ function stripFunctions(value) {
 
 function scopesFor(file) {
   const relative = file.split(path.sep).join('/');
+  const vendor = VENDOR_CSS.some((prefix) => relative.startsWith(prefix));
   return {
-    hover: true,
-    transition: relative !== 'src/styles/motion.css',
-    reducedMotion: relative !== 'src/styles/motion.css' && relative !== 'src/styles/utilities.css',
-    theme: !THEME_FILES.has(relative),
+    hover: !vendor,
+    transition: !vendor && relative !== 'src/styles/motion.css',
+    reducedMotion:
+      !vendor && relative !== 'src/styles/motion.css' && relative !== 'src/styles/utilities.css',
+    theme: !vendor && !THEME_FILES.has(relative),
     literals:
       relative.startsWith('src/components/') ||
       relative.startsWith('src/pages/') ||

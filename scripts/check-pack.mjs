@@ -30,6 +30,7 @@ for (const rel of [
   'LICENSES/LinuxLibertine-OFL.txt',
   'LICENSES/GPL-2.0.txt',
   'LICENSES/LinuxLibertine-GPL-2.0-with-font-exception.txt',
+  'LICENSES/ReactBits-MIT-Commons-Clause.txt',
   'THIRD-PARTY-NOTICES.md',
 ]) {
   if (!existsSync(join(root, rel))) {
