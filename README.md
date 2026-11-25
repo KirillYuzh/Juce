@@ -4,6 +4,8 @@ React-библиотека компонентов и шаблонов Джус �
 
 ## Установка как пакета
 
+Пакет ESM-only (`"type": "module"`): импортируйте его из ESM или бандлера, `require('juce-ui')` не поддерживается.
+
 ```bash
 npm i juce-ui
 # или
@@ -19,23 +21,30 @@ export function App() {
 }
 ```
 
+`juce-ui/styles.css` обязателен: в нём токены, темы и стили компонентов.
+
+Собранный бандл начинается с директивы `"use client"`, поэтому компоненты с хуками можно импортировать в React Server Components (Next App Router) без ручной обёртки.
+
 ## Темы
 
-Цвет и форма — независимые оси:
+Цвет и `color-scheme` задаёт `data-theme`:
 
-| Ось   | Атрибут      | Что задаёт                                                 | Значения                                                |
-| ----- | ------------ | ---------------------------------------------------------- | ------------------------------------------------------- |
-| Цвет  | `data-theme` | цветовые роли `--tb-*` и `color-scheme`                    | `light` (по умолчанию), `dark`, `heroui`, `heroui-dark` |
-| Форма | `data-skin`  | радиусы `--tb-radius-*`, фон поверхности, отключение теней | `default` (по умолчанию), `blueprint`                   |
+| Значение                                  | Что это                                         |
+| ----------------------------------------- | ----------------------------------------------- |
+| `light` (по умолчанию)                    | светлая                                         |
+| `dark`                                    | тёмная                                          |
+| `heroui`, `heroui-dark`                   | палитры HeroUI                                  |
+| `ocean`, `dune`, `dusk`, `silk`, `aurora` | тёмные пресеты, `src/styles/themes-presets.css` |
 
-Оси не связаны: `blueprint` есть и в светлой, и в тёмной теме. Атрибуты ставятся на любой контейнер, обычно на `<html>`:
+Нейтрали — поверхности, текст, границы, серая шкала — объявлены один раз на режим в `src/styles/tokens.css` через `light-dark()` и не имеют оттенка. Тема задаёт только акценты: `--tb-primary*`, `--tb-accent*`, ссылки и `--tb-border-on-primary`. Так держится правило 60-30-10: цвет темы живёт в точечных деталях. Форма — одна на кит: радиусы, шрифты и движение живут в структурном блоке `src/styles/structure.css` и от цвета не зависят.
+
+Атрибут ставится на любой контейнер, обычно на `<html>`:
 
 ```ts
-document.documentElement.dataset.theme = 'heroui-dark';
-document.documentElement.dataset.skin = 'blueprint';
+document.documentElement.dataset.theme = 'ocean';
 ```
 
-Контейнер с атрибутами — это scope: он красит свою поверхность и сбрасывает обе оси целиком. Поэтому две половины страницы могут жить в разных темах:
+Контейнер с атрибутом — это scope: он красит свою поверхность. Поэтому две половины страницы могут жить в разных темах:
 
 ```tsx
 import { ThemeScope } from 'juce-ui';
@@ -43,10 +52,10 @@ import { ThemeScope } from 'juce-ui';
 export function Split() {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-      <ThemeScope theme="light" skin="default">
+      <ThemeScope theme="light">
         <Preview />
       </ThemeScope>
-      <ThemeScope theme="heroui-dark" skin="blueprint">
+      <ThemeScope theme="dark">
         <Preview />
       </ThemeScope>
     </div>
@@ -54,7 +63,7 @@ export function Split() {
 }
 ```
 
-`ThemeScope` всегда ставит `data-theme` и `data-skin` (для default — `default`), поэтому вложенный блок сбрасывает и цвет, и форму. Класс `.dark` удалён: тёмная тема задаётся только `data-theme="dark"`.
+`ThemeScope` всегда ставит `data-theme`, поэтому вложенный блок сбрасывает цвет родителя. Класс `.dark` удалён: тёмная тема задаётся только `data-theme="dark"`.
 
 Системная тема:
 
@@ -72,8 +81,8 @@ apply();
 Тема — один блок цветовых ролей в `src/styles/tokens.css`; список значений для переключателя и типов — `src/styles/themes.ts`. Оба файла рукописные, генератора нет — свою тему кладут рядом:
 
 ```css
-[data-theme='ocean'] {
-  color-scheme: light;
+[data-theme='lagoon'] {
+  color-scheme: dark;
   --tb-bg: #0b1a26;
   --tb-surface: #102431;
   --tb-text-primary: #e6f1f8;
@@ -82,32 +91,10 @@ apply();
 ```
 
 ```ts
-document.documentElement.dataset.theme = 'ocean';
+document.documentElement.dataset.theme = 'lagoon';
 ```
 
-Блок обязан объявить весь цветовой набор: тест токенов назовёт пропущенные роли. Радиусы — ось скина. Тени задаёт тема (у `dark` свои значения), а скин может их отключить; минимальный набор темы включает `--tb-shadow-*`.
-
-### Свой скин
-
-Скин — один блок структурных ролей. Цвет он не задаёт и работает с любой темой. `blueprint` меняет радиусы, тени, сетку и фокус, но не шрифт заголовков:
-
-```css
-[data-skin='sharp'] {
-  --tb-radius-control: 4px;
-  --tb-radius-surface: 8px;
-  --tb-radius-popover: 8px;
-  --tb-radius-chip: 4px;
-  --tb-radius-switch: 2px;
-  --tb-radius-avatar: 50%;
-  --tb-shadow-card: none;
-}
-```
-
-```ts
-document.documentElement.dataset.skin = 'sharp';
-```
-
-Скин переопределяет то, что меняет: базовую форму объявляет каждый scope, поэтому форма внешнего scope внутрь не протекает.
+Блок обязан объявить весь цветовой набор: тест токенов назовёт пропущенные роли. Радиусы, шрифты и движение — общие структурные роли в `src/styles/structure.css`. Тени задаёт тема; минимальный набор темы включает `--tb-shadow-*`.
 
 ### Радиусы и тени
 
@@ -138,32 +125,54 @@ document.documentElement.dataset.skin = 'sharp';
 
 ## Стили
 
+### Подключение
+
+`import 'juce-ui/styles.css'` подключает токены, утилиты и стили компонентов. Документ он не ресетит: `body`, `a`, `button`, `ul` и заголовки остаются хосту.
+
+`import 'juce-ui/reset.css'` — опциональный нормализатор для демо и приложений без своего reset.
+
 ### Шрифты
 
-| Шрифт           | Домен                           | Лицензия |
-| --------------- | ------------------------------- | -------- |
-| Manrope         | база интерфейса и заголовков    | OFL      |
-| Linux Libertine | цитаты и длинный научный текст  | OFL      |
-| JetBrains Mono  | код, стек-трейсы и номера строк | OFL 1.1  |
+| Шрифт           | Домен                           | Лицензия                         |
+| --------------- | ------------------------------- | -------------------------------- |
+| Manrope         | база интерфейса и заголовков    | OFL                              |
+| Linux Libertine | цитаты и длинный научный текст  | OFL или GPL-2.0 с font exception |
+| JetBrains Mono  | код, стек-трейсы и номера строк | OFL 1.1                          |
 
-Цвет и темы живут в `src/styles/tokens.css`, формы скинов — в `src/styles/skins.css`. README не дублирует значения: единственный источник правды — токены.
+Цвет и темы живут в `src/styles/tokens.css`, тёмные пресеты — в `src/styles/themes-presets.css`, структурные роли (радиусы, шрифты, движение) — в `src/styles/structure.css`. README не дублирует значения: единственный источник правды — токены.
 
 ### Движение
 
 Длительности — `--tb-duration-fast|base|slow`, кривые — `--tb-ease-standard`. `transition` перечисляет свойства явно (без `all`) и берёт значения только из токенов.
 
-`prefers-reduced-motion: reduce` обрабатывается один раз в `src/styles/motion.css`: декоративные переходы схлопываются, а индикаторы с классом `tb-motion-essential` продолжают вращаться. Компоненты свой блок `prefers-reduced-motion` не объявляют — за этим следит `npm run lint:css`.
+`prefers-reduced-motion: reduce` обрабатывается один раз в `src/styles/motion.css`: переходы схлопываются, декоративные анимации отключаются, индикаторы с классом `tb-motion-essential` продолжают вращаться. Меняются только токены `--tb-duration-*` и классы `tb-motion-*`, остальной документ не затрагивается. Компоненты свой блок `prefers-reduced-motion` не объявляют — за этим следит `npm run lint:css`.
 
 ## Patterns
 
-Storybook `Patterns/Examples` — сочетания примитивов: как примитивы собираются в готовый экран, без нового компонента. В `storySort` раздел стоит после `Primitives`.
+Storybook `Patterns` — сочетания примитивов: как готовые компоненты собираются в экран, без нового API. В `storySort` раздел стоит после `Primitives`.
+
+| Раздел                                 | Что внутри                                                                                                                |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `Patterns/Layout`                      | форма, настройки, поиск с фильтрами, пустое состояние, список сущностей, уведомление                                      |
+| `Patterns/Using other libs/react-bits` | семь фонов react-bits: `HoloMosaic`, `NeonGlyphs`, `GradientASCII`, `GhostFibers`, `Topography`, `SideRays`, `AeroShards` |
+| `Patterns/Using other libs/antv`       | графы на X6, покрашенные токенами темы                                                                                    |
+| `Patterns/Using other libs/jointjs`    | графы на JointJS, покрашенные токенами темы                                                                               |
+
+Сторонние библиотеки в `Patterns/Using other libs` вызываются напрямую, без обёрток. Фоны react-bits рисуют в canvas/WebGL и не понимают `var()`, поэтому сторис читает `--tb-bg`, `--tb-text-primary` и `--tb-accent` через `getComputedStyle`, передаёт вычисленные значения в цветовые пропсы и пересчитывает их при смене `data-theme`. Поверх фона и под контентом — скрим из `--tb-bg`, чтобы текст оставался читаемым. `AeroShards` единственный требует WebGPU и devDependency `vgpu`; без WebGPU фон просто не рисуется.
+
+Графы — примеры, а не публичный API пакета: `@antv/x6` и `@joint/core` стоят только в devDependencies, а сторис вызывает их напрямую, без обёрток. Библиотеки не читают CSS-переменные в SVG-атрибутах, поэтому пример берёт значения через `getComputedStyle` от своего контейнера и пересоздаёт граф при смене `data-theme`.
 
 ## Лицензии
 
-|                  | Лицензия                                    |
-| ---------------- | ------------------------------------------- |
-| Код              | MIT                                         |
-| Ant Design Icons | MIT                                         |
-| Manrope          | OFL                                         |
-| JetBrains Mono   | OFL                                         |
-| Linux Libertine  | GPL-2.0 с font exception, дополнительно OFL |
+|                  | Лицензия                                                              |
+| ---------------- | --------------------------------------------------------------------- |
+| Код              | MIT                                                                   |
+| Ant Design Icons | MIT                                                                   |
+| Manrope          | OFL                                                                   |
+| JetBrains Mono   | OFL                                                                   |
+| Linux Libertine  | GPL-2.0 с font exception, дополнительно OFL                           |
+| ReactBits        | MIT + Commons Clause — только идея пресетов, код фонов написан с нуля |
+| X6, JointJS      | MIT, MPL-2.0 — devDependencies, только примеры                        |
+
+Полные тексты лицензий шрифтов лежат в `LICENSES/`.
+Сводка по шрифтам с правообладателями и источниками — в `THIRD-PARTY-NOTICES.md`.

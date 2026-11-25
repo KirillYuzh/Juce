@@ -66,19 +66,30 @@ export function Avatar({ src, alt = '', initials, size = 'm', className }: Avata
   return (
     <span
       className={cx(styles.avatar, styles[`avatar-${size}`], className)}
-      aria-label={alt || initials}
+      role={alt || initials ? 'img' : undefined}
+      aria-label={alt || initials || undefined}
+      aria-hidden={alt || initials ? undefined : true}
     >
       {initials}
     </span>
   );
 }
 
-export function Progress({ value, tone = 'accent' }: { value: number; tone?: 'accent' | 'brand' }) {
+export function Progress({
+  value,
+  tone = 'accent',
+  label,
+}: {
+  value: number;
+  tone?: 'accent' | 'brand';
+  label?: string;
+}) {
   const clamped = Math.min(100, Math.max(0, value));
   return (
     <div
       className={cx(styles.progress, tone === 'brand' && styles.progressAccent)}
       role="progressbar"
+      aria-label={label}
       aria-valuenow={clamped}
       aria-valuemin={0}
       aria-valuemax={100}
@@ -112,7 +123,7 @@ export function Skeleton({
 }) {
   return (
     <span
-      className={cx(styles.skeleton, className)}
+      className={cx(styles.skeleton, 'tb-motion-decorative', className)}
       style={radiusStyle(radius, { display: 'block', width, height })}
     />
   );

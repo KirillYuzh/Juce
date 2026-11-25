@@ -29,8 +29,8 @@
 }
 
 .badgeWarning {
-  background: var(--tb-accent-soft);
-  color: var(--tb-accent-text);
+  background: color-mix(in oklab, var(--tb-warning) 20%, transparent);
+  color: var(--tb-warning-text);
 }
 
 .chip {
@@ -170,7 +170,7 @@
   border-radius: var(--tb-radius-circle);
   border: 2px solid currentColor;
   border-right-color: transparent;
-  animation: spin 0.7s linear infinite;
+  animation: spin var(--tb-duration-spin) linear infinite;
 }
 
 @keyframes spin {

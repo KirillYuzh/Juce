@@ -25,7 +25,6 @@
 .tb-scroll-fade-y,
 .tb-scroll-fade-x,
 .tb-scroll-fade {
-
   --tb-sf-size: 40px;
   --tb-sf-reveal: 96px;
   scrollbar-width: none;
@@ -127,7 +126,6 @@
 }
 
 @supports not (animation-timeline: scroll()) {
-
   .tb-scroll-fade-y {
     mask-image: linear-gradient(
       to bottom,
@@ -335,13 +333,5 @@
   }
   to {
     background-position: 0 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tb-shimmer {
-    animation: none;
-    background-image: none;
-    -webkit-text-fill-color: currentColor;
   }
 }

@@ -1,6 +1,7 @@
 @import './fonts.css';
+@import './structure.css';
 @import './tokens.css';
-@import './skins.css';
+@import './themes-presets.css';
 @import './motion.css';
 @import './global.css';
 @import './utilities.css';

@@ -1,15 +1,27 @@
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  :root,
+  [data-theme] {
+    --tb-duration-fast: 0.01ms;
+    --tb-duration-base: 0.01ms;
+    --tb-duration-slow: 0.01ms;
+    --tb-duration-ambient: 0.01ms;
+    --tb-duration-ambient-slow: 0.01ms;
+  }
+
+  .tb-motion-decorative,
+  .tb-motion-decorative *::before,
+  .tb-motion-decorative *::after {
+    animation: none !important;
   }
 
   .tb-motion-essential {
     animation-duration: var(--tb-duration-spin) !important;
     animation-iteration-count: infinite !important;
+  }
+
+  .tb-shimmer {
+    animation: none !important;
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
   }
 }

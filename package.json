@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/KirillYuzh/Juce#readme",
   "files": [
-    "dist"
+    "dist",
+    "LICENSES",
+    "THIRD-PARTY-NOTICES.md"
   ],
   "sideEffects": [
     "**/*.css"
@@ -35,16 +37,17 @@
       "import": "./dist/juce-ui.js"
     },
     "./styles.css": "./dist/juce-ui.css",
+    "./reset.css": "./dist/reset.css",
     "./package.json": "./package.json"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19"
   },
   "scripts": {
     "dev": "vite",
     "drive": "node scripts/drive.mjs",
     "build": "tsc -b && vite build",
-    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.lib.json",
+    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fix-declarations.mjs && node scripts/copy-reset.mjs",
     "lint": "eslint .",
     "lint:rules": "ast-grep scan --config sgconfig.yml --error src",
     "lint:css": "node scripts/check-css.mjs && node scripts/check-css.mjs --test",
@@ -55,7 +58,7 @@
     "test:update": "node scripts/run-tests.mjs --update",
     "test:bombadil": "node scripts/bombadil.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "check": "npm run typecheck && npm run lint && npm run lint:rules && npm run rules:test && npm run lint:css && npm run check:pack && npm run test && npm run spec:validate",
+    "check": "npm run typecheck && npm run lint && npm run lint:rules && npm run rules:test && npm run lint:css && npm run build:lib && npm run check:pack && npm run test && npm run spec:validate",
     "prepare": "npm run build:lib",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
@@ -67,9 +70,11 @@
   },
   "devDependencies": {
     "@antithesishq/bombadil": "^0.8.0",
+    "@antv/x6": "^3.1.8",
     "@ast-grep/cli": "^0.51.3",
     "@eslint/js": "^9.39.5",
     "@fission-ai/openspec": "^2.1.1",
+    "@joint/core": "^4.3.4",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",
     "@storybook/react-vite": "^10.6.7",
@@ -92,6 +97,7 @@
     "storybook": "^10.6.7",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.73.0",
+    "vgpu": "^0.3.1",
     "vite": "^8.3.8",
     "vitest": "^5.1.1"
   },

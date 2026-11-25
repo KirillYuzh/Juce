@@ -1,18 +1,26 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ROOTS = ['src/components', 'src/sections', 'src/pages'];
+const ROOT = 'src';
+const THEME_FILES = new Set([
+  'src/styles/tokens.css',
+  'src/styles/themes-presets.css',
+  'src/styles/structure.css',
+  'src/styles/motion.css',
+]);
+const LITERAL_FILES = new Set(['src/styles/utilities.css']);
 const HOVER_MEDIA = /^@media\s*\(\s*hover\s*:\s*hover\s*\)/;
 const SHADOW_PROP = /^box-shadow$/;
 const COLOR_PROP =
   /^(color|background|background-color|background-image|border|border-color|border-top|border-right|border-bottom|border-left|outline|outline-color|fill|stroke|box-shadow)$/;
 const PALETTE_VAR =
   /var\(\s*--(ink|mist|coral|bg|bg-2|bg-3|label|label-2|label-3|label-4|separator|gray|gray-[2-6]|accent|on-accent|link|link-hover|pink|red|orange|yellow|green|mint|teal|cyan|blue|indigo|purple|brown)\s*[,)]/;
-const DURATION_LITERAL = /\d*\.?\d+m?s\b/;
-const EASE_LITERAL = /\b(ease|ease-in|ease-out|ease-in-out|linear|cubic-bezier)\b/;
-const ZERO_TIME = /\b0(?:\.0+)?m?s\b/g;
-const ZERO_STEP = /\b0(?:\.0+)?m?s\s+linear\b/g;
-const TRANSITION_ALL = /\ball\b/;
+const LENGTH_LITERAL = /\d(px|rem|em|%|vh|vw|ch|pt)\b/i;
+const DURATION_LITERAL = /\d*\.?\d+m?s\b/i;
+const EASE_LITERAL = /\b(ease|ease-in|ease-out|ease-in-out|linear|cubic-bezier)\b/i;
+const ZERO_TIME = /\b0(?:\.0+)?m?s\b/gi;
+const ZERO_STEP = /\b0(?:\.0+)?m?s\s+linear\b/gi;
+const TRANSITION_ALL = /\ball\b/i;
 const REDUCED_MOTION = /prefers-reduced-motion/;
 
 function cssFiles(directory) {
@@ -28,15 +36,63 @@ function blankComments(css) {
   return css.replace(/\/\*[\s\S]*?\*\//g, (match) => match.replace(/[^\n]/g, ' '));
 }
 
-function rules(css) {
+// Прячет содержимое строк и url(...), чтобы скобки внутри них не открывали блоки.
+function maskLiterals(css) {
+  const out = css.split('');
+  const mask = (index) => {
+    if (css[index] !== '\n') out[index] = ' ';
+  };
+  let quote = null;
+  let urlDepth = 0;
+
+  for (let index = 0; index < css.length; index += 1) {
+    const char = css[index];
+
+    if (quote) {
+      mask(index);
+      if (char === '\\') {
+        if (index + 1 < css.length) {
+          mask(index + 1);
+          index += 1;
+        }
+      } else if (char === quote) {
+        quote = null;
+      }
+      continue;
+    }
+
+    if (char === '"' || char === "'") {
+      quote = char;
+      mask(index);
+      continue;
+    }
+
+    if (urlDepth > 0) {
+      if (char === '(') urlDepth += 1;
+      else if (char === ')') urlDepth -= 1;
+      mask(index);
+      continue;
+    }
+
+    if (/^url\(/i.test(css.slice(index, index + 4))) {
+      for (let offset = 0; offset < 4; offset += 1) mask(index + offset);
+      index += 3;
+      urlDepth = 1;
+    }
+  }
+
+  return out.join('');
+}
+
+function blocks(masked, source) {
   const found = [];
   const stack = [];
   let start = 0;
 
-  for (let index = 0; index < css.length; index += 1) {
-    const char = css[index];
+  for (let index = 0; index < masked.length; index += 1) {
+    const char = masked[index];
     if (char === '{') {
-      const prelude = css.slice(start, index).trim().replace(/\s+/g, ' ');
+      const prelude = source.slice(start, index).trim().replace(/\s+/g, ' ');
       stack.push({
         prelude,
         parents: stack.map((frame) => frame.prelude),
@@ -49,8 +105,8 @@ function rules(css) {
       if (frame) {
         found.push({
           ...frame,
-          body: css.slice(frame.bodyStart, index),
-          line: css.slice(0, frame.offset).split('\n').length,
+          body: masked.slice(frame.bodyStart, index),
+          line: masked.slice(0, frame.offset).split('\n').length,
         });
       }
       start = index + 1;
@@ -83,45 +139,74 @@ function stripFunctions(value) {
   return result;
 }
 
-export function analyze(file) {
-  const css = blankComments(fs.readFileSync(file, 'utf8'));
+function scopesFor(file) {
+  const relative = file.split(path.sep).join('/');
+  return {
+    hover: true,
+    transition: relative !== 'src/styles/motion.css',
+    reducedMotion: relative !== 'src/styles/motion.css' && relative !== 'src/styles/utilities.css',
+    theme: !THEME_FILES.has(relative),
+    literals:
+      relative.startsWith('src/components/') ||
+      relative.startsWith('src/pages/') ||
+      LITERAL_FILES.has(relative),
+  };
+}
+
+const FULL_SCOPE = {
+  hover: true,
+  transition: true,
+  reducedMotion: true,
+  theme: true,
+  literals: true,
+};
+
+export function analyze(file, scope = scopesFor(file)) {
+  const source = blankComments(fs.readFileSync(file, 'utf8'));
+  const masked = maskLiterals(source);
   const problems = [];
 
-  for (const rule of rules(css)) {
+  for (const rule of blocks(masked, source)) {
     const isAtRule = rule.prelude.startsWith('@');
 
-    if (!isAtRule && rule.prelude.includes(':hover')) {
+    if (scope.hover && !isAtRule && rule.prelude.includes(':hover')) {
       const guarded = rule.parents.some((parent) => HOVER_MEDIA.test(parent));
       if (!guarded) {
         problems.push(`${file}:${rule.line}: :hover вне @media (hover: hover) в «${rule.prelude}»`);
       }
     }
 
-    if (isAtRule && REDUCED_MOTION.test(rule.prelude)) {
+    if (scope.reducedMotion && isAtRule && REDUCED_MOTION.test(rule.prelude)) {
       problems.push(
         `${file}:${rule.line}: локальный prefers-reduced-motion в «${rule.prelude}», защита живёт только в src/styles/motion.css`
       );
     }
 
-    if (!isAtRule && /\[data-(theme|skin)/.test(rule.prelude)) {
+    if (scope.theme && !isAtRule && /\[data-theme/.test(rule.prelude)) {
       problems.push(
         `${file}:${rule.line}: компонент не может ветвиться по теме в «${rule.prelude}»`
+      );
+    }
+
+    if (scope.theme && !isAtRule && /\[data-skin/.test(rule.prelude)) {
+      problems.push(
+        `${file}:${rule.line}: скинов нет: форма задаётся структурными ролями, убери [data-skin] в «${rule.prelude}»`
       );
     }
 
     if (isAtRule || rule.body.includes('{')) continue;
 
     for (const { property, value } of declarations(rule.body)) {
-      if (property === 'border-radius') {
+      if (scope.literals && property === 'border-radius') {
         const bare = stripFunctions(value);
-        if (/\d(px|rem|em|%|vh|vw)/.test(bare)) {
+        if (LENGTH_LITERAL.test(bare)) {
           problems.push(
             `${file}:${rule.line}: радиус задан числом «${value}», нужен токен --tb-radius-*`
           );
         }
       }
 
-      if (COLOR_PROP.test(property)) {
+      if (scope.literals && COLOR_PROP.test(property)) {
         if (/#[0-9a-f]{3,8}\b/i.test(value) || /\b(rgba?|hsla?|oklch)\(/i.test(value)) {
           problems.push(
             `${file}:${rule.line}: цвет задан литералом «${property}: ${value}», нужен --tb-*`
@@ -129,19 +214,24 @@ export function analyze(file) {
         }
       }
 
-      if (PALETTE_VAR.test(value)) {
+      if (scope.literals && PALETTE_VAR.test(value)) {
         problems.push(
           `${file}:${rule.line}: палитровая переменная в «${property}: ${value}», нужна --tb-* роль`
         );
       }
 
-      if (SHADOW_PROP.test(property) && value !== 'none' && !value.includes('var(--tb-')) {
+      if (
+        scope.literals &&
+        SHADOW_PROP.test(property) &&
+        value !== 'none' &&
+        !value.includes('var(--tb-')
+      ) {
         problems.push(
           `${file}:${rule.line}: тень задана без токена «${value}», нужен --tb-shadow-*`
         );
       }
 
-      if (property.startsWith('transition') && value !== 'none') {
+      if (scope.transition && property.startsWith('transition') && value !== 'none') {
         const bare = stripFunctions(value);
 
         if (TRANSITION_ALL.test(bare)) {
@@ -170,9 +260,24 @@ export function analyze(file) {
 
 function selfTest() {
   const cases = [
-    { name: 'hover', bad: 'bad.css', good: 'good.css' },
-    { name: 'theme', bad: 'bad.css', good: 'good.css' },
-    { name: 'literal', bad: 'bad.css', good: 'good.css' },
+    {
+      name: 'hover',
+      bad: 'bad.css',
+      good: 'good.css',
+      expect: ['hover вне @media (hover: hover)'],
+    },
+    {
+      name: 'theme',
+      bad: 'bad.css',
+      good: 'good.css',
+      expect: ['ветвиться по теме', 'скинов нет'],
+    },
+    {
+      name: 'literal',
+      bad: 'bad.css',
+      good: 'good.css',
+      expect: ['радиус задан числом', 'цвет задан литералом', 'тень задана без токена'],
+    },
     {
       name: 'motion',
       bad: 'bad.css',
@@ -181,23 +286,21 @@ function selfTest() {
         'время задано литералом',
         'кривая задана литералом',
         'локальный prefers-reduced-motion',
+        'перечисляет все свойства',
       ],
     },
+    { name: 'syntax', bad: 'bad.css', good: 'good.css', expect: ['радиус задан числом'] },
   ];
   let failed = 0;
 
   for (const testCase of cases) {
     const directory = path.join('tools', 'fixtures', 'css-check', testCase.name);
-    const bad = analyze(path.join(directory, testCase.bad));
-    const good = analyze(path.join(directory, testCase.good));
+    const bad = analyze(path.join(directory, testCase.bad), FULL_SCOPE);
+    const good = analyze(path.join(directory, testCase.good), FULL_SCOPE);
+    const output = bad.join('\n');
 
-    if (bad.length === 0) {
-      console.error(`✗ ${testCase.name}: ожидалось нарушение в ${testCase.bad}`);
-      failed += 1;
-    }
-
-    for (const expected of testCase.expect ?? []) {
-      if (!bad.join('\n').includes(expected)) {
+    for (const expected of testCase.expect) {
+      if (!output.includes(expected)) {
         console.error(`✗ ${testCase.name}: нет сообщения «${expected}» в ${testCase.bad}`);
         failed += 1;
       }
@@ -218,7 +321,7 @@ function selfTest() {
 if (process.argv.includes('--test')) {
   selfTest();
 } else {
-  const problems = ROOTS.flatMap(cssFiles).flatMap(analyze);
+  const problems = cssFiles(ROOT).flatMap((file) => analyze(file));
 
   if (problems.length > 0) {
     console.error(problems.join('\n'));
@@ -226,6 +329,6 @@ if (process.argv.includes('--test')) {
   }
 
   console.log(
-    '✓ css: hover под указателем, тема только данными, размеры только токенами, движение на токенах, защита движения в одном месте'
+    '✓ css: hover под указателем, тема только данными, радиусы и цвета только токенами, движение на токенах, защита движения в одном месте'
   );
 }

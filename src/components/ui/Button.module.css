@@ -70,7 +70,7 @@
 
 .outline {
   background: transparent;
-  color: var(--tb-primary);
+  color: var(--tb-text-primary);
   box-shadow: inset 0 0 0 1px var(--tb-border-strong);
 }
 
@@ -80,9 +80,21 @@
   }
 }
 
+.neutral {
+  background: transparent;
+  color: var(--tb-text-primary);
+  box-shadow: inset 0 0 0 1px var(--tb-border-strong);
+}
+
+@media (hover: hover) {
+  .neutral:hover {
+    background: var(--tb-bg-tertiary);
+  }
+}
+
 .ghost {
   background: transparent;
-  color: var(--tb-primary);
+  color: var(--tb-text-primary);
 }
 
 @media (hover: hover) {
@@ -99,6 +111,17 @@
 @media (hover: hover) {
   .dark:hover {
     background: var(--tb-accent-hover);
+  }
+}
+
+.danger {
+  background: var(--tb-error);
+  color: var(--tb-on-error);
+}
+
+@media (hover: hover) {
+  .danger:hover {
+    background: var(--tb-error-text);
   }
 }
 
@@ -127,7 +150,7 @@
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: var(--tb-radius-circle);
-  animation: rotate 0.7s linear infinite;
+  animation: rotate var(--tb-duration-spin) linear infinite;
 }
 
 @keyframes rotate {

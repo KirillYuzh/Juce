@@ -26,33 +26,33 @@
 
 .line {
   stroke-dasharray: 1;
-  animation: chart-draw 300ms var(--tb-ease-out) both;
+  animation: chart-draw var(--tb-duration-slow) var(--tb-ease-out) both;
 }
 
 .area {
-  animation: chart-fade 300ms var(--tb-ease-out) both;
+  animation: chart-fade var(--tb-duration-slow) var(--tb-ease-out) both;
 }
 
 .dot {
-  animation: chart-fade 300ms var(--tb-ease-out) both;
+  animation: chart-fade var(--tb-duration-slow) var(--tb-ease-out) both;
 }
 
 .barVertical {
   transform-box: fill-box;
   transform-origin: bottom center;
-  animation: chart-grow-y 300ms var(--tb-ease-out) both;
+  animation: chart-grow-y var(--tb-duration-slow) var(--tb-ease-out) both;
 }
 
 .barHorizontal {
   transform-box: fill-box;
   transform-origin: left center;
-  animation: chart-grow-x 300ms var(--tb-ease-out) both;
+  animation: chart-grow-x var(--tb-duration-slow) var(--tb-ease-out) both;
 }
 
 .slice {
   transform-box: fill-box;
   transform-origin: center;
-  animation: chart-slice 300ms var(--tb-ease-out) both;
+  animation: chart-slice var(--tb-duration-slow) var(--tb-ease-out) both;
 }
 
 @keyframes chart-draw {
