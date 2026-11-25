@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { cx } from '../../../lib/cx';
-import { useThemeTokens } from '../../../lib/use-theme-tokens';
-import { TextLink } from '../../../components/ui/Button';
-import { Badge } from '../../../components/ui/Display';
-import { DetailCard } from '../../../components/prebuilt';
-import PixelCard from './Components/PixelCard/PixelCard';
-import ProfileCard from './Components/ProfileCard/ProfileCard';
-import SwipeRow, { type SwipeAction } from './Micro/SwipeRow/SwipeRow';
-import styles from './ReactBitsCards.module.css';
+import { cx } from '../../../../lib/cx';
+import { useThemeTokens } from '../../../../lib/use-theme-tokens';
+import { TextLink } from '../../../../components/ui/Button';
+import { Badge } from '../../../../components/ui/Display';
+import { DetailCard } from '../../../../components/prebuilt';
+import PixelCard from '../Components/PixelCard/PixelCard';
+import ProfileCard from '../Components/ProfileCard/ProfileCard';
+import SwipeRow, { type SwipeAction } from '../Micro/SwipeRow/SwipeRow';
+import styles from './Cards.module.css';
 
 const meta: Meta = {
   title: 'Patterns/Using other libs/react-bits/Cards',
@@ -138,15 +138,15 @@ const CardsScene = () => {
 };
 
 const cardsSource = `import { useState } from 'react';
-import { cx } from '../../../lib/cx';
-import { useThemeTokens } from '../../../lib/use-theme-tokens';
-import { TextLink } from '../../../components/ui/Button';
-import { Badge } from '../../../components/ui/Display';
-import { DetailCard } from '../../../components/prebuilt';
-import PixelCard from './Components/PixelCard/PixelCard';
-import ProfileCard from './Components/ProfileCard/ProfileCard';
-import SwipeRow from './Micro/SwipeRow/SwipeRow';
-import styles from './ReactBitsCards.module.css';
+import { cx } from '../../../../lib/cx';
+import { useThemeTokens } from '../../../../lib/use-theme-tokens';
+import { TextLink } from '../../../../components/ui/Button';
+import { Badge } from '../../../../components/ui/Display';
+import { DetailCard } from '../../../../components/prebuilt';
+import PixelCard from '../Components/PixelCard/PixelCard';
+import ProfileCard from '../Components/ProfileCard/ProfileCard';
+import SwipeRow from '../Micro/SwipeRow/SwipeRow';
+import styles from './Cards.module.css';
 
 const actions = [
   { id: 'delete', label: 'Удалить' },
