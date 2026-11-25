@@ -1,10 +1,24 @@
-import { useState, type ReactNode } from 'react';
+import {
+  cloneElement,
+  isValidElement,
+  useId,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import styles from './Feedback.module.css';
-import { Icon } from './Icon';
+import { Icon, type IconName } from './Icon';
 import { Button } from './Button';
 import { cx } from '../../lib/cx';
 
 export type AlertTone = 'info' | 'warning' | 'error' | 'success';
+
+const ALERT_ICONS: Record<AlertTone, IconName> = {
+  info: 'info',
+  warning: 'alertCircle',
+  error: 'alertCircle',
+  success: 'checkCircle',
+};
 
 export interface AlertProps {
   tone?: AlertTone;
@@ -21,10 +35,10 @@ export function Alert({ tone = 'info', children, action, className }: AlertProps
         tone !== 'info' && styles[`alert${tone[0].toUpperCase()}${tone.slice(1)}`],
         className
       )}
-      role="status"
+      role={tone === 'error' ? 'alert' : 'status'}
     >
       <span className={styles.alertIcon}>
-        <Icon name="info" size={24} />
+        <Icon name={ALERT_ICONS[tone]} size={24} />
       </span>
       <div className={styles.alertContent}>
         <span className={styles.alertText}>{children}</span>
@@ -35,10 +49,30 @@ export function Alert({ tone = 'info', children, action, className }: AlertProps
 }
 
 export function Tooltip({ text, children }: { text: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  const trigger =
+    isValidElement(children) && typeof children.type !== 'symbol'
+      ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, {
+          'aria-describedby': id,
+        })
+      : children;
+
+  const handleBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
+    const next = event.relatedTarget;
+    if (!(next instanceof Node && event.currentTarget.contains(next))) setOpen(false);
+  };
+
   return (
-    <span className={styles.tooltipWrap}>
-      {children}
-      <span className={styles.tooltip} role="tooltip">
+    <span
+      className={styles.tooltipWrap}
+      onPointerEnter={() => setOpen(true)}
+      onPointerLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={handleBlur}
+    >
+      {trigger}
+      <span id={id} className={styles.tooltip} role="tooltip" aria-hidden={open ? undefined : true}>
         {text}
       </span>
     </span>

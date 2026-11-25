@@ -228,6 +228,14 @@ export function CarouselContent({ children, className }: CarouselContentProps) {
       event.preventDefault();
       api.scrollNext();
     }
+    if (event.key === 'Home') {
+      event.preventDefault();
+      api.scrollTo(0);
+    }
+    if (event.key === 'End') {
+      event.preventDefault();
+      api.scrollTo(api.scrollSnapList().length - 1);
+    }
   };
 
   return (
@@ -252,13 +260,26 @@ export interface CarouselItemProps {
 }
 
 export function CarouselItem({ children, basis = '100%', className, style }: CarouselItemProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ index: 0, total: 0 });
+
+  useEffect(() => {
+    const node = ref.current;
+    const parent = node?.parentElement;
+    if (!node || !parent) return;
+    const slides = Array.from(parent.querySelectorAll<HTMLElement>(ITEM_SELECTOR));
+    setPosition({ index: slides.indexOf(node) + 1, total: slides.length });
+  }, []);
+
   return (
     <div
+      ref={ref}
       data-carousel-item
       className={cx(styles.item, className)}
       style={{ flexBasis: basis, ...style }}
       role="group"
       aria-roledescription="slide"
+      aria-label={position.index ? `${position.index} из ${position.total}` : undefined}
     >
       {children}
     </div>

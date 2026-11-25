@@ -2,11 +2,11 @@ import {
   createContext,
   useContext,
   useId,
-  useState,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
   type ReactNode,
 } from 'react';
+import { useControllableState } from '../../lib/use-controllable-state';
 
 interface CollapsibleContextValue {
   open: boolean;
@@ -34,14 +34,12 @@ export function Collapsible({
   children,
   className,
 }: CollapsibleProps) {
-  const [innerOpen, setInnerOpen] = useState(defaultOpen);
+  const [current, setOpen] = useControllableState({
+    value: open,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const reactId = useId().replace(/:/g, '');
-  const controlled = open !== undefined;
-  const current = controlled ? open : innerOpen;
-  const setOpen = (next: boolean) => {
-    if (!controlled) setInnerOpen(next);
-    onOpenChange?.(next);
-  };
 
   return (
     <CollapsibleContext.Provider
@@ -66,19 +64,19 @@ export function CollapsibleTrigger({
   className,
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  const { open, contentId, setOpen } = useCollapsible('CollapsibleTrigger');
+  const { open, contentId, keepMounted, setOpen } = useCollapsible('CollapsibleTrigger');
   return (
     <button
+      {...rest}
       type="button"
       className={className}
       aria-expanded={open}
-      aria-controls={contentId}
+      aria-controls={open || keepMounted ? contentId : undefined}
       data-state={open ? 'open' : 'closed'}
       onClick={(event) => {
         onClick?.(event);
         if (!event.defaultPrevented) setOpen(!open);
       }}
-      {...rest}
     >
       {children}
     </button>
@@ -96,11 +94,13 @@ export function CollapsibleContent({
 
   return (
     <div
+      {...rest}
       id={contentId}
       className={className}
       data-state={open ? 'open' : 'closed'}
       hidden={!open}
-      {...rest}
+      inert={!open}
+      aria-hidden={!open || undefined}
     >
       {children}
     </div>

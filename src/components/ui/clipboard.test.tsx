@@ -67,4 +67,58 @@ describe('useCopy', () => {
     await click();
     expect(screen.getByRole('button').textContent).toBe('Скопировать');
   });
+
+  it('uses the fallback when the clipboard API is unavailable', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+    execCommand.mockReturnValue(true);
+    render(<CopyButton value="hello" />);
+
+    await click();
+    expect(writeText).not.toHaveBeenCalled();
+    expect(execCommand).toHaveBeenCalledWith('copy');
+    expect(screen.getByRole('button').textContent).toBe('Скопировано');
+  });
+
+  it('survives execCommand throwing and cleans up the textarea', async () => {
+    writeText.mockRejectedValue(new Error('denied'));
+    execCommand.mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    render(<CopyButton value="hello" />);
+
+    await click();
+    expect(screen.getByRole('button').textContent).toBe('Скопировать');
+    expect(document.querySelector('textarea')).toBeNull();
+  });
+
+  it('restores focus after the fallback copy', async () => {
+    writeText.mockRejectedValue(new Error('denied'));
+    execCommand.mockReturnValue(true);
+    render(<CopyButton value="hello" />);
+
+    const button = screen.getByRole('button');
+    button.focus();
+    await click();
+    expect(document.activeElement).toBe(button);
+  });
+
+  it('ignores a copy that resolves after unmount', async () => {
+    let resolveWrite: (() => void) | undefined;
+    writeText.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveWrite = resolve;
+        })
+    );
+    const { unmount } = render(<CopyButton value="hello" />);
+
+    fireEvent.click(screen.getByRole('button'));
+    unmount();
+
+    await act(async () => {
+      resolveWrite?.();
+      await Promise.resolve();
+    });
+    expect(writeText).toHaveBeenCalledWith('hello');
+  });
 });

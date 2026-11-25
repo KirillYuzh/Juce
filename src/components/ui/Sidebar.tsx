@@ -5,6 +5,7 @@ import {
   useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
   type ReactNode,
@@ -13,11 +14,14 @@ import styles from './Sidebar.module.css';
 import { IconButton } from './Button';
 import { Skeleton } from './Display';
 import { cx } from '../../lib/cx';
+import { useControllableState } from '../../lib/use-controllable-state';
 
 export const SIDEBAR_WIDTH = '16rem';
 export const SIDEBAR_WIDTH_MOBILE = '18rem';
 export const SIDEBAR_WIDTH_ICON = '3.25rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 interface SidebarContextValue {
   open: boolean;
@@ -27,6 +31,7 @@ interface SidebarContextValue {
   isMobile: boolean;
   state: 'expanded' | 'collapsed';
   toggleSidebar: () => void;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
@@ -54,19 +59,16 @@ export function SidebarProvider({
   className,
   style,
 }: SidebarProviderProps) {
-  const [innerOpen, setInnerOpen] = useState(defaultOpen);
+  const [open, setOpen] = useControllableState({
+    value: openProp,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [openMobile, setOpenMobile] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  const open = openProp ?? innerOpen;
-
-  const setOpen = useCallback(
-    (next: boolean) => {
-      if (openProp === undefined) setInnerOpen(next);
-      onOpenChange?.(next);
-    },
-    [openProp, onOpenChange]
-  );
+  const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const wasMobileOpen = useRef(false);
 
   const toggleSidebar = useCallback(() => {
     if (isMobile) setOpenMobile((current) => !current);
@@ -82,11 +84,42 @@ export function SidebarProvider({
   }, []);
 
   useEffect(() => {
+    if (openMobile) {
+      wasMobileOpen.current = true;
+      return;
+    }
+    if (wasMobileOpen.current) {
+      wasMobileOpen.current = false;
+      triggerRef.current?.focus();
+    }
+  }, [openMobile]);
+
+  useEffect(() => {
+    if (!openMobile) return;
     const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      setOpenMobile(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [openMobile]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
       if (event.key.toLowerCase() !== SIDEBAR_KEYBOARD_SHORTCUT) return;
       if (!event.metaKey && !event.ctrlKey) return;
-      const target = event.target as HTMLElement | null;
-      if (target?.closest('input, textarea, [contenteditable="true"]')) return;
+      if (event.altKey || event.shiftKey) return;
+      const target = event.target;
+      const root = rootRef.current;
+      if (!(target instanceof Node) || !root?.contains(target)) return;
+      if (
+        target instanceof Element &&
+        target.closest('input, textarea, select, [contenteditable="true"]')
+      ) {
+        return;
+      }
       event.preventDefault();
       toggleSidebar();
     };
@@ -103,6 +136,7 @@ export function SidebarProvider({
       isMobile,
       state: open ? 'expanded' : 'collapsed',
       toggleSidebar,
+      triggerRef,
     }),
     [open, setOpen, openMobile, isMobile, toggleSidebar]
   );
@@ -110,6 +144,7 @@ export function SidebarProvider({
   return (
     <SidebarContext.Provider value={value}>
       <div
+        ref={rootRef}
         className={cx(styles.provider, className)}
         style={
           {
@@ -143,8 +178,31 @@ export function Sidebar({
 }: SidebarProps) {
   const { state, openMobile, setOpenMobile, isMobile } = useSidebar();
   const titleId = useId();
+  const asideRef = useRef<HTMLElement>(null);
 
-  const dataState = isMobile && openMobile ? 'expanded' : state;
+  const dataState = isMobile ? (openMobile ? 'expanded' : 'collapsed') : state;
+  const closed = isMobile ? !openMobile : collapsible === 'offcanvas' && state === 'collapsed';
+
+  useEffect(() => {
+    if (!isMobile || !openMobile) return;
+    const first = asideRef.current?.querySelector<HTMLElement>(FOCUSABLE);
+    first?.focus();
+  }, [isMobile, openMobile]);
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (!isMobile || !openMobile || event.key !== 'Tab') return;
+    const focusable = Array.from(asideRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
 
   return (
     <>
@@ -152,6 +210,7 @@ export function Sidebar({
         <div className={styles.backdrop} onClick={() => setOpenMobile(false)} aria-hidden="true" />
       )}
       <aside
+        ref={asideRef}
         className={cx(styles.sidebar, className)}
         data-state={dataState}
         data-side={side}
@@ -159,6 +218,9 @@ export function Sidebar({
         data-collapsible={collapsible}
         data-mobile={isMobile || undefined}
         aria-labelledby={titleId}
+        aria-hidden={closed || undefined}
+        inert={closed || undefined}
+        onKeyDown={onKeyDown}
       >
         <span id={titleId} className={styles.srOnly}>
           Боковая панель
@@ -176,14 +238,16 @@ export function SidebarTrigger({
   label?: string;
   className?: string;
 }) {
-  const { toggleSidebar, state } = useSidebar();
+  const { toggleSidebar, state, isMobile, openMobile, triggerRef } = useSidebar();
+  const expanded = isMobile ? openMobile : state === 'expanded';
   return (
     <IconButton
+      ref={triggerRef}
       icon="menu"
       label={label}
       variant="plain"
       className={cx(styles.trigger, className)}
-      aria-expanded={state === 'expanded'}
+      aria-expanded={expanded}
       onClick={toggleSidebar}
     />
   );
@@ -283,13 +347,15 @@ export function SidebarMenuItem({
   return <li className={cx(styles.menuItem, className)}>{children}</li>;
 }
 
-export interface SidebarMenuButtonProps extends Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  'children'
-> {
+export interface SidebarMenuButtonProps
+  extends
+    Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'>,
+    Pick<
+      React.AnchorHTMLAttributes<HTMLAnchorElement>,
+      'href' | 'target' | 'rel' | 'download' | 'referrerPolicy' | 'hrefLang'
+    > {
   children: ReactNode;
   isActive?: boolean;
-  href?: string;
   icon?: ReactNode;
 }
 
@@ -316,6 +382,7 @@ export function SidebarMenuButton({
   if (href) {
     return (
       <a
+        {...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         className={classes}
         href={href}
         data-active={isActive || undefined}
@@ -386,6 +453,7 @@ export function SidebarMenuSubButton({
   if (href) {
     return (
       <a
+        {...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         className={classes}
         href={href}
         data-active={isActive || undefined}

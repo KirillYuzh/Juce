@@ -3,13 +3,11 @@ import styles from './Button.module.css';
 import { Icon, type IconName } from './Icon';
 import { cx } from '../../lib/cx';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'white' | 'outline' | 'ghost' | 'dark';
+export type ButtonVariant =
+  'primary' | 'secondary' | 'white' | 'outline' | 'neutral' | 'ghost' | 'dark' | 'danger';
 export type ButtonSize = 's' | 'm' | 'l';
 
-export interface ButtonProps extends Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  'children'
-> {
+export interface ButtonProps extends Omit<React.ComponentPropsWithRef<'button'>, 'children'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   fullWidth?: boolean;
@@ -32,6 +30,7 @@ export function Button({
   href,
   disabled,
   type = 'button',
+  ref,
   ...rest
 }: ButtonProps) {
   const classes = cx(
@@ -58,12 +57,25 @@ export function Button({
     </>
   );
 
+  const unavailable = Boolean(disabled || loading);
+
   if (href) {
+    const anchorRest = rest as React.AnchorHTMLAttributes<HTMLAnchorElement>;
     return (
       <a
+        {...anchorRest}
+        ref={ref as React.Ref<HTMLAnchorElement>}
         className={classes}
         href={href}
-        {...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+        aria-disabled={unavailable || undefined}
+        tabIndex={unavailable ? -1 : anchorRest.tabIndex}
+        onClick={(event) => {
+          if (unavailable) {
+            event.preventDefault();
+            return;
+          }
+          anchorRest.onClick?.(event);
+        }}
       >
         {content}
       </a>
@@ -71,13 +83,13 @@ export function Button({
   }
 
   return (
-    <button className={classes} type={type} disabled={disabled || loading} {...rest}>
+    <button ref={ref} className={classes} type={type} disabled={unavailable} {...rest}>
       {content}
     </button>
   );
 }
 
-export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface IconButtonProps extends React.ComponentPropsWithRef<'button'> {
   icon: IconName;
   label: string;
   size?: 'xs' | 's' | 'm';
@@ -90,10 +102,12 @@ export function IconButton({
   size = 'm',
   variant = 'neutral',
   className,
+  ref,
   ...rest
 }: IconButtonProps) {
   return (
     <button
+      ref={ref}
       type="button"
       aria-label={label}
       className={cx(

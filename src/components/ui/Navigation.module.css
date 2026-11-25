@@ -77,7 +77,7 @@
   transition: transform var(--tb-duration-fast) var(--tb-ease-standard);
 }
 
-.accordionOpen .accordionChevron {
+.accordionItem[data-state='open'] .accordionChevron {
   transform: rotate(180deg);
 }
 
@@ -92,7 +92,7 @@
     padding-bottom var(--tb-duration-base) var(--tb-ease-standard);
 }
 
-.accordionOpen .accordionPanel {
+.accordionItem[data-state='open'] .accordionPanel {
   grid-template-rows: 1fr;
   padding-bottom: 20px;
 }

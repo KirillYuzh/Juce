@@ -1,6 +1,4 @@
 .scope {
   background-color: var(--tb-bg);
-  background-image: var(--tb-surface-pattern);
-  background-size: var(--tb-surface-pattern-size);
   color: var(--tb-text-primary);
 }

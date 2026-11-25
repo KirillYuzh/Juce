@@ -112,6 +112,47 @@ export function labelStep(count: number, plotWidth: number, minGap = 64) {
   return Math.max(1, Math.ceil(count / Math.max(2, Math.floor(plotWidth / minGap))));
 }
 
+export interface PlotPadding {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
+export function plotSize(width: number, height: number, padding: PlotPadding) {
+  return {
+    width: Math.max(width - padding.left - padding.right, 0),
+    height: Math.max(height - padding.top - padding.bottom, 0),
+  };
+}
+
+export function lineScale(count: number, plotWidth: number, left: number) {
+  return (index: number) => left + (count > 1 ? (plotWidth * index) / (count - 1) : plotWidth / 2);
+}
+
+export function pointerIndex(position: number, plotWidth: number, left: number, count: number) {
+  if (count === 0) return null;
+  const ratio = count > 1 ? (position - left) / Math.max(plotWidth, 1) : 0.5;
+  return Math.min(Math.max(Math.round(ratio * (count - 1)), 0), count - 1);
+}
+
+export function bandIndex(position: number, band: number, count: number) {
+  if (count === 0) return null;
+  return Math.min(Math.max(Math.floor(position / Math.max(band, 1)), 0), count - 1);
+}
+
+export function valueExtent(groups: number[][]) {
+  let min = 0;
+  let max = 0;
+  for (const values of groups) {
+    for (const value of values) {
+      if (value < min) min = value;
+      if (value > max) max = value;
+    }
+  }
+  return { min, max };
+}
+
 export function usePlotWidth() {
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);

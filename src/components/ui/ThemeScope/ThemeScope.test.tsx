@@ -4,20 +4,19 @@ import { ThemeScope } from './ThemeScope';
 import styles from './ThemeScope.module.css';
 
 describe('ThemeScope', () => {
-  it('renders a div with the light theme and the default skin', () => {
+  it('renders a div with the light theme by default', () => {
     render(<ThemeScope>Содержимое</ThemeScope>);
     const scope = screen.getByText('Содержимое');
 
     expect(scope.tagName).toBe('DIV');
     expect(scope.getAttribute('data-theme')).toBe('light');
-    expect(scope.getAttribute('data-skin')).toBe('default');
   });
 
-  it('sets the blueprint skin', () => {
-    render(<ThemeScope skin="blueprint">Содержимое</ThemeScope>);
+  it('sets the requested theme', () => {
+    render(<ThemeScope theme="ocean">Содержимое</ThemeScope>);
     const scope = screen.getByText('Содержимое');
 
-    expect(scope.getAttribute('data-skin')).toBe('blueprint');
+    expect(scope.getAttribute('data-theme')).toBe('ocean');
   });
 
   it('changes the rendered tag', () => {
@@ -35,17 +34,16 @@ describe('ThemeScope', () => {
     expect(scope.classList.contains('custom')).toBe(true);
   });
 
-  it('keeps its own theme and resets the inherited skin when nested', () => {
+  it('keeps its own theme when nested', () => {
     const { container } = render(
-      <ThemeScope skin="blueprint">
+      <ThemeScope theme="dark">
         <ThemeScope theme="light">Вложенный</ThemeScope>
       </ThemeScope>
     );
     const outer = container.firstElementChild as HTMLElement;
     const inner = outer.firstElementChild as HTMLElement;
 
-    expect(outer.getAttribute('data-skin')).toBe('blueprint');
+    expect(outer.getAttribute('data-theme')).toBe('dark');
     expect(inner.getAttribute('data-theme')).toBe('light');
-    expect(inner.getAttribute('data-skin')).toBe('default');
   });
 });

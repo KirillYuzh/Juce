@@ -20,14 +20,6 @@ const half: CSSProperties = {
   boxSizing: 'border-box',
 };
 
-const eyebrow: CSSProperties = {
-  margin: 0,
-  font: '500 13px/18px var(--tb-font-text)',
-  letterSpacing: '0.08em',
-  textTransform: 'uppercase',
-  color: 'var(--tb-text-secondary)',
-};
-
 const heading: CSSProperties = {
   margin: 0,
   font: '500 32px/40px var(--tb-font-heading)',
@@ -119,20 +111,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const TwoSkins: Story = {
+export const TwoThemes: Story = {
   render: () => (
     <div style={page}>
       <ThemeScope as="section" theme="light">
         <div style={half}>
-          <p style={eyebrow}>Светлая тема</p>
-          <h2 style={heading}>Обычные компоненты</h2>
+          <h2 style={heading}>Лендинг для всех</h2>
           <Demo />
         </div>
       </ThemeScope>
-      <ThemeScope as="section" theme="light" skin="blueprint">
+      <ThemeScope as="section" theme="dark">
         <div style={half}>
-          <p style={eyebrow}>Blueprint</p>
-          <h2 style={heading}>Сетка и прямые углы</h2>
+          <h2 style={heading}>Раздел для технарей</h2>
           <Demo />
         </div>
       </ThemeScope>

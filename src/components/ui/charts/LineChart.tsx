@@ -6,6 +6,9 @@ import {
   axisTicks,
   labelStep,
   linePath,
+  lineScale,
+  plotSize,
+  pointerIndex,
   seriesColors,
   toNumber,
   usePlotWidth,
@@ -55,15 +58,13 @@ export function LineChart({
 
   const geometry = useMemo(() => {
     const padding = { top: 8, right: 8, bottom: 24, left: grid ? 44 : 8 };
-    const plotWidth = Math.max(width - padding.left - padding.right, 0);
-    const plotHeight = Math.max(height - padding.top - padding.bottom, 0);
+    const plot = plotSize(width, height, padding);
 
     const values = series.map((item) => data.map((row) => toNumber(row[item.key])));
     const { max: axisMax, values: tickValues } = axisTicks(Math.max(1, ...values.flat()), ticks);
 
-    const x = (index: number) =>
-      padding.left + (data.length > 1 ? (plotWidth * index) / (data.length - 1) : plotWidth / 2);
-    const y = (value: number) => padding.top + plotHeight * (1 - value / axisMax);
+    const x = lineScale(data.length, plot.width, padding.left);
+    const y = (value: number) => padding.top + plot.height * (1 - value / axisMax);
 
     const lines = values.map((rowValues) => {
       const points = rowValues.map((value, index) => [x(index), y(value)] as Point);
@@ -72,24 +73,25 @@ export function LineChart({
 
     return {
       padding,
-      plotWidth,
+      plotWidth: plot.width,
       x,
       y,
       lines,
       tickValues,
-      every: labelStep(data.length, plotWidth),
+      every: labelStep(data.length, plot.width),
     };
   }, [curve, data, grid, height, series, ticks, width]);
 
   const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
-    if (data.length === 0) return;
     const bounds = event.currentTarget.getBoundingClientRect();
-    const ratio =
-      data.length > 1
-        ? (event.clientX - bounds.left - geometry.padding.left) / Math.max(geometry.plotWidth, 1)
-        : 0.5;
-    const index = Math.round(ratio * (data.length - 1));
-    setHovered(Math.min(Math.max(index, 0), data.length - 1));
+    const index = pointerIndex(
+      event.clientX - bounds.left,
+      geometry.plotWidth,
+      geometry.padding.left,
+      data.length
+    );
+    if (index === null) return;
+    setHovered(index);
   };
 
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
@@ -113,9 +115,9 @@ export function LineChart({
               <ChartGrid
                 ticks={geometry.tickValues}
                 format={valueFormat}
-                y={geometry.y}
-                left={geometry.padding.left}
-                right={width - geometry.padding.right}
+                position={geometry.y}
+                start={geometry.padding.left}
+                end={width - geometry.padding.right}
               />
             )}
 

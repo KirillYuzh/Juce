@@ -3,7 +3,8 @@
 }
 
 .viewport {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   border-radius: inherit;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -33,6 +34,8 @@
 
 .root[data-orientation='vertical'] .viewport {
   height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   scroll-snap-type: y mandatory;
 }
 

@@ -1,13 +1,16 @@
 import { useMemo, useState } from 'react';
 import styles from './Chart.module.css';
-import { ChartLegend, ChartTooltip } from './ChartParts';
+import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
 import { cx } from '../../../lib/cx';
 import {
+  bandIndex,
   labelStep,
+  plotSize,
   seriesColors,
   signedTicks,
   toNumber,
   usePlotWidth,
+  valueExtent,
   type ChartRow,
   type ChartSeries,
   type TooltipIndicator,
@@ -57,8 +60,7 @@ export function BarChart({
     const padding = horizontal
       ? { top: 8, right: 16, bottom: grid ? 24 : 8, left: 96 }
       : { top: 8, right: 8, bottom: 24, left: grid ? 48 : 8 };
-    const plotWidth = Math.max(width - padding.left - padding.right, 0);
-    const plotHeight = Math.max(height - padding.top - padding.bottom, 0);
+    const plot = plotSize(width, height, padding);
 
     const values = series.map((item) => data.map((row) => toNumber(row[item.key])));
     const starts = series.map(() => data.map(() => 0));
@@ -71,23 +73,18 @@ export function BarChart({
       });
     });
 
-    const {
-      min,
-      max,
-      values: tickValues,
-    } = signedTicks(
-      Math.min(0, ...starts.flat(), ...ends.flat()),
-      Math.max(0, ...starts.flat(), ...ends.flat()),
-      ticks
-    );
+    const extent = valueExtent(starts.concat(ends));
+    const { min, max, values: tickValues } = signedTicks(extent.min, extent.max, ticks);
     const span = max - min || 1;
 
-    const band = (horizontal ? plotHeight : plotWidth) / Math.max(data.length, 1);
+    const band = (horizontal ? plot.height : plot.width) / Math.max(data.length, 1);
     const groupSize = stacked ? 1 : series.length;
     const barSize = (band * 0.68) / groupSize;
     const center = (value: number) => {
       const ratio = (value - min) / span;
-      return horizontal ? padding.left + plotWidth * ratio : padding.top + plotHeight * (1 - ratio);
+      return horizontal
+        ? padding.left + plot.width * ratio
+        : padding.top + plot.height * (1 - ratio);
     };
 
     const bars = series.map((_, seriesIndex) =>
@@ -107,8 +104,8 @@ export function BarChart({
 
     return {
       padding,
-      plotWidth,
-      plotHeight,
+      plotWidth: plot.width,
+      plotHeight: plot.height,
       band,
       barSize,
       center,
@@ -120,20 +117,18 @@ export function BarChart({
   }, [data, grid, height, horizontal, series, stacked, ticks, width]);
 
   const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
-    if (data.length === 0) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     const position = horizontal
       ? event.clientY - bounds.top - geometry.padding.top
       : event.clientX - bounds.left - geometry.padding.left;
-    const index = Math.min(
-      Math.max(Math.floor(position / Math.max(geometry.band, 1)), 0),
-      data.length - 1
-    );
+    const index = bandIndex(position, geometry.band, data.length);
+    if (index === null) return;
     setHover({ index, x: event.clientX - bounds.left, y: event.clientY - bounds.top });
   };
 
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
   const flipTooltip = hover !== null && width - hover.x < 200;
+  const every = labelStep(data.length, geometry.plotWidth);
 
   return (
     <div className={cx(styles.chart, className)}>
@@ -149,31 +144,15 @@ export function BarChart({
             onPointerLeave={() => setHover(null)}
           >
             {grid && (
-              <g>
-                {geometry.tickValues.map((value) => {
-                  const line = geometry.center(value);
-                  return (
-                    <g key={value}>
-                      <line
-                        x1={horizontal ? line : geometry.padding.left}
-                        x2={horizontal ? line : width - geometry.padding.right}
-                        y1={horizontal ? geometry.padding.top : line}
-                        y2={horizontal ? height - geometry.padding.bottom : line}
-                        style={{ stroke: 'var(--tb-border)' }}
-                      />
-                      <text
-                        x={horizontal ? line : geometry.padding.left - 8}
-                        y={horizontal ? height - 6 : line}
-                        textAnchor={horizontal ? 'middle' : 'end'}
-                        dominantBaseline={horizontal ? 'auto' : 'middle'}
-                        className={styles.tick}
-                      >
-                        {valueFormat(value)}
-                      </text>
-                    </g>
-                  );
-                })}
-              </g>
+              <ChartGrid
+                ticks={geometry.tickValues}
+                format={valueFormat}
+                position={geometry.center}
+                start={horizontal ? geometry.padding.top : geometry.padding.left}
+                end={horizontal ? height - geometry.padding.bottom : width - geometry.padding.right}
+                orientation={horizontal ? 'horizontal' : 'vertical'}
+                labelGap={horizontal ? 18 : 8}
+              />
             )}
 
             {horizontal &&
@@ -195,22 +174,15 @@ export function BarChart({
                 </text>
               ))}
 
-            {!horizontal &&
-              data.map((row, index) => {
-                const every = labelStep(data.length, geometry.plotWidth);
-                if (index % every !== 0 && index !== data.length - 1) return null;
-                return (
-                  <text
-                    key={`${String(row[xKey])}-${index}`}
-                    x={geometry.padding.left + geometry.band * index + geometry.band * 0.5}
-                    y={height - 6}
-                    textAnchor="middle"
-                    className={styles.tick}
-                  >
-                    {String(row[xKey])}
-                  </text>
-                );
-              })}
+            {!horizontal && (
+              <ChartXAxis
+                items={data.map((row) => ({ label: String(row[xKey]) }))}
+                x={(index) => geometry.padding.left + geometry.band * index + geometry.band * 0.5}
+                y={height - 6}
+                every={every}
+                anchor="middle"
+              />
+            )}
 
             {series.map((item, seriesIndex) =>
               geometry.bars[seriesIndex].map((bar, pointIndex) => (
@@ -267,6 +239,30 @@ export function BarChart({
           items={series.map((item, index) => ({ label: item.label, color: colors[index] }))}
         />
       )}
+
+      <table className="tb-visually-hidden">
+        <caption>{label}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{xKey}</th>
+            {series.map((item) => (
+              <th key={item.key} scope="col">
+                {item.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, rowIndex) => (
+            <tr key={`${String(row[xKey])}-${rowIndex}`}>
+              <th scope="row">{String(row[xKey])}</th>
+              {series.map((item) => (
+                <td key={item.key}>{valueFormat(toNumber(row[item.key]))}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

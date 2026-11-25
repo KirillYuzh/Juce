@@ -6,6 +6,7 @@ import {
   WEEKDAYS_SHORT,
   addDays,
   addMonths,
+  clampDate,
   dateKey,
   endOfMonth,
   endOfWeek,
@@ -24,6 +25,10 @@ import {
 import { cx } from '../../../lib/cx';
 
 export type CalendarMode = 'single' | 'range';
+
+export function shiftFocusedDay(day: Date, months: number, min?: Date, max?: Date): Date {
+  return clampDate(addMonths(day, months), min, max);
+}
 
 export interface CalendarProps {
   mode?: CalendarMode;
@@ -72,9 +77,10 @@ export function Calendar({
   };
 
   const moveFocus = (next: Date) => {
+    const target = clampDate(next, min, max);
     wantFocus.current = true;
-    setFocusedDay(next);
-    if (!isSameMonth(next, visibleMonth)) setMonth(startOfMonth(next));
+    setFocusedDay(target);
+    if (!isSameMonth(target, visibleMonth)) setMonth(startOfMonth(target));
   };
 
   useEffect(() => {
@@ -84,7 +90,7 @@ export function Calendar({
   }, [focusedDay, visibleMonth, autoFocus]);
 
   const goMonth = (amount: number) => {
-    setFocusedDay(addMonths(focusedDay, amount));
+    setFocusedDay(shiftFocusedDay(focusedDay, amount, min, max));
     setMonth(addMonths(visibleMonth, amount));
   };
 

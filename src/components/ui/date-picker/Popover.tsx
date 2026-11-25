@@ -105,17 +105,11 @@ export function Popover({
   );
 }
 
-export interface PopoverTriggerProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface PopoverTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
-export function PopoverTrigger({
-  className,
-  children,
-  onClick,
-  ...rest
-}: PopoverTriggerProps) {
+export function PopoverTrigger({ className, children, onClick, ...rest }: PopoverTriggerProps) {
   const popover = usePopover('PopoverTrigger');
   return (
     <button
@@ -140,7 +134,13 @@ export interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement
   children: ReactNode;
 }
 
-export function PopoverContent({ className, children, ...rest }: PopoverContentProps) {
+export function PopoverContent({
+  id,
+  tabIndex,
+  className,
+  children,
+  ...rest
+}: PopoverContentProps) {
   const popover = usePopover('PopoverContent');
   if (!popover.open) return null;
 
@@ -148,8 +148,8 @@ export function PopoverContent({ className, children, ...rest }: PopoverContentP
     <div
       {...rest}
       ref={popover.contentRef}
-      id={popover.contentId}
-      tabIndex={-1}
+      id={id ?? popover.contentId}
+      tabIndex={tabIndex ?? -1}
       className={cx(styles.content, className)}
     >
       {children}

@@ -68,34 +68,48 @@ export function ChartLegend({ items }: ChartLegendProps) {
 export interface ChartGridProps {
   ticks: number[];
   format: (value: number) => string;
-  y: (value: number) => number;
-  left: number;
-  right: number;
+  position: (value: number) => number;
+  start: number;
+  end: number;
+  orientation?: 'vertical' | 'horizontal';
+  labelGap?: number;
 }
 
-export function ChartGrid({ ticks, format, y, left, right }: ChartGridProps) {
+export function ChartGrid({
+  ticks,
+  format,
+  position,
+  start,
+  end,
+  orientation = 'vertical',
+  labelGap = 8,
+}: ChartGridProps) {
+  const horizontal = orientation === 'horizontal';
   return (
     <>
-      {ticks.map((value) => (
-        <g key={value}>
-          <line
-            x1={left}
-            x2={right}
-            y1={y(value)}
-            y2={y(value)}
-            style={{ stroke: 'var(--tb-border)' }}
-          />
-          <text
-            x={left - 8}
-            y={y(value)}
-            textAnchor="end"
-            dominantBaseline="middle"
-            className={styles.tick}
-          >
-            {format(value)}
-          </text>
-        </g>
-      ))}
+      {ticks.map((value) => {
+        const at = position(value);
+        return (
+          <g key={value}>
+            <line
+              x1={horizontal ? at : start}
+              x2={horizontal ? at : end}
+              y1={horizontal ? start : at}
+              y2={horizontal ? end : at}
+              style={{ stroke: 'var(--tb-border)' }}
+            />
+            <text
+              x={horizontal ? at : start - labelGap}
+              y={horizontal ? end + labelGap : at}
+              textAnchor={horizontal ? 'middle' : 'end'}
+              dominantBaseline={horizontal ? 'auto' : 'middle'}
+              className={styles.tick}
+            >
+              {format(value)}
+            </text>
+          </g>
+        );
+      })}
     </>
   );
 }
@@ -105,19 +119,28 @@ export interface ChartXAxisProps {
   x: (index: number) => number;
   y: number;
   every: number;
+  anchor?: 'edges' | 'middle';
 }
 
-export function ChartXAxis({ items, x, y, every }: ChartXAxisProps) {
+export function ChartXAxis({ items, x, y, every, anchor = 'edges' }: ChartXAxisProps) {
   return (
     <>
       {items.map((item, index) => {
         if (index % every !== 0 && index !== items.length - 1) return null;
+        const textAnchor =
+          anchor === 'middle'
+            ? 'middle'
+            : index === 0
+              ? 'start'
+              : index === items.length - 1
+                ? 'end'
+                : 'middle';
         return (
           <text
             key={`${String(item.label)}-${index}`}
             x={x(index)}
             y={y}
-            textAnchor={index === 0 ? 'start' : index === items.length - 1 ? 'end' : 'middle'}
+            textAnchor={textAnchor}
             className={styles.tick}
           >
             {item.label}

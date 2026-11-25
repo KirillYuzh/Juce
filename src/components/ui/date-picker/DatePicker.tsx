@@ -67,9 +67,17 @@ export type DatePickerProps =
       onChange?: (value: DateRange | null) => void;
     } & DatePickerBaseProps);
 
+function isDateRange(value: Date | DateRange | null): value is DateRange {
+  return value !== null && typeof value === 'object' && !(value instanceof Date);
+}
+
 export function DatePicker(props: DatePickerProps) {
   const { placeholder, presets, inline, min, max, disabled, id, className, size = 'l' } = props;
-  const mode: CalendarMode = props.mode ?? 'single';
+  const binding =
+    props.mode === 'range'
+      ? { mode: 'range' as const, onSelect: props.onChange }
+      : { mode: 'single' as const, onSelect: props.onChange };
+  const mode: CalendarMode = binding.mode;
 
   const [innerValue, setInnerValue] = useState<Date | DateRange | null>(props.value ?? null);
   const [open, setOpen] = useState(false);
@@ -77,16 +85,19 @@ export function DatePicker(props: DatePickerProps) {
 
   const commit = (next: Date | DateRange | null) => {
     setInnerValue(next);
-    if (props.mode === 'range') props.onChange?.(next as DateRange | null);
-    else props.onChange?.(next as Date | null);
+    if (binding.mode === 'range') {
+      binding.onSelect?.(isDateRange(next) ? next : null);
+    } else {
+      binding.onSelect?.(next instanceof Date ? next : null);
+    }
   };
 
   const handleSelect = (next: Date | DateRange | null) => {
     commit(next);
     const complete =
-      mode === 'range'
-        ? Boolean((next as DateRange | null)?.from && (next as DateRange | null)?.to)
-        : next !== null;
+      binding.mode === 'range'
+        ? isDateRange(next) && Boolean(next.from && next.to)
+        : next instanceof Date;
     if (complete) setOpen(false);
   };
 
@@ -100,13 +111,13 @@ export function DatePicker(props: DatePickerProps) {
   };
 
   const text =
-    mode === 'range'
-      ? formatDateRange(value as DateRange | null)
-      : value
-        ? formatDate(value as Date)
+    binding.mode === 'range'
+      ? formatDateRange(isDateRange(value) ? value : null)
+      : value instanceof Date
+        ? formatDate(value)
         : '';
   const display = text || placeholder || (mode === 'range' ? 'Выберите период' : 'Выберите дату');
-  const presetItems = mode === 'range' ? (presets ?? defaultRangePresets) : [];
+  const presetItems = binding.mode === 'range' ? (presets ?? defaultRangePresets) : [];
 
   const body = (
     <div className={styles.body}>

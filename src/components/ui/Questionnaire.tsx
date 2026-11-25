@@ -265,9 +265,7 @@ export function QuestionnaireChoice({ value, children, className }: Questionnair
 
   const multiple = Boolean(active.multiple);
   const answer = answers[active.name];
-  const selected = multiple
-    ? Array.isArray(answer) && answer.includes(value)
-    : answer === value;
+  const selected = multiple ? Array.isArray(answer) && answer.includes(value) : answer === value;
   const letter = String.fromCharCode(
     65 + Math.max(active.choices?.findIndex((choice) => choice.value === value) ?? 0, 0)
   );
@@ -370,7 +368,7 @@ export function QuestionnaireSubmit({ label = 'Отправить' }: { label?: 
   const { isLast } = useQuestionnaire('QuestionnaireSubmit');
   if (!isLast) return null;
   return (
-    <Button variant="primary" size="m" type="submit">
+    <Button variant="secondary" size="m" type="submit">
       {label}
     </Button>
   );
