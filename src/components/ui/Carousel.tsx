@@ -1,5 +1,8 @@
 import {
+  Children,
+  cloneElement,
   createContext,
+  isValidElement,
   useCallback,
   useContext,
   useEffect,
@@ -7,6 +10,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactElement,
   type ReactNode,
 } from 'react';
 import styles from './Carousel.module.css';
@@ -14,6 +18,7 @@ import { IconButton } from './Button';
 import { cx } from '../../lib/cx';
 
 export type CarouselOrientation = 'horizontal' | 'vertical';
+export type CarouselEvent = 'select';
 
 export interface CarouselOptions {
   align?: 'start' | 'center' | 'end';
@@ -28,8 +33,8 @@ export interface CarouselApi {
   scrollSnapList: () => number[];
   canScrollPrev: () => boolean;
   canScrollNext: () => boolean;
-  on: (event: 'select', handler: () => void) => () => void;
-  off: (event: 'select', handler: () => void) => void;
+  on: (event: CarouselEvent, handler: () => void) => () => void;
+  off: (event: CarouselEvent, handler: () => void) => void;
 }
 
 interface CarouselContextValue {
@@ -70,7 +75,7 @@ export function Carousel({
 }: CarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const handlers = useRef(new Set<() => void>());
+  const handlers = useRef(new Map<CarouselEvent, Set<() => void>>());
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
 
@@ -157,12 +162,14 @@ export function Carousel({
       scrollSnapList: () => items().map((_, index) => index),
       canScrollPrev,
       canScrollNext,
-      on: (_event, handler) => {
-        handlers.current.add(handler);
-        return () => handlers.current.delete(handler);
+      on: (event, handler) => {
+        const set = handlers.current.get(event) ?? new Set<() => void>();
+        handlers.current.set(event, set);
+        set.add(handler);
+        return () => set.delete(handler);
       },
-      off: (_event, handler) => {
-        handlers.current.delete(handler);
+      off: (event, handler) => {
+        handlers.current.get(event)?.delete(handler);
       },
     };
   }, [currentIndex, items, loop, offset, orientation, scrollToIndex]);
@@ -180,7 +187,7 @@ export function Carousel({
       frame = window.requestAnimationFrame(() => {
         setAtStart(!api.canScrollPrev());
         setAtEnd(!api.canScrollNext());
-        handlers.current.forEach((handler) => handler());
+        handlers.current.get('select')?.forEach((handler) => handler());
       });
     };
     notify();
@@ -216,6 +223,8 @@ export interface CarouselContentProps {
 
 export function CarouselContent({ children, className }: CarouselContentProps) {
   const { orientation, viewportRef, trackRef, api } = useCarousel('CarouselContent');
+  const slides = Children.toArray(children);
+  const total = slides.length;
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const previous = orientation === 'horizontal' ? 'ArrowLeft' : 'ArrowUp';
@@ -246,7 +255,14 @@ export function CarouselContent({ children, className }: CarouselContentProps) {
       onKeyDown={onKeyDown}
     >
       <div ref={trackRef} className={styles.track}>
-        {children}
+        {slides.map((child, index) =>
+          isValidElement(child) && child.type === CarouselItem
+            ? cloneElement(child as ReactElement<CarouselItemProps>, {
+                position: index,
+                total,
+              })
+            : child
+        )}
       </div>
     </div>
   );
@@ -257,29 +273,28 @@ export interface CarouselItemProps {
   basis?: string;
   className?: string;
   style?: CSSProperties;
+  position?: number;
+  total?: number;
 }
 
-export function CarouselItem({ children, basis = '100%', className, style }: CarouselItemProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ index: 0, total: 0 });
-
-  useEffect(() => {
-    const node = ref.current;
-    const parent = node?.parentElement;
-    if (!node || !parent) return;
-    const slides = Array.from(parent.querySelectorAll<HTMLElement>(ITEM_SELECTOR));
-    setPosition({ index: slides.indexOf(node) + 1, total: slides.length });
-  }, []);
+export function CarouselItem({
+  children,
+  basis = '100%',
+  className,
+  style,
+  position,
+  total,
+}: CarouselItemProps) {
+  const label = position !== undefined && total ? `${position + 1} из ${total}` : undefined;
 
   return (
     <div
-      ref={ref}
       data-carousel-item
       className={cx(styles.item, className)}
       style={{ flexBasis: basis, ...style }}
       role="group"
       aria-roledescription="slide"
-      aria-label={position.index ? `${position.index} из ${position.total}` : undefined}
+      aria-label={label}
     >
       {children}
     </div>
@@ -339,15 +354,17 @@ export function CarouselDots({ className }: { className?: string }) {
 
   if (state.count < 2) return null;
 
+  const active = Math.min(state.index, state.count - 1);
+
   return (
     <div className={cx(styles.dots, className)}>
       {Array.from({ length: state.count }, (_, dot) => (
         <button
           key={dot}
           type="button"
-          className={cx(styles.dot, dot === state.index && styles.dotActive)}
+          className={cx(styles.dot, dot === active && styles.dotActive)}
           aria-label={`Слайд ${dot + 1}`}
-          aria-current={dot === state.index}
+          aria-current={dot === active}
           onClick={() => api.scrollTo(dot)}
         />
       ))}

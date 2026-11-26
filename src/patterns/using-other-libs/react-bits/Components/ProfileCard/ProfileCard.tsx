@@ -299,6 +299,7 @@ const ProfileCard = ({
     if (!root || !enableMobileTilt) return;
 
     let listening = false;
+    let cancelled = false;
     const onOrientation = (event: DeviceOrientationEvent) => {
       if (event.beta == null || event.gamma == null) return;
       const sensitivity = settingsRef.current.mobileTiltSensitivity;
@@ -308,7 +309,7 @@ const ProfileCard = ({
       );
     };
     const listen = () => {
-      if (listening) return;
+      if (cancelled || listening) return;
       listening = true;
       window.addEventListener('deviceorientation', onOrientation);
     };
@@ -327,6 +328,7 @@ const ProfileCard = ({
 
     root.addEventListener('click', onClick);
     return () => {
+      cancelled = true;
       root.removeEventListener('click', onClick);
       window.removeEventListener('deviceorientation', onOrientation);
     };

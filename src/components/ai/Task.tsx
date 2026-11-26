@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import styles from './Task.module.css';
 import {
   Trace,
@@ -43,10 +43,26 @@ export interface TaskProps {
 
 export function Task({ title, status, steps = [], defaultOpen, children, className }: TaskProps) {
   const running = status === 'running';
+  const [open, setOpen] = useState(() => defaultOpen ?? running);
+  const touched = useRef(false);
+  const wasRunning = useRef(running);
+
+  useEffect(() => {
+    if (running && !wasRunning.current && !touched.current && defaultOpen === undefined) {
+      setOpen(true);
+    }
+    wasRunning.current = running;
+  }, [defaultOpen, running]);
+
+  const change = (next: boolean) => {
+    touched.current = true;
+    setOpen(next);
+  };
+
   return (
     <div className={styles.task}>
       <Trace className={className}>
-        <TraceCollapsible defaultOpen={defaultOpen ?? running} keepMounted>
+        <TraceCollapsible open={open} onOpenChange={change} keepMounted>
           <TraceCollapsibleTrigger>
             <TraceLine status={running ? 'running' : status === 'error' ? 'error' : undefined}>
               <TraceIcon>{statusIcon(status ?? 'done')}</TraceIcon>

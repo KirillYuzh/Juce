@@ -702,6 +702,7 @@ const ElectricLogo = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<Settings | null>(null);
   const shapeRef = useRef<Shape | null>(null);
+  const wakeRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     settingsRef.current = {
@@ -724,6 +725,7 @@ const ElectricLogo = ({
       theme,
       onRender,
     };
+    wakeRef.current();
   });
 
   useEffect(() => {
@@ -740,6 +742,7 @@ const ElectricLogo = ({
         traced = null;
       }
       if (traced) shapeRef.current = traced;
+      wakeRef.current();
     };
     image.src = src || BOLT;
     return () => {
@@ -1065,11 +1068,23 @@ const ElectricLogo = ({
         s.onRender?.(canvas);
       }
 
-      if (visible) raf = requestAnimationFrame(frame);
+      // idle без движения не держит rAF: пауза, speed=0, reduced motion и скрытая
+      // вкладка останавливают цикл, события и видимость его будят
+      const frozen = !s || s.speed === 0 || reducedMotion;
+      const settledNow =
+        !to ||
+        (morph >= 1 &&
+          progress >= 1 &&
+          sparks.length === 0 &&
+          pulses.length === 0 &&
+          !burst &&
+          hover.power < 0.001);
+      if (visible && !document.hidden && !(frozen && settledNow))
+        raf = requestAnimationFrame(frame);
     };
 
     const start = () => {
-      if (raf || !visible) return;
+      if (raf || !visible || document.hidden) return;
       last = performance.now();
       raf = requestAnimationFrame(frame);
     };
@@ -1079,6 +1094,7 @@ const ElectricLogo = ({
       pointer.x = e.clientX - rect.left;
       pointer.y = e.clientY - rect.top;
       pointer.over = true;
+      start();
     };
     const onDown = (e: PointerEvent) => {
       onMove(e);
@@ -1086,6 +1102,7 @@ const ElectricLogo = ({
       pulses.push({ x: pointer.x, y: pointer.y, born: performance.now() });
       if (pulses.length > PULSES) pulses.shift();
       burst = { x: pointer.x, y: pointer.y };
+      start();
     };
     const onLeave = () => {
       pointer.over = false;
@@ -1102,15 +1119,19 @@ const ElectricLogo = ({
       start();
     });
     intersectionObserver.observe(container);
+    document.addEventListener('visibilitychange', start);
+    wakeRef.current = start;
 
     resize();
     start();
 
     return () => {
       visible = false;
+      wakeRef.current = () => {};
       cancelAnimationFrame(raf);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      document.removeEventListener('visibilitychange', start);
       container.removeEventListener('pointermove', onMove);
       container.removeEventListener('pointerdown', onDown);
       container.removeEventListener('pointerleave', onLeave);

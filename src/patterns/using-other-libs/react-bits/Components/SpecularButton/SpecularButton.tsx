@@ -302,6 +302,7 @@ const SpecularButton = ({
     let visible = true;
 
     const toRgb = (value: string): number[] => {
+      if (!value) return [1, 1, 1];
       const cached = colors.get(value);
       if (cached) return cached;
       let rgb = [1, 1, 1];

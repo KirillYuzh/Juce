@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { useState } from 'react';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { ChatList, type ChatListItem } from './ChatList';
 
@@ -130,5 +131,63 @@ describe('ChatList', () => {
     fireEvent.keyDown(items()[1], { key: 'ArrowUp' });
     fireEvent.keyDown(items()[0], { key: 'ArrowUp' });
     expect(document.activeElement).toBe(search);
+  });
+
+  it('copies the chat text without a per-row clipboard hook', async () => {
+    const writeText = vi.fn(() => Promise.resolve());
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+
+    render(<ChatList chats={chats} />);
+    fireEvent.click(screen.getByLabelText('Действия с чатом «Второй диалог»'));
+    fireEvent.click(screen.getByRole('menuitem', { name: /Скопировать/ }));
+
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith('Второй диалог\n\nПро матрицы'));
+  });
+
+  it('sanitizes the download file name', () => {
+    vi.useFakeTimers();
+    const downloads: string[] = [];
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
+      this: HTMLAnchorElement
+    ) {
+      downloads.push(this.download);
+    });
+    const createObjectURL = vi.fn(() => 'blob:chat');
+    const revokeObjectURL = vi.fn();
+    vi.stubGlobal('URL', Object.assign(URL, { createObjectURL, revokeObjectURL }));
+
+    render(<ChatList chats={[{ id: 'x', title: 'План/на\nнеделю' }]} />);
+    fireEvent.click(screen.getByLabelText(/Действия с чатом/));
+    fireEvent.click(screen.getByRole('menuitem', { name: /Скачать/ }));
+
+    expect(downloads).toEqual(['План на неделю.txt']);
+    vi.advanceTimersByTime(1000);
+    expect(revokeObjectURL).toHaveBeenCalledWith('blob:chat');
+
+    click.mockRestore();
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
+
+  it('keeps focus inside the list after a row is deleted', () => {
+    function Deletable() {
+      const [list, setList] = useState(chats);
+      return (
+        <ChatList
+          chats={list}
+          onDelete={(id) => setList((current) => current.filter((chat) => chat.id !== id))}
+        />
+      );
+    }
+
+    render(<Deletable />);
+    fireEvent.click(screen.getByLabelText('Действия с чатом «Первый диалог»'));
+    fireEvent.click(screen.getByRole('menuitem', { name: /Удалить/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Удалить' }));
+
+    const remaining = items();
+    expect(remaining).toHaveLength(1);
+    expect(document.activeElement).not.toBe(document.body);
+    expect(document.activeElement).toBe(remaining[0]);
   });
 });

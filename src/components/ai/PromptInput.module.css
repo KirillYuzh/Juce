@@ -26,6 +26,11 @@
   pointer-events: none;
 }
 
+.attachButton:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
 .group:disabled .remove {
   pointer-events: none;
 }
@@ -63,8 +68,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--tb-radius-circle);
   color: var(--tb-text-secondary);
   transition:

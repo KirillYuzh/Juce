@@ -14,7 +14,7 @@
 
   --tb-text-primary: light-dark(#1a1a1a, #ededed);
   --tb-text-secondary: light-dark(rgb(26 26 26 / 0.68), rgb(237 237 237 / 0.74));
-  --tb-text-tertiary: light-dark(rgb(26 26 26 / 0.54), rgb(237 237 237 / 0.6));
+  --tb-text-tertiary: light-dark(rgb(26 26 26 / 0.62), rgb(237 237 237 / 0.6));
   --tb-text-muted: light-dark(rgb(26 26 26 / 0.66), rgb(237 237 237 / 0.7));
   --tb-text-inverse: rgb(255 255 255 / 0.9);
   --tb-text-inverse-secondary: rgb(255 255 255 / 0.64);
@@ -47,14 +47,14 @@
   --tb-overlay: light-dark(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.6));
 
   --tb-success: light-dark(#2f9e4f, #61ca84);
-  --tb-success-text: light-dark(#168821, #8ad9a2);
+  --tb-success-text: light-dark(#127a1e, #8ad9a2);
   --tb-success-soft: light-dark(#e8f6ea, #233628);
   --tb-error: light-dark(#e01f19, #ff8a75);
   --tb-on-error: light-dark(#ffffff, #141414);
   --tb-error-text: light-dark(#c40b08, #ffb3a7);
   --tb-error-soft: light-dark(#fdeae9, #3a2521);
   --tb-warning: light-dark(#f2c230, #f6d15c);
-  --tb-warning-text: light-dark(#9a6b00, #f6d15c);
+  --tb-warning-text: light-dark(#8a5f00, #f6d15c);
 
   --tb-chart-1: light-dark(#3b82d9, #8cc0ff);
   --tb-chart-2: light-dark(#ff6574, #ff979c);
@@ -84,7 +84,7 @@
   --tb-accent: #ff6574;
   --tb-accent-hover: #f04c5d;
   --tb-accent-soft: #ffdfe3;
-  --tb-accent-text: #c03445;
+  --tb-accent-text: #b8303f;
   --tb-accent-text-hover: #a52435;
   --tb-accent-on-inverse: #ff6574;
   --tb-on-accent: #1a1a1a;
@@ -133,8 +133,8 @@
   color-scheme: dark;
 
   --tb-primary: #006fee;
-  --tb-primary-hover: #338ef7;
-  --tb-primary-active: #66aaf9;
+  --tb-primary-hover: #005bc4;
+  --tb-primary-active: #004aa8;
   --tb-on-primary: #ffffff;
   --tb-accent: #c20e4d;
   --tb-accent-hover: #a80c43;
@@ -151,5 +151,19 @@
 @media (max-width: 599px) {
   :root {
     --tb-gutter: 16px;
+  }
+}
+
+/* После базовых токенов: при равной специфичности переопределяет их только порядок. */
+@media (prefers-contrast: more) {
+  :root,
+  [data-theme] {
+    --tb-text-secondary: color-mix(in oklab, var(--tb-text-primary) 92%, transparent);
+    --tb-text-muted: color-mix(in oklab, var(--tb-text-primary) 84%, transparent);
+    --tb-text-tertiary: color-mix(in oklab, var(--tb-text-primary) 68%, transparent);
+    --tb-text-link: color-mix(in oklab, var(--link) 65%, var(--tb-text-primary));
+    --tb-border: color-mix(in oklab, var(--tb-text-primary) 28%, transparent);
+    --tb-border-strong: color-mix(in oklab, var(--tb-text-primary) 48%, transparent);
+    --tb-border-control: color-mix(in oklab, var(--tb-text-primary) 52%, transparent);
   }
 }

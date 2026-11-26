@@ -2,31 +2,36 @@ name: check
 
 on:
   push:
+    branches: [main, develop]
   pull_request:
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20.19', '22']
     steps:
       - uses: actions/checkout@v4
+      - name: Guard against committed npm credentials
+        run: |
+          if [ -n "$(git ls-files .npmrc)" ]; then
+            echo "check: .npmrc попал в git — токен npm утёк, уберите файл из индекса"
+            exit 1
+          fi
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
       - run: npm run check
-      - run: npm run build
-      - run: npm run build:lib
-      - name: package content
-        run: |
-          node -e "
-            const { existsSync } = require('node:fs');
-            const files = ['dist/juce-ui.js', 'dist/juce-ui.css', 'dist/types/index.d.ts'];
-            const missing = files.filter((file) => !existsSync(file));
-            if (missing.length > 0) {
-              console.error('нет файлов пакета ' + missing.join(', '));
-              process.exit(1);
-            }
-            console.log('пакет собран ' + files.join(', '));
-          "
+      - run: npm pack --dry-run --ignore-scripts

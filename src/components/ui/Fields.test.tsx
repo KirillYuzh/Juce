@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Input, Select, Textarea } from './Fields';
 
@@ -96,5 +96,67 @@ describe('Select', () => {
     rerender(<Select label="Язык" options={[options[0]]} defaultValue="go" />);
 
     expect(screen.getByRole('button', { name: 'Язык' }).textContent).toContain('Java');
+  });
+
+  it('закрывает список по Escape с триггера и возвращает фокус триггеру', () => {
+    render(<Select label="Язык" options={options} />);
+    const trigger = screen.getByRole('button', { name: 'Язык' });
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole('listbox')).toBeTruthy();
+
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: 'Escape' });
+
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('закрывает список по Tab, не возвращая фокус на триггер', () => {
+    render(<Select label="Язык" options={options} />);
+    const trigger = screen.getByRole('button', { name: 'Язык' });
+
+    fireEvent.click(trigger);
+    const list = screen.getByRole('listbox');
+    fireEvent.keyDown(list, { key: 'Tab' });
+
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(document.activeElement).not.toBe(trigger);
+  });
+
+  it('выбирает опцию мышью и Enter, держит aria-expanded и aria-activedescendant', () => {
+    const onChange = vi.fn();
+    render(<Select label="Язык" options={options} onChange={onChange} />);
+    const trigger = screen.getByRole('button', { name: 'Язык' });
+
+    fireEvent.click(trigger);
+    const list = screen.getByRole('listbox');
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(list.id).toBe(`${trigger.id}-listbox`);
+    expect(list.getAttribute('aria-activedescendant')).toBe(`${trigger.id}-0`);
+
+    fireEvent.keyDown(list, { key: 'ArrowDown' });
+    expect(list.getAttribute('aria-activedescendant')).toBe(`${trigger.id}-1`);
+
+    fireEvent.keyDown(list, { key: 'Enter' });
+
+    expect(onChange).toHaveBeenCalledWith('go');
+    expect(trigger.textContent).toContain('Go');
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('выбирает опцию мышью', () => {
+    const onChange = vi.fn();
+    render(<Select label="Язык" options={options} onChange={onChange} />);
+    const trigger = screen.getByRole('button', { name: 'Язык' });
+
+    fireEvent.click(trigger);
+    fireEvent.click(screen.getByText('Go'));
+
+    expect(onChange).toHaveBeenCalledWith('go');
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(trigger.textContent).toContain('Go');
   });
 });

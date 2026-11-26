@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import styles from './Header.module.css';
 import { Logo } from '../ui/Display';
 import { Icon } from '../ui/Icon';
@@ -16,6 +16,94 @@ export interface HeaderProps {
   className?: string;
 }
 
+function DesktopNavItem({ item }: { item: NavItem }) {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLAnchorElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const skipFocusOpen = useRef(false);
+  const focusFirstOnOpen = useRef(false);
+  const panelId = `nav-panel-${useId().replace(/:/g, '')}`;
+  const hasChildren = Boolean(item.children);
+
+  useEffect(() => {
+    if (!open || !focusFirstOnOpen.current) return;
+    focusFirstOnOpen.current = false;
+    panelRef.current?.querySelector<HTMLElement>('a[href]')?.focus();
+  }, [open]);
+
+  const openPanel = () => {
+    focusFirstOnOpen.current = true;
+    setOpen(true);
+  };
+
+  return (
+    <div
+      className={styles.navItem}
+      onFocus={() => {
+        if (skipFocusOpen.current) {
+          skipFocusOpen.current = false;
+          return;
+        }
+        if (hasChildren) setOpen(true);
+      }}
+      onBlur={(event) => {
+        if (!hasChildren) return;
+        if (
+          event.relatedTarget instanceof Node &&
+          event.currentTarget.contains(event.relatedTarget)
+        ) {
+          return;
+        }
+        setOpen(false);
+      }}
+      onPointerEnter={() => {
+        if (hasChildren) setOpen(true);
+      }}
+      onPointerLeave={(event) => {
+        if (!hasChildren) return;
+        if (event.currentTarget.contains(document.activeElement)) return;
+        setOpen(false);
+      }}
+      onKeyDown={(event) => {
+        if (!hasChildren) return;
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          setOpen(false);
+          if (document.activeElement !== triggerRef.current) {
+            skipFocusOpen.current = true;
+            triggerRef.current?.focus();
+          }
+          return;
+        }
+        if (event.target !== triggerRef.current) return;
+        if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
+          event.preventDefault();
+          openPanel();
+        }
+      }}
+    >
+      <a
+        ref={triggerRef}
+        className={styles.navLink}
+        href={item.href}
+        aria-expanded={hasChildren ? open : undefined}
+        aria-controls={hasChildren ? panelId : undefined}
+      >
+        {item.title}
+      </a>
+      {item.children && open && (
+        <div className={styles.dropdown} id={panelId} ref={panelRef}>
+          {item.children.map((child) => (
+            <a className={styles.dropdownLink} key={child.title} href={child.href}>
+              {child.title}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Header({
   nav,
   loginLabel,
@@ -28,6 +116,9 @@ export function Header({
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = `mobile-menu-${useId().replace(/:/g, '')}`;
+  const burgerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const wasOpen = useRef(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
@@ -35,6 +126,15 @@ export function Header({
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    if (menuOpen) {
+      menuRef.current?.querySelector<HTMLElement>('a[href], button')?.focus();
+    } else if (wasOpen.current) {
+      burgerRef.current?.focus();
+    }
+    wasOpen.current = menuOpen;
+  }, [menuOpen]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -56,24 +156,7 @@ export function Header({
 
         <nav className={styles.nav} aria-label="Основное меню">
           {nav.map((item) => (
-            <div className={styles.navItem} key={item.title}>
-              <a
-                className={styles.navLink}
-                href={item.href}
-                aria-haspopup={item.children ? 'menu' : undefined}
-              >
-                {item.title}
-              </a>
-              {item.children && (
-                <div className={styles.dropdown}>
-                  {item.children.map((child) => (
-                    <a className={styles.dropdownLink} key={child.title} href={child.href}>
-                      {child.title}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
+            <DesktopNavItem item={item} key={item.title} />
           ))}
         </nav>
 
@@ -94,6 +177,7 @@ export function Header({
             </Button>
             {onSearch && <IconButton icon="search" label="Поиск" size="s" onClick={onSearch} />}
             <IconButton
+              ref={burgerRef}
               icon={menuOpen ? 'close' : 'menu'}
               label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
               size="s"
@@ -106,7 +190,7 @@ export function Header({
       </div>
 
       {menuOpen && (
-        <div className={styles.mobileMenu} id={menuId}>
+        <div className={styles.mobileMenu} id={menuId} ref={menuRef}>
           <div className="tb-container">
             <nav aria-label="Мобильное меню">
               {nav.map((item) => (

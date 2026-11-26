@@ -33,10 +33,16 @@ export function AssistantPage() {
 
   useEffect(
     () => () => {
-      if (timer.current) window.clearTimeout(timer.current);
+      if (timer.current !== null) window.clearTimeout(timer.current);
+      timer.current = null;
     },
     []
   );
+
+  const clearTimer = useCallback(() => {
+    if (timer.current !== null) window.clearTimeout(timer.current);
+    timer.current = null;
+  }, []);
 
   const nextId = useCallback((prefix: string) => {
     idRef.current += 1;
@@ -44,6 +50,7 @@ export function AssistantPage() {
   }, []);
 
   const startReply = useCallback(() => {
+    clearTimer();
     setStatus('streaming');
     timer.current = window.setTimeout(() => {
       idRef.current += 1;
@@ -51,7 +58,7 @@ export function AssistantPage() {
       setStatus('ready');
       timer.current = null;
     }, demoChatReplyDelay);
-  }, []);
+  }, [clearTimer]);
 
   const send = ({ text }: PromptInputPayload) => {
     if (status !== 'ready') return;
@@ -60,8 +67,7 @@ export function AssistantPage() {
   };
 
   const stop = () => {
-    if (timer.current) window.clearTimeout(timer.current);
-    timer.current = null;
+    clearTimer();
     const stopped: ChatMessage = {
       id: nextId('a'),
       role: 'assistant',

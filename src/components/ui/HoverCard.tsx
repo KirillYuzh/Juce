@@ -1,25 +1,21 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
 } from 'react';
 import styles from './HoverCard.module.css';
 import { cx } from '../../lib/cx';
-
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+import { FOCUSABLE_SELECTOR, focusables } from '../../lib/focusable';
 
 interface HoverCardContextValue {
   open: boolean;
   setOpen: (open: boolean) => void;
-  cancelClose: () => void;
-  scheduleClose: () => void;
-  openOnFocus: () => void;
-  closeAndFocusTrigger: () => void;
   contentId: string;
   triggerId: string;
   triggerRef: React.RefObject<HTMLSpanElement | null>;
@@ -49,53 +45,44 @@ export function HoverCard({
   const closeTimer = useRef<number | null>(null);
   const restoreFocus = useRef(false);
 
-  const clearTimers = () => {
+  const clearTimers = useCallback(() => {
     if (openTimer.current) window.clearTimeout(openTimer.current);
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
     openTimer.current = null;
     closeTimer.current = null;
-  };
+  }, []);
 
-  useEffect(() => clearTimers, []);
+  useEffect(() => clearTimers, [clearTimers]);
 
-  const openWithDelay = () => {
+  const openWithDelay = useCallback(() => {
     clearTimers();
     openTimer.current = window.setTimeout(() => setOpen(true), delay);
-  };
-  const scheduleClose = () => {
+  }, [clearTimers, delay]);
+
+  const scheduleClose = useCallback(() => {
     clearTimers();
     closeTimer.current = window.setTimeout(() => setOpen(false), closeDelay);
-  };
+  }, [clearTimers, closeDelay]);
+
   const openOnFocus = () => {
     if (restoreFocus.current) return;
     clearTimers();
     setOpen(true);
   };
+
   const closeAndFocusTrigger = () => {
     clearTimers();
     setOpen(false);
     const root = triggerRef.current;
     if (!root) return;
-    const target = root.querySelector<HTMLElement>(FOCUSABLE) ?? root;
+    const target = focusables(root)[0] ?? root;
     restoreFocus.current = true;
     target.focus();
     restoreFocus.current = false;
   };
 
   return (
-    <HoverCardContext.Provider
-      value={{
-        open,
-        setOpen,
-        cancelClose: clearTimers,
-        scheduleClose,
-        openOnFocus,
-        closeAndFocusTrigger,
-        contentId,
-        triggerId,
-        triggerRef,
-      }}
-    >
+    <HoverCardContext.Provider value={{ open, setOpen, contentId, triggerId, triggerRef }}>
       <span
         className={styles.trigger}
         onMouseEnter={openWithDelay}
@@ -126,13 +113,13 @@ function useContextCard(component: string) {
 }
 
 export function HoverCardTrigger({ children }: { children: ReactNode }) {
-  const { open, setOpen, cancelClose, scheduleClose, contentId, triggerId, triggerRef } =
-    useContextCard('HoverCardTrigger');
+  const { open, setOpen, contentId, triggerId, triggerRef } = useContextCard('HoverCardTrigger');
   const localRef = useRef<HTMLSpanElement>(null);
   const [ownsFocus, setOwnsFocus] = useState(false);
 
-  useEffect(() => {
-    setOwnsFocus(Boolean(localRef.current?.querySelector(FOCUSABLE)));
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+    setOwnsFocus(Boolean(localRef.current?.querySelector(FOCUSABLE_SELECTOR)));
   }, [children]);
 
   return (
@@ -146,22 +133,13 @@ export function HoverCardTrigger({ children }: { children: ReactNode }) {
       tabIndex={ownsFocus ? undefined : 0}
       aria-expanded={open}
       aria-controls={open ? contentId : undefined}
-      onMouseEnter={() => {
-        cancelClose();
-        setOpen(true);
-      }}
-      onMouseLeave={scheduleClose}
-      onClick={() => {
-        cancelClose();
-        setOpen(!open);
-      }}
+      onClick={() => setOpen(!open)}
       onKeyDown={
         ownsFocus
           ? undefined
           : (event) => {
               if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
-                cancelClose();
                 setOpen(!open);
               }
             }
@@ -181,8 +159,7 @@ export function HoverCardContent({
   className?: string;
   'aria-label'?: string;
 }) {
-  const { open, contentId, triggerId, cancelClose, scheduleClose } =
-    useContextCard('HoverCardContent');
+  const { open, contentId, triggerId } = useContextCard('HoverCardContent');
   if (!open) return null;
   return (
     <span
@@ -191,8 +168,6 @@ export function HoverCardContent({
       role="dialog"
       aria-label={ariaLabel}
       aria-labelledby={ariaLabel ? undefined : triggerId}
-      onMouseEnter={cancelClose}
-      onMouseLeave={scheduleClose}
     >
       {children}
     </span>

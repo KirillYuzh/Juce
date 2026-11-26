@@ -8,17 +8,18 @@ export type CardDensity = 'm' | 'l';
 export type CardAs = 'article' | 'div' | 'section' | 'a';
 export type CardMediaPosition = 'top' | 'bottom' | 'right' | 'back' | 'block' | 'side';
 
-export interface CardProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
+export interface CardBaseProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   as?: CardAs;
-  href?: string;
   tone?: CardTone;
   density?: CardDensity;
   radius?: RadiusValue;
   mediaWidth?: string;
-  interactive?: boolean;
   ref?: React.Ref<HTMLElement>;
   children: ReactNode;
 }
+
+export type CardProps = CardBaseProps &
+  ({ interactive?: false; href?: string } | { interactive: true; href: string });
 
 export function Card({
   as = 'article',
@@ -31,12 +32,10 @@ export function Card({
   className,
   style,
   children,
-  onKeyDown,
   ref,
   ...rest
 }: CardProps) {
   const Tag: ElementType = href ? 'a' : as;
-  const keyboardInteractive = Boolean(interactive) && !href;
   const sizing = mediaWidth
     ? ({ ...style, '--tb-card-media-width': mediaWidth } as CSSProperties)
     : style;
@@ -50,20 +49,6 @@ export function Card({
       data-density={density}
       data-interactive={interactive || undefined}
       href={href}
-      role={keyboardInteractive ? 'button' : undefined}
-      tabIndex={keyboardInteractive ? 0 : undefined}
-      onKeyDown={
-        keyboardInteractive
-          ? (event: React.KeyboardEvent<HTMLElement>) => {
-              onKeyDown?.(event);
-              if (event.defaultPrevented) return;
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                event.currentTarget.click();
-              }
-            }
-          : onKeyDown
-      }
       style={radiusStyle(radius, sizing)}
       {...rest}
     >

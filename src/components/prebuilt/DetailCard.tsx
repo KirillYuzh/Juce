@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import styles from './Prebuilt.module.css';
+import { safeHref } from '../../lib/url';
 import {
   Card,
   CardAction,
@@ -40,14 +41,13 @@ export function DetailCard({
   children,
   className,
 }: DetailCardProps) {
+  const link = href ? safeHref(href) : undefined;
+  const cardLink = link
+    ? { as: 'a' as const, href: link, interactive: true as const }
+    : { as: 'article' as const };
+
   return (
-    <Card
-      as={href ? 'a' : 'article'}
-      href={href}
-      interactive={Boolean(href)}
-      tone="secondary"
-      className={className}
-    >
+    <Card {...cardLink} tone="secondary" className={className}>
       {media && <CardMedia position={mediaPosition}>{media}</CardMedia>}
       <CardBody>
         <CardHeader>
@@ -59,7 +59,7 @@ export function DetailCard({
         {meta && meta.length > 0 && (
           <div className={styles.meta}>
             {meta.map((item, index) => (
-              <span className={styles.metaItem} key={item.id ?? index}>
+              <span className={styles.metaItem} key={`${item.id ?? 'meta'}-${index}`}>
                 {item.label && <span className={styles.metaLabel}>{item.label}</span>}
                 <span>{item.value}</span>
               </span>

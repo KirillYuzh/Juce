@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -10,6 +10,17 @@ const buildHint = 'запустите npm run build:lib';
 
 const fail = (message, hint) => errors.push(hint ? `${message} — ${hint}` : message);
 
+const walk = (directory) =>
+  readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const full = join(directory, entry.name);
+    return entry.isDirectory() ? walk(full) : [full];
+  });
+
+const formatSize = (bytes) =>
+  bytes >= 1024 * 1024
+    ? `${(bytes / 1024 / 1024).toFixed(2)} МБ`
+    : `${Math.round(bytes / 1024)} КБ`;
+
 if (!Array.isArray(pkg.files) || !pkg.files.includes('dist')) {
   fail('package.json: files должен содержать "dist"');
 }
@@ -18,6 +29,13 @@ for (const rel of ['LICENSES', 'THIRD-PARTY-NOTICES.md']) {
   if (!Array.isArray(pkg.files) || !pkg.files.includes(rel)) {
     fail(`package.json: files должен содержать "${rel}"`);
   }
+}
+
+if (pkg.scripts?.prepublishOnly !== 'npm run check') {
+  fail(
+    'package.json: scripts.prepublishOnly должен запускать "npm run check"',
+    'предпубликационная проверка не должна теряться'
+  );
 }
 
 if (!existsSync(join(root, 'LICENSE'))) {
@@ -38,9 +56,37 @@ for (const rel of [
   }
 }
 
-for (const key of ['.', './styles.css', './reset.css']) {
+for (const key of ['.', './styles.css', './styles-core.css', './fonts.css', './reset.css']) {
   if (!pkg.exports || !Object.hasOwn(pkg.exports, key)) {
     fail(`package.json: exports должен содержать "${key}"`);
+  }
+}
+
+for (const [key, value] of Object.entries(pkg.exports ?? {})) {
+  if (typeof value !== 'object' || value === null) {
+    fail(`package.json: exports["${key}"] должен быть объектом условий`);
+    continue;
+  }
+
+  if (typeof value.default !== 'string') {
+    fail(
+      `package.json: exports["${key}"] без "default"`,
+      'добавьте "default" с путём к этому же файлу'
+    );
+  }
+
+  if (key === './package.json') {
+    const extra = ['types', 'import'].filter((condition) => condition in value);
+    if (extra.length > 0) {
+      fail(
+        `package.json: exports["./package.json"] — только "default", лишние ${extra.join(', ')}`
+      );
+    }
+    continue;
+  }
+
+  if (key === '.' && (typeof value.types !== 'string' || typeof value.import !== 'string')) {
+    fail('package.json: exports["."] должен содержать "types" и "import"');
   }
 }
 
@@ -61,7 +107,14 @@ for (const target of targets) {
   }
 }
 
-for (const rel of ['juce-ui.js', 'juce-ui.css', 'reset.css', 'types/index.d.ts']) {
+for (const rel of [
+  'juce-ui.js',
+  'juce-ui.css',
+  'juce-ui-core.css',
+  'juce-ui-fonts.css',
+  'reset.css',
+  'types/index.d.ts',
+]) {
   if (!existsSync(join(dist, rel))) {
     fail(`dist/${rel} отсутствует`, buildHint);
   }
@@ -147,6 +200,122 @@ if (existsSync(declarations)) {
       `dist/types/index.d.ts: относительные импорты без .js — ${extensionless.join(', ')}`,
       'запустите npm run build:lib (fix-declarations.mjs входит в неё)'
     );
+  }
+}
+
+const distFiles = existsSync(dist) ? walk(dist) : [];
+
+const maps = distFiles.filter((file) => file.endsWith('.map'));
+if (maps.length > 0) {
+  fail(
+    `dist/${relative(dist, maps[0])} — карта исходников в пакете без src`,
+    'поставьте sourcemap: false в vite.lib.config.ts и пересоберите'
+  );
+}
+
+const sizeBudget = 1.45 * 1024 * 1024;
+const shipped = distFiles.filter((file) => !file.endsWith('.map'));
+const shippedBytes = shipped.reduce((total, file) => total + statSync(file).size, 0);
+if (shippedBytes > sizeBudget) {
+  fail(
+    `dist без .map занимает ${formatSize(shippedBytes)} при бюджете ${formatSize(sizeBudget)}`,
+    'уберите лишнее из сборки или осознанно поднимите бюджет'
+  );
+} else {
+  console.log(`check-pack: dist без .map — ${formatSize(shippedBytes)}`);
+}
+
+const viteConfigPath = join(root, 'vite.lib.config.ts');
+const viteConfig = existsSync(viteConfigPath) ? readFileSync(viteConfigPath, 'utf8') : '';
+const externalMatch = viteConfig.match(/external:\s*\[([^\]]*)\]/);
+
+if (!externalMatch) {
+  fail('vite.lib.config.ts: не найден rollupOptions.external', 'верните список external в конфиг');
+} else {
+  const declared = new Set([
+    ...Object.keys(pkg.dependencies ?? {}),
+    ...Object.keys(pkg.peerDependencies ?? {}),
+    ...Object.keys(pkg.devDependencies ?? {}),
+  ]);
+  const externals = Array.from(externalMatch[1].matchAll(/['"]([^'"]+)['"]/g), (match) => match[1]);
+
+  for (const specifier of externals) {
+    const name = specifier.startsWith('@')
+      ? specifier.split('/').slice(0, 2).join('/')
+      : specifier.split('/')[0];
+    if (!declared.has(name)) {
+      fail(
+        `vite.lib.config.ts: external "${specifier}" не объявлен как зависимость`,
+        `добавьте "${name}" в peerDependencies, dependencies или devDependencies`
+      );
+    }
+  }
+}
+
+const fontFaceCount = (css) => (css.match(/@font-face/g) ?? []).length;
+
+const checkFontUrls = (css, label) => {
+  for (const face of css.matchAll(/@font-face\s*\{([^}]*)\}/g)) {
+    for (const url of face[1].matchAll(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g)) {
+      const target = url[2];
+      if (/^(data:|https?:|\/\/)/.test(target)) continue;
+      if (!existsSync(resolve(dist, target))) {
+        fail(
+          `${label}: @font-face ссылается на несуществующий ${target}`,
+          'проверьте src/styles/fonts.css и сборку ассетов'
+        );
+      }
+    }
+  }
+};
+
+if (existsSync(packageCss)) {
+  const css = readFileSync(packageCss, 'utf8');
+  if (fontFaceCount(css) === 0) {
+    fail('dist/juce-ui.css без @font-face', 'шрифты должны остаться в styles.css');
+  }
+  checkFontUrls(css, 'dist/juce-ui.css');
+}
+
+const coreCss = join(dist, 'juce-ui-core.css');
+if (existsSync(coreCss) && fontFaceCount(readFileSync(coreCss, 'utf8')) > 0) {
+  fail(
+    'dist/juce-ui-core.css содержит @font-face',
+    'запустите npm run build:lib (split-fonts.mjs)'
+  );
+}
+
+const fontsCss = join(dist, 'juce-ui-fonts.css');
+if (existsSync(fontsCss)) {
+  const css = readFileSync(fontsCss, 'utf8');
+  if (fontFaceCount(css) === 0) {
+    fail('dist/juce-ui-fonts.css без @font-face', 'запустите npm run build:lib (split-fonts.mjs)');
+  }
+  checkFontUrls(css, 'dist/juce-ui-fonts.css');
+}
+
+const typesDir = join(dist, 'types');
+if (existsSync(typesDir)) {
+  for (const file of walk(typesDir).filter((name) => name.endsWith('.d.ts'))) {
+    const source = readFileSync(file, 'utf8');
+    for (const match of source.matchAll(
+      /(?:\bfrom\s*|\bimport\s*\(\s*)['"](\.{1,2}\/[^'"]+)['"]/g
+    )) {
+      const specifier = match[1];
+      const base = resolve(dirname(file), specifier);
+      const candidates = [
+        base,
+        `${base}.d.ts`,
+        base.replace(/\.[cm]?js$/, '.d.ts'),
+        base.replace(/\.[cm]?js$/, '.ts'),
+      ];
+      if (!candidates.some((candidate) => existsSync(candidate))) {
+        fail(
+          `dist/types/${relative(typesDir, file)}: импорт "${specifier}" не разрешается в существующий файл`,
+          buildHint
+        );
+      }
+    }
   }
 }
 

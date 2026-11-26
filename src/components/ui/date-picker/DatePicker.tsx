@@ -53,6 +53,8 @@ interface DatePickerBaseProps {
   id?: string;
   className?: string;
   size?: 'm' | 'l';
+  label?: string;
+  'aria-label'?: string;
 }
 
 export type DatePickerProps =
@@ -72,7 +74,19 @@ function isDateRange(value: Date | DateRange | null): value is DateRange {
 }
 
 export function DatePicker(props: DatePickerProps) {
-  const { placeholder, presets, inline, min, max, disabled, id, className, size = 'l' } = props;
+  const {
+    placeholder,
+    presets,
+    inline,
+    min,
+    max,
+    disabled,
+    id,
+    className,
+    size = 'l',
+    label,
+    'aria-label': ariaLabel,
+  } = props;
   const binding =
     props.mode === 'range'
       ? { mode: 'range' as const, onSelect: props.onChange }
@@ -164,6 +178,7 @@ export function DatePicker(props: DatePickerProps) {
       <PopoverTrigger
         id={id}
         disabled={disabled}
+        aria-label={ariaLabel ?? label}
         className={cx(styles.trigger, styles[`size-${size}`])}
       >
         <span className={styles.icon} aria-hidden="true">

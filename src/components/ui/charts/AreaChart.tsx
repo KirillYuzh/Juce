@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
 import { cx } from '../../../lib/cx';
@@ -60,6 +60,10 @@ export function AreaChart({
   const [hovered, setHovered] = useState<number | null>(null);
   const gradientId = useId().replace(/:/g, '');
   const colors = seriesColors(series);
+
+  useEffect(() => {
+    setHovered(null);
+  }, [data]);
 
   const geometry = useMemo(() => {
     const padding = { top: 8, right: 8, bottom: 24, left: grid ? 44 : 8 };
@@ -193,7 +197,7 @@ export function AreaChart({
               />
             ))}
 
-            {hovered !== null && (
+            {hovered !== null && hovered < data.length && (
               <g pointerEvents="none">
                 <line
                   x1={geometry.x(hovered)}
@@ -202,16 +206,20 @@ export function AreaChart({
                   y2={height - geometry.padding.bottom}
                   style={{ stroke: 'var(--tb-border-strong)' }}
                 />
-                {geometry.bands.map((band, index) => (
-                  <circle
-                    key={`dot-${series[index].key}`}
-                    cx={band.top[hovered][0]}
-                    cy={band.top[hovered][1]}
-                    r={4}
-                    strokeWidth={2}
-                    style={{ fill: colors[index], stroke: 'var(--tb-surface)' }}
-                  />
-                ))}
+                {geometry.bands.map((band, index) => {
+                  const point = band.top[hovered];
+                  if (!point) return null;
+                  return (
+                    <circle
+                      key={`dot-${series[index].key}`}
+                      cx={point[0]}
+                      cy={point[1]}
+                      r={4}
+                      strokeWidth={2}
+                      style={{ fill: colors[index], stroke: 'var(--tb-surface)' }}
+                    />
+                  );
+                })}
               </g>
             )}
           </svg>
@@ -238,6 +246,30 @@ export function AreaChart({
           items={series.map((item, index) => ({ label: item.label, color: colors[index] }))}
         />
       )}
+
+      <table className="tb-visually-hidden">
+        <caption>{label}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{xKey}</th>
+            {series.map((item) => (
+              <th key={item.key} scope="col">
+                {item.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, rowIndex) => (
+            <tr key={`${String(row[xKey])}-${rowIndex}`}>
+              <th scope="row">{String(row[xKey])}</th>
+              {series.map((item) => (
+                <td key={item.key}>{valueFormat(toNumber(row[item.key]))}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

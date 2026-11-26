@@ -29,10 +29,11 @@ const PAIRS: Array<[text: string, surfaces: string[], minimum: number]> = [
   ['--tb-text-secondary', SURFACES, 4.5],
   ['--tb-text-muted', SURFACES, 4.5],
   ['--tb-text-link', SURFACES, 4.5],
-  ['--tb-text-tertiary', SURFACES, 3],
-  ['--tb-success-text', ['--tb-bg-secondary'], 3],
-  ['--tb-error-text', ['--tb-bg-secondary'], 3],
-  ['--tb-on-primary', ['--tb-primary'], 4.5],
+  ['--tb-text-tertiary', SURFACES, 4.5],
+  ['--tb-success-text', ['--tb-bg-secondary'], 4.5],
+  ['--tb-error-text', ['--tb-bg-secondary'], 4.5],
+  ['--tb-warning-text', ['--tb-bg-secondary'], 4.5],
+  ['--tb-on-primary', ['--tb-primary', '--tb-primary-hover', '--tb-primary-active'], 4.5],
   ['--tb-on-accent', ['--tb-accent'], 4.5],
   ['--tb-on-error', ['--tb-error'], 4.5],
   ['--tb-border-control', ['--tb-bg', '--tb-surface', '--tb-field', '--tb-bg-secondary'], 3],
@@ -270,5 +271,46 @@ describe('контраст токенов', () => {
 
     expect(values.get('--tb-radius-pill')).toBe('999px');
     expect(values.get('--tb-radius-circle')).toBe('50%');
+  });
+
+  it('accent-text читается на accent-soft во всех темах', () => {
+    const failures: string[] = [];
+
+    for (const theme of THEMES) {
+      const tokens = themeTokens(rules, theme.value);
+      const text = colorFor(tokens, '--tb-accent-text', theme.mode);
+      const soft = colorFor(tokens, '--tb-accent-soft', theme.mode);
+      if (!text || !soft) {
+        failures.push(`${theme.value}: не разобрать accent-text/accent-soft`);
+        continue;
+      }
+
+      for (const surfaceName of SURFACES) {
+        const surface = colorFor(tokens, surfaceName, theme.mode);
+        if (!surface) continue;
+        const backdrop = compositeOver(soft, surface);
+        const ratio = contrastRatio(compositeOver(text, backdrop), backdrop);
+        if (ratio < 4.5) {
+          failures.push(
+            `${theme.value}: accent-text на accent-soft поверх ${surfaceName} — ${ratio.toFixed(2)}`
+          );
+        }
+      }
+    }
+
+    expect(failures, failures.join('\n')).toEqual([]);
+  });
+
+  it('prefers-contrast объявлен после базовых токенов', () => {
+    const structure = fs.readFileSync('src/styles/structure.css', 'utf8');
+    const tokens = fs.readFileSync('src/styles/tokens.css', 'utf8');
+    const index = fs.readFileSync('src/styles/index.css', 'utf8');
+
+    expect(structure).not.toContain('prefers-contrast');
+    const block = tokens.indexOf('@media (prefers-contrast');
+    expect(block).toBeGreaterThan(-1);
+    expect(block).toBeGreaterThan(tokens.indexOf('--tb-text-secondary:'));
+    expect(block).toBeGreaterThan(tokens.indexOf('--tb-border-control:'));
+    expect(index.indexOf('./tokens.css')).toBeGreaterThan(index.indexOf('./structure.css'));
   });
 });

@@ -32,4 +32,33 @@ describe('Header', () => {
     fireEvent.click(within(menu).getByText('Статьи'));
     expect(screen.queryByRole('navigation', { name: 'Мобильное меню' })).toBeNull();
   });
+
+  it('reflects the desktop dropdown state and closes it on Escape', () => {
+    render(<Header nav={homeNav} />);
+    const trigger = screen.getByRole('link', { name: 'Платформа' });
+
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(trigger.getAttribute('aria-controls')).toBeTruthy();
+
+    fireEvent.keyDown(trigger, { key: 'ArrowDown' });
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(document.activeElement?.textContent).toBe('Ассистент Джупсик');
+
+    fireEvent.keyDown(document.activeElement as Element, { key: 'Escape' });
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('moves focus into the mobile menu and back to the toggle', () => {
+    render(<Header nav={homeNav} />);
+    const toggle = screen.getByLabelText('Открыть меню');
+
+    fireEvent.click(toggle);
+    const menu = screen.getByRole('navigation', { name: 'Мобильное меню' });
+    expect(menu.contains(document.activeElement)).toBe(true);
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('navigation', { name: 'Мобильное меню' })).toBeNull();
+    expect(document.activeElement).toBe(toggle);
+  });
 });

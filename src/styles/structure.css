@@ -51,19 +51,8 @@
   --tb-duration-slow: 280ms;
   --tb-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --tb-duration-spin: 700ms;
+  --tb-duration-blink: 1s;
+  --tb-duration-shimmer: 1.4s;
   --tb-duration-ambient: 26s;
   --tb-duration-ambient-slow: 44s;
-}
-
-@media (prefers-contrast: more) {
-  :root,
-  [data-theme] {
-    --tb-text-secondary: color-mix(in oklab, var(--tb-text-primary) 92%, transparent);
-    --tb-text-muted: color-mix(in oklab, var(--tb-text-primary) 84%, transparent);
-    --tb-text-tertiary: color-mix(in oklab, var(--tb-text-primary) 68%, transparent);
-    --tb-text-link: color-mix(in oklab, var(--link) 65%, var(--tb-text-primary));
-    --tb-border: color-mix(in oklab, var(--tb-text-primary) 28%, transparent);
-    --tb-border-strong: color-mix(in oklab, var(--tb-text-primary) 48%, transparent);
-    --tb-border-control: color-mix(in oklab, var(--tb-text-primary) 52%, transparent);
-  }
 }

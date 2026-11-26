@@ -1,5 +1,7 @@
 import {
+  Children,
   createContext,
+  isValidElement,
   useContext,
   useEffect,
   useId,
@@ -49,6 +51,8 @@ interface QuestionnaireContextValue {
 }
 
 const QuestionnaireContext = createContext<QuestionnaireContextValue | null>(null);
+const QuestionnaireItemContext = createContext<QuestionnaireItemConfig | null>(null);
+const ChoiceOrderContext = createContext(-1);
 
 function useQuestionnaire(component: string): QuestionnaireContextValue {
   const context = useContext(QuestionnaireContext);
@@ -191,7 +195,7 @@ export function QuestionnaireProgress({ className }: { className?: string }) {
       <div
         className={styles.progressTrack}
         role="progressbar"
-        aria-valuemin={1}
+        aria-valuemin={0}
         aria-valuemax={total}
         aria-valuenow={index + 1}
         aria-label="Пройдено вопросов"
@@ -213,7 +217,8 @@ export interface QuestionnaireItemProps {
 
 export function QuestionnaireItem({ name, children, className }: QuestionnaireItemProps) {
   const { items, index } = useQuestionnaire('QuestionnaireItem');
-  const position = items.findIndex((item) => item.name === name);
+  const item = items.find((entry) => entry.name === name);
+  const position = items.findIndex((entry) => entry.name === name);
   const isActive = position === index;
   const fieldsetRef = useRef<HTMLFieldSetElement>(null);
   const mounted = useRef(false);
@@ -229,14 +234,16 @@ export function QuestionnaireItem({ name, children, className }: QuestionnaireIt
   }, [isActive]);
 
   return (
-    <fieldset
-      ref={fieldsetRef}
-      className={cx(styles.item, className)}
-      hidden={!isActive}
-      inert={!isActive || undefined}
-    >
-      {children}
-    </fieldset>
+    <QuestionnaireItemContext.Provider value={item ?? null}>
+      <fieldset
+        ref={fieldsetRef}
+        className={cx(styles.item, className)}
+        hidden={!isActive}
+        inert={!isActive || undefined}
+      >
+        {children}
+      </fieldset>
+    </QuestionnaireItemContext.Provider>
   );
 }
 
@@ -250,7 +257,17 @@ export function QuestionnaireDescription({ children }: { children?: ReactNode })
 }
 
 export function QuestionnaireChoices({ children }: { children: ReactNode }) {
-  return <div className={styles.choices}>{children}</div>;
+  let order = 0;
+  return (
+    <div className={styles.choices}>
+      {Children.map(children, (child) => {
+        if (!isValidElement(child) || child.type !== QuestionnaireChoice) return child;
+        const current = order;
+        order += 1;
+        return <ChoiceOrderContext.Provider value={current}>{child}</ChoiceOrderContext.Provider>;
+      })}
+    </div>
+  );
 }
 
 export interface QuestionnaireChoiceProps {
@@ -261,14 +278,19 @@ export interface QuestionnaireChoiceProps {
 
 export function QuestionnaireChoice({ value, children, className }: QuestionnaireChoiceProps) {
   const { active, answers, toggleChoice } = useQuestionnaire('QuestionnaireChoice');
-  if (!active) return null;
+  const configured = useContext(QuestionnaireItemContext);
+  const order = useContext(ChoiceOrderContext);
+  const item = configured ?? active;
+  if (!item) return null;
 
-  const multiple = Boolean(active.multiple);
-  const answer = answers[active.name];
+  const multiple = Boolean(item.multiple);
+  const answer = answers[item.name];
   const selected = multiple ? Array.isArray(answer) && answer.includes(value) : answer === value;
-  const letter = String.fromCharCode(
-    65 + Math.max(active.choices?.findIndex((choice) => choice.value === value) ?? 0, 0)
-  );
+  const index =
+    order >= 0
+      ? order
+      : Math.max(item.choices?.findIndex((choice) => choice.value === value) ?? 0, 0);
+  const letter = String.fromCharCode(65 + index);
 
   return (
     <label
@@ -278,10 +300,10 @@ export function QuestionnaireChoice({ value, children, className }: Questionnair
     >
       <input
         type={multiple ? 'checkbox' : 'radio'}
-        name={active.name}
+        name={item.name}
         value={value}
         checked={selected}
-        onChange={() => toggleChoice(active, value)}
+        onChange={() => toggleChoice(item, value)}
       />
       <span className={styles.choiceBody}>{children}</span>
       <span className={styles.choiceMark} aria-hidden="true">
@@ -299,9 +321,11 @@ export interface QuestionnaireInputProps {
 
 export function QuestionnaireInput({ label, placeholder, className }: QuestionnaireInputProps) {
   const { active, answers, setInput } = useQuestionnaire('QuestionnaireInput');
+  const configured = useContext(QuestionnaireItemContext);
   const id = useId();
-  if (!active) return null;
-  const value = answers[otherKey(active.name)];
+  const item = configured ?? active;
+  if (!item) return null;
+  const value = answers[otherKey(item.name)];
 
   return (
     <div className={cx(styles.inputRow, className)}>
@@ -314,7 +338,7 @@ export function QuestionnaireInput({ label, placeholder, className }: Questionna
         type="text"
         placeholder={placeholder}
         value={typeof value === 'string' ? value : ''}
-        onChange={(event) => setInput(active, event.target.value)}
+        onChange={(event) => setInput(item, event.target.value)}
       />
     </div>
   );

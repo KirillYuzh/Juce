@@ -190,6 +190,7 @@ const TechText = ({
     let visible = false;
     let alive = true;
     let layoutKey = '';
+    let hostStyle: { color: string; family: string } | null = null;
     let sizeDirty = true;
     let requestedFont = '';
     let word: Word | null = null;
@@ -214,6 +215,7 @@ const TechText = ({
 
     const invalidateLayout = () => {
       layoutKey = '';
+      hostStyle = null;
       wakeRef.current();
     };
 
@@ -222,12 +224,23 @@ const TechText = ({
       invalidateLayout();
     };
 
-    const family = (s: Settings) =>
-      s.fontFamily || getComputedStyle(container).fontFamily || 'sans-serif';
+    // цвет и гарнитура хоста читаются один раз на тему/размер: getComputedStyle
+    // на каждом кадре давал style-recalc, поэтому кеш сбрасывает invalidateLayout
+    const readHost = () => {
+      if (!hostStyle) {
+        const computed = getComputedStyle(container);
+        hostStyle = {
+          color: computed.color || '#000000',
+          family: computed.fontFamily || 'sans-serif',
+        };
+      }
+      return hostStyle;
+    };
+    const family = (s: Settings) => s.fontFamily || readHost().family;
     const fontFor = (s: Settings, size: number) => `${s.fontWeight} ${size}px ${family(s)}`;
 
     const palette = (s: Settings) => {
-      const current = getComputedStyle(container).color || '#000000';
+      const current = readHost().color || '#000000';
       const pick = (value: string) =>
         !value || INHERIT.test(String(value).trim()) ? current : value;
       return { ink: pick(s.color), accent: pick(s.accentColor) };
@@ -1029,6 +1042,7 @@ const TechText = ({
 
     const resize = () => {
       sizeDirty = true;
+      hostStyle = null;
       wake();
     };
 
@@ -1107,7 +1121,7 @@ const TechText = ({
       wake();
     });
     intersectionObserver.observe(container);
-    const themeObserver = new MutationObserver(wake);
+    const themeObserver = new MutationObserver(invalidateLayout);
     for (const node of [document.documentElement, document.body]) {
       if (node)
         themeObserver.observe(node, {

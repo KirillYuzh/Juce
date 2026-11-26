@@ -1,4 +1,6 @@
 .layout {
+  --tb-chat-sidebar-width: 240px;
+
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--tb-chat-sidebar-width, 240px);
   height: 100%;

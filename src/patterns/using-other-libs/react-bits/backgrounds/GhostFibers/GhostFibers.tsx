@@ -677,6 +677,7 @@ const GhostFibers = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wakeRef = useRef<(() => void) | null>(null);
+  const releaseRef = useRef(0);
   const settings: Settings = {
     glowColor: String(glowColor),
     lineColor: lineColor ? String(lineColor) : '',
@@ -722,6 +723,8 @@ const GhostFibers = ({
   useEffect(() => {
     const container = containerRef.current;
     const canvas = canvasRef.current;
+    cancelAnimationFrame(releaseRef.current);
+    releaseRef.current = 0;
     const gl = canvas?.getContext('webgl2', {
       alpha: true,
       premultipliedAlpha: true,
@@ -1038,7 +1041,7 @@ const GhostFibers = ({
 
     const frame = (now: number) => {
       raf = 0;
-      if (!alive || !visible || document.hidden) return;
+      if (!alive || !visible || document.hidden || gl.isContextLost()) return;
       const s = settingsRef.current;
       const elapsed = last ? (now - last) / 1000 : 1 / 60;
       const dt = Math.min(0.05, elapsed);
@@ -1167,12 +1170,20 @@ const GhostFibers = ({
       window.removeEventListener('pointerdown', onPointerDown);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
       document.removeEventListener('visibilitychange', onVisibility);
-      gl.deleteVertexArray(vao);
-      [scene, ...chain].forEach(target => {
-        if (target.texture) gl.deleteTexture(target.texture);
-        gl.deleteFramebuffer(target.framebuffer);
-      });
-      [dots, dust, bright, down, up, composite].forEach(entry => gl.deleteProgram(entry.program));
+      if (!gl.isContextLost()) {
+        gl.deleteVertexArray(vao);
+        [scene, ...chain].forEach(target => {
+          if (target.texture) gl.deleteTexture(target.texture);
+          gl.deleteFramebuffer(target.framebuffer);
+        });
+        [dots, dust, bright, down, up, composite].forEach(entry => gl.deleteProgram(entry.program));
+      }
+      const free = () => {
+        releaseRef.current = 0;
+        if (!canvas.isConnected && !gl.isContextLost()) gl.getExtension('WEBGL_lose_context')?.loseContext();
+      };
+      if (canvas.isConnected) releaseRef.current = requestAnimationFrame(free);
+      else free();
     };
   }, []);
 

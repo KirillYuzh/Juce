@@ -43,13 +43,13 @@ export function Footer({
                     {column.map((group, groupIndex) => (
                       <div className={styles.group} key={`${group.title}-${groupIndex}`}>
                         <span className={styles.groupTitle}>{group.title}</span>
-                        {group.links.map((link) => {
+                        {group.links.map((link, linkIndex) => {
                           const title = typeof link === 'string' ? link : link.title;
                           const linkHref = typeof link === 'string' ? undefined : link.href;
                           return (
                             <a
                               className={styles.link}
-                              key={linkHref ?? title}
+                              key={`${linkHref ?? '#'}-${title}-${linkIndex}`}
                               href={linkHref ?? '#'}
                             >
                               {title}

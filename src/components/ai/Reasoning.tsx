@@ -38,13 +38,16 @@ export function Reasoning({
   const current = open ?? innerOpen;
 
   useEffect(() => {
-    if (open !== undefined) {
-      wasStreaming.current = isStreaming;
-      return;
-    }
-    if (isStreaming && !wasStreaming.current && !touched.current) setInnerOpen(true);
+    touched.current = false;
+  }, [text]);
+
+  useEffect(() => {
+    const started = isStreaming && !wasStreaming.current;
     wasStreaming.current = isStreaming;
-  }, [isStreaming, open]);
+    if (!started || touched.current || current) return;
+    if (open === undefined) setInnerOpen(true);
+    else onOpenChange?.(true);
+  }, [current, isStreaming, onOpenChange, open]);
 
   const change = (next: boolean) => {
     touched.current = true;

@@ -879,6 +879,7 @@ const smoother = (x: number) => {
 let probe: CanvasRenderingContext2D | null = null;
 
 const parseColor = (value: string, fallback: RGB | null): RGB | null => {
+  if (!value) return fallback;
   if (value === 'transparent') return null;
   if (typeof document === 'undefined') return fallback;
   if (!probe) probe = document.createElement('canvas').getContext('2d');
@@ -1068,6 +1069,7 @@ export default function AeroShards({
   const containerRef = useRef<HTMLDivElement>(null);
   const onErrorRef = useRef(onError);
   onErrorRef.current = onError;
+  const wakeRef = useRef<() => void>(() => {});
 
   const settings = {
     shard: parseColor(shardColor, [0.54, 0.42, 0.74]) ?? [0.54, 0.42, 0.74],
@@ -2187,7 +2189,7 @@ export default function AeroShards({
       };
 
       const tick = (now: number) => {
-        raf = requestAnimationFrame(tick);
+        raf = 0;
         if (!state.visible || document.hidden) {
           state.last = now;
           return;
@@ -2300,10 +2302,20 @@ export default function AeroShards({
         if (state.seen !== s || transient || moving) state.quiet = 0;
         else state.quiet += 1;
         state.seen = s;
+        // idle не планирует следующий кадр: остановленный цикл не считает .some() по шардам
         if (state.quiet > 30) return;
         resize();
         render(s, dt, reduced);
+        raf = requestAnimationFrame(tick);
       };
+
+      const wake = () => {
+        state.quiet = 0;
+        if (disposed || raf || !state.visible || document.hidden) return;
+        state.last = 0;
+        raf = requestAnimationFrame(tick);
+      };
+      wakeRef.current = wake;
 
       const local = (event: PointerEvent) => {
         const rect = container.getBoundingClientRect();
@@ -2324,10 +2336,12 @@ export default function AeroShards({
         const hit = local(event);
         state.inside = hit.inside;
         if (hit.inside) state.pointer = hit.point;
+        wake();
       };
 
       const onLeave = () => {
         state.inside = false;
+        wake();
       };
 
       const onDown = (event: PointerEvent) => {
@@ -2343,6 +2357,7 @@ export default function AeroShards({
         state.pointer = hit.point;
         state.pressAt = state.clock;
         state.pressPoint = hit.point;
+        wake();
       };
 
       const onUp = () => {
@@ -2364,6 +2379,7 @@ export default function AeroShards({
         }
         state.pressAt = -1;
         state.holding = false;
+        wake();
       };
 
       window.addEventListener('pointermove', onMove, { passive: true });
@@ -2381,9 +2397,12 @@ export default function AeroShards({
 
       const visibility = new IntersectionObserver((entries) => {
         state.visible = entries.some((entry) => entry.isIntersecting);
+        if (state.visible) wake();
       });
       visibility.observe(container);
       cleanups.push(() => visibility.disconnect());
+      document.addEventListener('visibilitychange', wake);
+      cleanups.push(() => document.removeEventListener('visibilitychange', wake));
       raf = requestAnimationFrame(tick);
     };
 
@@ -2391,12 +2410,17 @@ export default function AeroShards({
 
     return () => {
       disposed = true;
+      wakeRef.current = () => {};
       cancelAnimationFrame(raf);
       cleanups.forEach((cleanup) => cleanup());
       gpu?.dispose();
       canvas.remove();
     };
   }, []);
+
+  useEffect(() => {
+    wakeRef.current();
+  });
 
   return (
     <div ref={containerRef} className={[ROOT, className].filter(Boolean).join(' ')} style={style} />

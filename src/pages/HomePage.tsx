@@ -45,7 +45,7 @@ export function HomePage() {
                 key={product.id}
                 title={product.title}
                 text={product.description}
-                media={<img src={product.image} alt="" loading="lazy" />}
+                media={<img src={product.image} alt="" width={2280} height={1283} loading="lazy" />}
                 links={[{ label: product.cta, href: product.href }]}
               />
             ))}
@@ -72,7 +72,7 @@ export function HomePage() {
                 key={promo.id}
                 title={promo.title}
                 text={promo.text}
-                media={<img src={promo.image} alt="" loading="lazy" />}
+                media={<img src={promo.image} alt="" width={2280} height={1283} loading="lazy" />}
                 links={[{ label: promo.cta, href: promo.href }]}
               />
             ))}
@@ -84,7 +84,7 @@ export function HomePage() {
             <MediaPanel
               title="Как разобрать чужой код за вечер"
               text="Блог Джус"
-              media={<img src="/image.png" alt="" loading="lazy" />}
+              media={<img src="/image.png" alt="" width={2280} height={1283} loading="lazy" />}
               links={[{ label: 'Читать', href: '#' }]}
             />
           </div>

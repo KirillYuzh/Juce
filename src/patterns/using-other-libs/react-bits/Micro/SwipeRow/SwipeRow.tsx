@@ -163,6 +163,7 @@ const SwipeRow: React.FC<SwipeRowProps> = ({
   const unwatch = useRef<(() => void) | null>(null);
   const live = useRef<Live>({} as Live);
   const foldTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const alive = useRef(true);
   const heading = useRef<number | null>(null);
 
   const x = useMotionValue(0);
@@ -210,13 +211,14 @@ const SwipeRow: React.FC<SwipeRowProps> = ({
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
       clearTimeout(foldTimer.current);
       unwatch.current?.();
-    },
-    []
-  );
+    };
+  }, []);
 
   const setOpen = (next: boolean) => {
     if (next === open) return;
@@ -253,8 +255,10 @@ const SwipeRow: React.FC<SwipeRowProps> = ({
     setSay(a.label);
     setOpen(false);
     const fold = () => {
+      if (!alive.current) return;
       setPhase('collapsing');
       foldTimer.current = setTimeout(() => {
+        if (!alive.current) return;
         onCommit?.(a);
         a.onSelect?.();
       }, collapseMs);

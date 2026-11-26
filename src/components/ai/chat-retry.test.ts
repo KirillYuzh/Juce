@@ -9,27 +9,25 @@ const messages: ChatMessage[] = [
 ];
 
 describe('planRetry', () => {
-  it('returns the previous question and drops the broken answer', () => {
+  it('returns the previous question and cuts the thread before the target', () => {
     const plan = planRetry(messages, 'broken');
-    expect(plan).toEqual({
-      prompt: 'Почему утекает горутина?',
-      messages: messages.filter((message) => message.id !== 'broken'),
-    });
+    expect(plan?.prompt).toBe('Почему утекает горутина?');
+    expect(plan?.messages.map((message) => message.id)).toEqual(['greeting', 'ask']);
+    expect(plan?.message.id).toBe('broken');
   });
 
-  it('uses the nearest user message and keeps the rest of the thread', () => {
+  it('drops everything after the target so the tail cannot survive a retry', () => {
     const thread: ChatMessage[] = [
       { id: 'q1', role: 'user', content: 'Первый вопрос' },
       { id: 'a1', role: 'assistant', content: 'Ответ' },
       { id: 'q2', role: 'user', content: 'Второй вопрос' },
       { id: 'a2', role: 'assistant', content: '', error: true },
+      { id: 'q3', role: 'user', content: 'Третий вопрос' },
+      { id: 'a3', role: 'assistant', content: 'Ответ' },
     ];
-    expect(planRetry(thread, 'a2')?.prompt).toBe('Второй вопрос');
-    expect(planRetry(thread, 'a2')?.messages.map((message) => message.id)).toEqual([
-      'q1',
-      'a1',
-      'q2',
-    ]);
+    const plan = planRetry(thread, 'a1');
+    expect(plan?.prompt).toBe('Первый вопрос');
+    expect(plan?.messages.map((message) => message.id)).toEqual(['q1']);
   });
 
   it('returns null for an unknown id or a thread without a question', () => {

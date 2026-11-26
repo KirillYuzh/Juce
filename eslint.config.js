@@ -13,6 +13,8 @@ export default tseslint.config(
       'node_modules/**',
       '.research/**',
       'artifacts/**',
+      'tools/rules/fixtures/**',
+      'tools/fixtures/**',
     ],
   },
   js.configs.recommended,

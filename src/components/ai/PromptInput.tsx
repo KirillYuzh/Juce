@@ -22,11 +22,33 @@ export interface PromptInputProps {
   disabled?: boolean;
   accept?: string;
   multiple?: boolean;
+  maxFileSize?: number;
   hint?: string;
   actions?: ReactNode;
   className?: string;
   id?: string;
   'aria-label'?: string;
+}
+
+const MAX_TEXTAREA_HEIGHT = 200;
+
+function matchesAccept(file: File, accept?: string): boolean {
+  if (!accept) return true;
+  const type = file.type.toLowerCase();
+  const name = file.name.toLowerCase();
+  return accept.split(',').some((raw) => {
+    const token = raw.trim().toLowerCase();
+    if (!token) return false;
+    if (token.startsWith('.')) return name.endsWith(token);
+    if (token.endsWith('/*')) return type.startsWith(token.slice(0, -1));
+    return type === token;
+  });
+}
+
+function formatSize(bytes: number): string {
+  if (bytes >= 1024 * 1024) return `${Math.round((bytes / (1024 * 1024)) * 10) / 10} МБ`;
+  if (bytes >= 1024) return `${Math.round(bytes / 1024)} КБ`;
+  return `${bytes} Б`;
 }
 
 export function PromptInput({
@@ -40,6 +62,7 @@ export function PromptInput({
   disabled = false,
   accept,
   multiple = true,
+  maxFileSize,
   hint = 'Enter — отправить, Shift+Enter — новая строка',
   actions,
   className,
@@ -48,6 +71,7 @@ export function PromptInput({
 }: PromptInputProps) {
   const [inner, setInner] = useState(defaultValue);
   const [files, setFiles] = useState<File[]>([]);
+  const [rejection, setRejection] = useState<string | null>(null);
   const controlled = value !== undefined;
   const text = controlled ? value : inner;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -55,6 +79,7 @@ export function PromptInput({
   const formRef = useRef<HTMLFormElement>(null);
   const generatedId = useId().replace(/:/g, '');
   const inputId = id ?? `prompt-${generatedId}`;
+  const hintId = `${inputId}-hint`;
 
   const update = (next: string) => {
     if (!controlled) setInner(next);
@@ -65,7 +90,8 @@ export function PromptInput({
     const element = textareaRef.current;
     if (!element) return;
     element.style.height = 'auto';
-    element.style.height = `${Math.min(element.scrollHeight, 200)}px`;
+    const next = `${Math.min(element.scrollHeight, MAX_TEXTAREA_HEIGHT)}px`;
+    if (element.style.height !== next) element.style.height = next;
   }, [text]);
 
   const blocked = status === 'streaming' || status === 'submitted';
@@ -80,6 +106,24 @@ export function PromptInput({
     if (fileRef.current) fileRef.current.value = '';
   };
 
+  const addFiles = (list: File[]) => {
+    const accepted: File[] = [];
+    let rejected: string | null = null;
+    for (const file of list) {
+      if (maxFileSize !== undefined && file.size > maxFileSize) {
+        rejected = `Файл «${file.name}» больше ${formatSize(maxFileSize)}`;
+        continue;
+      }
+      if (!matchesAccept(file, accept)) {
+        rejected = `Файл «${file.name}» не подходит по типу`;
+        continue;
+      }
+      accepted.push(file);
+    }
+    setRejection(rejected);
+    if (accepted.length > 0) setFiles((current) => [...current, ...accepted]);
+  };
+
   return (
     <form
       ref={formRef}
@@ -89,17 +133,7 @@ export function PromptInput({
         submit();
       }}
     >
-      <fieldset
-        className={styles.group}
-        disabled={disabled}
-        onMouseDown={(event) => {
-          const target = event.target as Element;
-          if (target === textareaRef.current) return;
-          event.preventDefault();
-          if (target.closest('button, label, a, input, [role="button"]')) return;
-          textareaRef.current?.focus();
-        }}
-      >
+      <fieldset className={styles.group}>
         {files.length > 0 && (
           <div className={styles.attachments}>
             {files.map((file, index) => (
@@ -126,6 +160,8 @@ export function PromptInput({
           value={text}
           placeholder={placeholder}
           aria-label={ariaLabel}
+          aria-describedby={hint ? hintId : undefined}
+          aria-keyshortcuts="Enter"
           disabled={disabled}
           rows={1}
           onChange={(event) => update(event.target.value)}
@@ -144,6 +180,7 @@ export function PromptInput({
               type="button"
               className={styles.attachButton}
               aria-label="Прикрепить файлы"
+              disabled={disabled}
               onClick={() => fileRef.current?.click()}
             >
               <Icon name="paperclip" size={20} />
@@ -156,13 +193,17 @@ export function PromptInput({
               multiple={multiple}
               tabIndex={-1}
               onChange={(event) => {
-                const next = Array.from(event.target.files ?? []);
-                setFiles((current) => [...current, ...next]);
+                addFiles(Array.from(event.target.files ?? []));
+                event.target.value = '';
               }}
             />
           </div>
 
-          {hint && <span className={styles.status}>{hint}</span>}
+          {(rejection || hint) && (
+            <span id={hintId} className={styles.status} role={rejection ? 'alert' : undefined}>
+              {rejection ?? hint}
+            </span>
+          )}
 
           {status === 'streaming' && onStop ? (
             <button

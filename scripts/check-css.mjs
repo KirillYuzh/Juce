@@ -17,7 +17,8 @@ const VENDOR_CSS = [
   'src/patterns/using-other-libs/react-bits/backgrounds/',
   'src/patterns/using-other-libs/react-bits/HoloMosaic.css',
 ];
-const HOVER_MEDIA = /^@media\s*\(\s*hover\s*:\s*hover\s*\)/;
+const HOVER_QUERY = /\(\s*hover\s*:\s*hover\s*\)/;
+const HOVER_NEGATED = /\b(not|or)\b/i;
 const SHADOW_PROP = /^box-shadow$/;
 const COLOR_PROP =
   /^(color|background|background-color|background-image|border|border-color|border-top|border-right|border-bottom|border-left|outline|outline-color|fill|stroke|box-shadow)$/;
@@ -30,6 +31,24 @@ const ZERO_TIME = /\b0(?:\.0+)?m?s\b/gi;
 const ZERO_STEP = /\b0(?:\.0+)?m?s\s+linear\b/gi;
 const TRANSITION_ALL = /\ball\b/i;
 const REDUCED_MOTION = /prefers-reduced-motion/;
+const ANIMATION_PROP = /^animation(?:-duration|-timing-function)?$/;
+const ANIMATION_EASE = /\b(ease|ease-in|ease-out|ease-in-out|cubic-bezier)\b/i;
+
+// Стили заморожены: строки снимаются по мере правки компонентов, новые сюда не добавляются.
+const KNOWN_ANIMATION_LITERALS = [];
+const knownAnimation = new Set(
+  KNOWN_ANIMATION_LITERALS.map(({ file, value }) => `${file}::${value}`)
+);
+const usedAnimation = new Set();
+
+// Медиазапрос защищает :hover, только если (hover: hover) есть в каждой альтернативе списка.
+function hoverGuarded(prelude) {
+  if (!/^@media\b/i.test(prelude)) return false;
+  return prelude
+    .slice('@media'.length)
+    .split(',')
+    .every((query) => HOVER_QUERY.test(query) && !HOVER_NEGATED.test(query));
+}
 
 function cssFiles(directory) {
   if (!fs.existsSync(directory)) return [];
@@ -153,6 +172,9 @@ function scopesFor(file) {
   return {
     hover: !vendor,
     transition: !vendor && relative !== 'src/styles/motion.css',
+    // В src/styles анимации служебные и scroll-driven (1ms linear), их литералы осознанны.
+    animation:
+      !vendor && (relative.startsWith('src/components/') || relative.startsWith('src/pages/')),
     reducedMotion:
       !vendor && relative !== 'src/styles/motion.css' && relative !== 'src/styles/utilities.css',
     theme: !vendor && !THEME_FILES.has(relative),
@@ -166,6 +188,7 @@ function scopesFor(file) {
 const FULL_SCOPE = {
   hover: true,
   transition: true,
+  animation: true,
   reducedMotion: true,
   theme: true,
   literals: true,
@@ -180,7 +203,7 @@ export function analyze(file, scope = scopesFor(file)) {
     const isAtRule = rule.prelude.startsWith('@');
 
     if (scope.hover && !isAtRule && rule.prelude.includes(':hover')) {
-      const guarded = rule.parents.some((parent) => HOVER_MEDIA.test(parent));
+      const guarded = rule.parents.some(hoverGuarded);
       if (!guarded) {
         problems.push(`${file}:${rule.line}: :hover вне @media (hover: hover) в «${rule.prelude}»`);
       }
@@ -262,6 +285,22 @@ export function analyze(file, scope = scopesFor(file)) {
           );
         }
       }
+
+      if (scope.animation && ANIMATION_PROP.test(property) && value !== 'none') {
+        const bare = stripFunctions(value);
+        const timing = bare.replace(ZERO_TIME, '');
+        const message = DURATION_LITERAL.test(timing)
+          ? `время анимации задано литералом в «${property}: ${value}», возьми --tb-duration-*`
+          : ANIMATION_EASE.test(bare.replace(ZERO_STEP, ''))
+            ? `кривая анимации задана литералом в «${property}: ${value}», возьми --tb-ease-*`
+            : null;
+
+        if (message) {
+          const key = `${file}::${value}`;
+          if (knownAnimation.has(key)) usedAnimation.add(key);
+          else problems.push(`${file}:${rule.line}: ${message}`);
+        }
+      }
     }
   }
 
@@ -299,6 +338,18 @@ function selfTest() {
         'перечисляет все свойства',
       ],
     },
+    {
+      name: 'animation',
+      bad: 'bad.css',
+      good: 'good.css',
+      expect: ['время анимации задано литералом', 'кривая анимации задана литералом'],
+    },
+    {
+      name: 'hover-composite',
+      bad: 'bad.css',
+      good: 'good.css',
+      expect: ['hover вне @media (hover: hover)'],
+    },
     { name: 'syntax', bad: 'bad.css', good: 'good.css', expect: ['радиус задан числом'] },
   ];
   let failed = 0;
@@ -332,9 +383,17 @@ if (process.argv.includes('--test')) {
   selfTest();
 } else {
   const problems = cssFiles(ROOT).flatMap((file) => analyze(file));
+  const stale = KNOWN_ANIMATION_LITERALS.filter(
+    ({ file, value }) => !usedAnimation.has(`${file}::${value}`)
+  );
 
-  if (problems.length > 0) {
-    console.error(problems.join('\n'));
+  if (problems.length > 0 || stale.length > 0) {
+    if (problems.length > 0) console.error(problems.join('\n'));
+    for (const { file, value } of stale) {
+      console.error(
+        `✗ baseline устарел: ${file} «${value}» больше не нарушает — удали строку из KNOWN_ANIMATION_LITERALS`
+      );
+    }
     process.exit(1);
   }
 

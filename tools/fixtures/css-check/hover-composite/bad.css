@@ -1,0 +1,5 @@
+@media (hover: hover), (pointer: fine) {
+  .link:hover {
+    color: var(--tb-text-link-hover);
+  }
+}

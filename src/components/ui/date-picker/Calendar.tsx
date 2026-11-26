@@ -8,6 +8,7 @@ import {
   addMonths,
   clampDate,
   dateKey,
+  daysInMonth,
   endOfMonth,
   endOfWeek,
   formatDateFull,
@@ -28,6 +29,15 @@ export type CalendarMode = 'single' | 'range';
 
 export function shiftFocusedDay(day: Date, months: number, min?: Date, max?: Date): Date {
   return clampDate(addMonths(day, months), min, max);
+}
+
+function firstEnabledDay(month: Date, min?: Date, max?: Date): Date | null {
+  const total = daysInMonth(month);
+  for (let day = 1; day <= total; day += 1) {
+    const candidate = new Date(month.getFullYear(), month.getMonth(), day);
+    if (!isDateDisabled(candidate, min, max)) return candidate;
+  }
+  return null;
 }
 
 export interface CalendarProps {
@@ -67,6 +77,22 @@ export function Calendar({
     startOfDay(selectedDay ?? range?.from ?? new Date())
   );
 
+  const rovingDay: Date | null = isSameMonth(focusedDay, visibleMonth)
+    ? focusedDay
+    : firstEnabledDay(visibleMonth, min, max);
+
+  useEffect(() => {
+    if (rovingDay && !isSameMonth(focusedDay, visibleMonth)) setFocusedDay(rovingDay);
+  }, [focusedDay, rovingDay, visibleMonth]);
+
+  const selectedTime =
+    mode === 'single' ? (selectedDay?.getTime() ?? null) : (range?.from?.getTime() ?? null);
+
+  useEffect(() => {
+    if (selectedTime === null) return;
+    setFocusedDay(startOfDay(new Date(selectedTime)));
+  }, [selectedTime]);
+
   const titleId = useId();
   const dayRefs = useRef(new Map<string, HTMLButtonElement>());
   const wantFocus = useRef(true);
@@ -84,13 +110,13 @@ export function Calendar({
   };
 
   useEffect(() => {
-    if (!autoFocus || !wantFocus.current) return;
+    if (!autoFocus || !wantFocus.current || !rovingDay) return;
     wantFocus.current = false;
-    dayRefs.current.get(dateKey(focusedDay))?.focus();
-  }, [focusedDay, visibleMonth, autoFocus]);
+    dayRefs.current.get(dateKey(rovingDay))?.focus();
+  }, [rovingDay, autoFocus]);
 
   const goMonth = (amount: number) => {
-    setFocusedDay(shiftFocusedDay(focusedDay, amount, min, max));
+    setFocusedDay(shiftFocusedDay(rovingDay ?? startOfMonth(visibleMonth), amount, min, max));
     setMonth(addMonths(visibleMonth, amount));
   };
 
@@ -109,31 +135,32 @@ export function Calendar({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!rovingDay) return;
     let next: Date | null = null;
     switch (event.key) {
       case 'ArrowLeft':
-        next = addDays(focusedDay, -1);
+        next = addDays(rovingDay, -1);
         break;
       case 'ArrowRight':
-        next = addDays(focusedDay, 1);
+        next = addDays(rovingDay, 1);
         break;
       case 'ArrowUp':
-        next = addDays(focusedDay, -7);
+        next = addDays(rovingDay, -7);
         break;
       case 'ArrowDown':
-        next = addDays(focusedDay, 7);
+        next = addDays(rovingDay, 7);
         break;
       case 'Home':
-        next = startOfWeek(focusedDay);
+        next = startOfWeek(rovingDay);
         break;
       case 'End':
-        next = endOfWeek(focusedDay);
+        next = endOfWeek(rovingDay);
         break;
       case 'PageUp':
-        next = addMonths(focusedDay, -1);
+        next = addMonths(rovingDay, -1);
         break;
       case 'PageDown':
-        next = addMonths(focusedDay, 1);
+        next = addMonths(rovingDay, 1);
         break;
       default:
         return;
@@ -231,7 +258,7 @@ export function Calendar({
                       else dayRefs.current.delete(key);
                     }}
                     type="button"
-                    tabIndex={isSameDay(day, focusedDay) ? 0 : -1}
+                    tabIndex={rovingDay && isSameDay(day, rovingDay) ? 0 : -1}
                     aria-disabled={disabled || undefined}
                     aria-label={`${formatDateFull(day)}${suffix}`}
                     className={cx(

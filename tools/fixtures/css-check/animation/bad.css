@@ -1,0 +1,7 @@
+.pulse {
+  animation: pulse 1.5s ease infinite;
+}
+
+.fade {
+  animation: fade var(--tb-duration-base) ease-out;
+}

@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from 'react';
+import { memo, useCallback, useId, type ReactNode } from 'react';
 import styles from './Chat.module.css';
 import { MessageScroller } from './MessageScroller';
 import { Bubble, BubbleContent, Message, MessageContent, MessageReactions } from './Message';
@@ -45,7 +45,8 @@ export interface ChatProps {
   showSources?: boolean;
   authorName?: string;
   authorInitials?: string;
-  conversationKey?: string;
+  conversationKey?: string | number;
+  titleLevel?: 2 | 3 | 4;
 }
 
 export function Chat({
@@ -71,8 +72,15 @@ export function Chat({
   authorName = 'Джупсик',
   authorInitials = 'Дж',
   conversationKey,
+  titleLevel = 2,
 }: ChatProps) {
-  const scrollKey = conversationKey ?? messages[0]?.id ?? '';
+  const emptyKey = useId();
+  const scrollKey =
+    conversationKey !== undefined ? String(conversationKey) : (messages[0]?.id ?? emptyKey);
+  const anyStreaming = messages.some((message) => message.streaming);
+  const retry = useCallback((id: string) => onRetry?.(id), [onRetry]);
+  const Heading = `h${titleLevel}` as 'h2' | 'h3' | 'h4';
+  const lastIndex = messages.length - 1;
 
   return (
     <div className={cx(styles.chat, !framed && styles.plain, className)}>
@@ -80,7 +88,7 @@ export function Chat({
         <div className={styles.headerMain}>
           {headerLeading}
           <div className={styles.headerText}>
-            <span className={styles.title}>{title}</span>
+            <Heading className={styles.title}>{title}</Heading>
             <span className={styles.subtitle}>{subtitle}</span>
           </div>
         </div>
@@ -91,18 +99,20 @@ export function Chat({
         <MessageScroller.Provider autoScroll defaultScrollPosition="end" resetKey={scrollKey}>
           <MessageScroller.Root className={styles.scroller}>
             <MessageScroller.Viewport className={styles.viewport}>
-              <MessageScroller.Content className={styles.content}>
+              <MessageScroller.Content className={styles.content} busy={anyStreaming}>
                 {messages.length === 0 ? (
                   <div className={styles.empty}>
                     <span className={styles.emptyTitle}>{emptyTitle}</span>
                     <span className={styles.emptyText}>{emptyText}</span>
                   </div>
                 ) : (
-                  messages.map((message) => (
+                  messages.map((message, index) => (
                     <MessageScroller.Item
                       key={message.id}
                       messageId={message.id}
                       scrollAnchor={message.role === 'user'}
+                      role="article"
+                      aria-label={message.role === 'user' ? 'Ваше сообщение' : authorName}
                     >
                       {message.role === 'user' ? (
                         <UserMessage message={message} />
@@ -112,7 +122,9 @@ export function Chat({
                           showAuthor={showAuthor}
                           showReasoning={showReasoning}
                           showSources={showSources}
-                          onRetry={onRetry}
+                          onRetry={
+                            onRetry && (message.error || index === lastIndex) ? retry : undefined
+                          }
                           authorName={authorName}
                           authorInitials={authorInitials}
                         />
@@ -130,9 +142,9 @@ export function Chat({
       <div className={styles.composer}>
         {suggestions.length > 0 && (
           <Suggestions>
-            {suggestions.map((suggestion) => (
+            {suggestions.map((suggestion, index) => (
               <Suggestion
-                key={suggestion}
+                key={`${index}-${suggestion}`}
                 onClick={() => onSend({ text: suggestion, files: [] })}
                 disabled={status !== 'ready'}
               >

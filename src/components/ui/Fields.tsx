@@ -1,10 +1,19 @@
-import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import styles from './Fields.module.css';
 import { Chip } from './Display';
 import { Icon } from './Icon';
 import { cx } from '../../lib/cx';
 import { radiusStyle, type RadiusValue } from '../../lib/radius';
 import { useControllableState } from '../../lib/use-controllable-state';
+import { useDismiss } from '../../lib/use-dismiss';
 
 interface FieldShellProps {
   label?: string;
@@ -313,10 +322,11 @@ export function Select({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
-  const wasOpen = useRef(false);
+  const restoreFocus = useRef(false);
 
   const openSelect = () => {
     if (disabled || !options.length) return;
+    setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
     setOpen(true);
   };
 
@@ -324,8 +334,19 @@ export function Select({
     const option = options[index];
     if (!option) return;
     setCurrent(option.value);
+    restoreFocus.current = true;
     setOpen(false);
   };
+
+  const dismissWithFocus = useCallback(() => {
+    restoreFocus.current = true;
+    setOpen(false);
+  }, []);
+
+  const dismissKeepingFocus = useCallback(() => setOpen(false), []);
+
+  useDismiss(wrapperRef, { onDismiss: dismissWithFocus, enabled: open, pointer: false });
+  useDismiss(wrapperRef, { onDismiss: dismissKeepingFocus, enabled: open, escape: false });
 
   useEffect(() => {
     if (value !== undefined) return;
@@ -341,25 +362,13 @@ export function Select({
   }, [options.length]);
 
   useEffect(() => {
-    if (open) {
-      wasOpen.current = true;
-      setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
-      listRef.current?.focus();
-      return;
-    }
-    if (wasOpen.current) {
-      wasOpen.current = false;
-      triggerRef.current?.focus();
-    }
-  }, [open, selectedIndex]);
+    if (open) listRef.current?.focus();
+  }, [open]);
 
   useEffect(() => {
-    if (!open) return;
-    const close = (event: PointerEvent) => {
-      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener('pointerdown', close);
-    return () => document.removeEventListener('pointerdown', close);
+    if (open || !restoreFocus.current) return;
+    restoreFocus.current = false;
+    triggerRef.current?.focus();
   }, [open]);
 
   const onListKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
@@ -386,7 +395,6 @@ export function Select({
         event.preventDefault();
         choose(activeIndex);
         break;
-      case 'Escape':
       case 'Tab':
         setOpen(false);
         break;

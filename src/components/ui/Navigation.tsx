@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import styles from './Navigation.module.css';
 import { Icon } from './Icon';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './Collapsible';
@@ -132,33 +132,62 @@ export interface AccordionItem {
 
 export interface AccordionProps {
   items: AccordionItem[];
+  openId?: string | null;
+  onOpenChange?: (id: string | null) => void;
+  multiple?: boolean;
+  defaultOpenIds?: string[];
   defaultOpenId?: string;
   className?: string;
 }
 
-export function Accordion({ items, defaultOpenId, className }: AccordionProps) {
-  const [openId, setOpenId] = useState<string | null>(defaultOpenId ?? null);
+export function Accordion({
+  items,
+  openId,
+  onOpenChange,
+  multiple = false,
+  defaultOpenIds,
+  defaultOpenId,
+  className,
+}: AccordionProps) {
+  const [openIds, setOpenIds] = useControllableState<string[]>({
+    value: openId === undefined ? undefined : openId === null ? [] : [openId],
+    defaultValue: defaultOpenIds ?? (defaultOpenId ? [defaultOpenId] : []),
+    onChange: (next) => onOpenChange?.(next[0] ?? null),
+  });
+
+  const toggle = (id: string) => {
+    setOpenIds((prev) => {
+      if (multiple) {
+        return prev.includes(id) ? prev.filter((entry) => entry !== id) : [...prev, id];
+      }
+      return prev.includes(id) ? [] : [id];
+    });
+  };
+
   return (
     <div className={cx(styles.accordion, className)}>
-      {items.map((item) => (
-        <Collapsible
-          key={item.id}
-          open={item.id === openId}
-          onOpenChange={(open) => setOpenId(open ? item.id : null)}
-          keepMounted
-          className={styles.accordionItem}
-        >
-          <CollapsibleTrigger className={styles.accordionButton}>
-            {item.title}
-            <span className={styles.accordionChevron}>
-              <Icon name="chevronDown" size={20} />
-            </span>
-          </CollapsibleTrigger>
-          <CollapsibleContent className={styles.accordionPanel}>
-            <div className={styles.accordionPanelInner}>{item.content}</div>
-          </CollapsibleContent>
-        </Collapsible>
-      ))}
+      {items.map((item) => {
+        const open = openIds.includes(item.id);
+        return (
+          <Collapsible
+            key={item.id}
+            open={open}
+            onOpenChange={() => toggle(item.id)}
+            keepMounted
+            className={styles.accordionItem}
+          >
+            <CollapsibleTrigger className={styles.accordionButton}>
+              {item.title}
+              <span className={styles.accordionChevron}>
+                <Icon name="chevronDown" size={20} />
+              </span>
+            </CollapsibleTrigger>
+            <CollapsibleContent className={styles.accordionPanel}>
+              <div className={styles.accordionPanelInner}>{item.content}</div>
+            </CollapsibleContent>
+          </Collapsible>
+        );
+      })}
     </div>
   );
 }

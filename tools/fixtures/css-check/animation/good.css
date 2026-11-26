@@ -1,0 +1,12 @@
+.pulse {
+  animation: pulse var(--tb-duration-slow) var(--tb-ease-standard) infinite;
+}
+
+.spin {
+  animation: rotate var(--tb-duration-spin) linear infinite;
+}
+
+.slow {
+  animation-duration: var(--tb-duration-base);
+  animation-timing-function: var(--tb-ease-standard);
+}

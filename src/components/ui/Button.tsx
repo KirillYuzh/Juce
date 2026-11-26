@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import styles from './Button.module.css';
 import { Icon, type IconName } from './Icon';
 import { cx } from '../../lib/cx';
+import { safeHref } from '../../lib/url';
 
 export type ButtonVariant =
   'primary' | 'secondary' | 'white' | 'outline' | 'neutral' | 'ghost' | 'dark' | 'danger';
@@ -60,17 +61,19 @@ export function Button({
   const unavailable = Boolean(disabled || loading);
 
   if (href) {
+    const destination = safeHref(href);
+    const blocked = unavailable || destination === undefined;
     const anchorRest = rest as React.AnchorHTMLAttributes<HTMLAnchorElement>;
     return (
       <a
         {...anchorRest}
         ref={ref as React.Ref<HTMLAnchorElement>}
         className={classes}
-        href={href}
-        aria-disabled={unavailable || undefined}
-        tabIndex={unavailable ? -1 : anchorRest.tabIndex}
+        href={destination}
+        aria-disabled={blocked || undefined}
+        tabIndex={blocked ? -1 : anchorRest.tabIndex}
         onClick={(event) => {
-          if (unavailable) {
+          if (blocked) {
             event.preventDefault();
             return;
           }
@@ -129,9 +132,15 @@ export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElem
   children: ReactNode;
 }
 
-export function TextLink({ arrow, children, className, ...rest }: TextLinkProps) {
+export function TextLink({ arrow, children, className, href, ...rest }: TextLinkProps) {
+  const destination = href === undefined ? undefined : safeHref(href);
   return (
-    <a className={cx(styles.link, arrow && styles.linkArrow, className)} {...rest}>
+    <a
+      className={cx(styles.link, arrow && styles.linkArrow, className)}
+      href={destination}
+      aria-disabled={href !== undefined && destination === undefined ? true : undefined}
+      {...rest}
+    >
       {children}
       {arrow && <Icon name="arrowRight" size={16} />}
     </a>

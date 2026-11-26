@@ -58,18 +58,16 @@ export function Tooltip({ text, children }: { text: string; children: ReactNode 
         })
       : children;
 
-  const handleBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
-    const next = event.relatedTarget;
-    if (!(next instanceof Node && event.currentTarget.contains(next))) setOpen(false);
-  };
-
   return (
     <span
       className={styles.tooltipWrap}
       onPointerEnter={() => setOpen(true)}
       onPointerLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
-      onBlur={handleBlur}
+      onFocusCapture={() => setOpen(true)}
+      onBlurCapture={(event) => {
+        const next = event.relatedTarget;
+        if (!(next instanceof Node && event.currentTarget.contains(next))) setOpen(false);
+      }}
     >
       {trigger}
       <span id={id} className={styles.tooltip} role="tooltip" aria-hidden={open ? undefined : true}>

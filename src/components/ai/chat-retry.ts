@@ -3,6 +3,7 @@ import type { ChatMessage } from './Chat';
 export interface RetryPlan {
   prompt: string;
   messages: ChatMessage[];
+  message: ChatMessage;
 }
 
 export function planRetry(messages: ChatMessage[], id: string): RetryPlan | null {
@@ -14,7 +15,8 @@ export function planRetry(messages: ChatMessage[], id: string): RetryPlan | null
     if (message.role === 'user' && message.content.trim()) {
       return {
         prompt: message.content,
-        messages: messages.filter((item) => item.id !== id),
+        messages: messages.slice(0, index),
+        message: messages[index],
       };
     }
   }

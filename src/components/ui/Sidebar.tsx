@@ -14,14 +14,13 @@ import styles from './Sidebar.module.css';
 import { IconButton } from './Button';
 import { Skeleton } from './Display';
 import { cx } from '../../lib/cx';
+import { focusables } from '../../lib/focusable';
 import { useControllableState } from '../../lib/use-controllable-state';
 
 export const SIDEBAR_WIDTH = '16rem';
 export const SIDEBAR_WIDTH_MOBILE = '18rem';
 export const SIDEBAR_WIDTH_ICON = '3.25rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 interface SidebarContextValue {
   open: boolean;
@@ -72,8 +71,8 @@ export function SidebarProvider({
 
   const toggleSidebar = useCallback(() => {
     if (isMobile) setOpenMobile((current) => !current);
-    else setOpen(!open);
-  }, [isMobile, open, setOpen]);
+    else setOpen((current) => !current);
+  }, [isMobile, setOpen]);
 
   useEffect(() => {
     const query = window.matchMedia('(max-width: 767px)');
@@ -185,13 +184,12 @@ export function Sidebar({
 
   useEffect(() => {
     if (!isMobile || !openMobile) return;
-    const first = asideRef.current?.querySelector<HTMLElement>(FOCUSABLE);
-    first?.focus();
+    focusables(asideRef.current)[0]?.focus();
   }, [isMobile, openMobile]);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (!isMobile || !openMobile || event.key !== 'Tab') return;
-    const focusable = Array.from(asideRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []);
+    const focusable = focusables(asideRef.current);
     if (!focusable.length) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -488,12 +486,12 @@ export function SidebarMenuSubSkeleton({ className }: { className?: string }) {
 }
 
 export function SidebarRail({ className }: { className?: string }) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, open } = useSidebar();
   return (
     <button
       type="button"
       className={cx(styles.rail, className)}
-      aria-label="Свернуть панель"
+      aria-label={open ? 'Свернуть панель' : 'Развернуть панель'}
       onClick={toggleSidebar}
     />
   );

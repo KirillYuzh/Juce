@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import styles from './Sources.module.css';
 import {
   Trace,
@@ -31,9 +32,14 @@ export interface SourcesProps {
 }
 
 export function Sources({ sources, defaultOpen = false, className }: SourcesProps) {
-  const unique = sources.filter(
-    (source, index, all) => all.findIndex((other) => other.url === source.url) === index
-  );
+  const unique = useMemo(() => {
+    const seen = new Set<string>();
+    return sources.filter((source) => {
+      if (seen.has(source.url)) return false;
+      seen.add(source.url);
+      return true;
+    });
+  }, [sources]);
 
   return (
     <Trace className={className}>

@@ -10,6 +10,7 @@ import {
 } from 'react';
 import styles from './Popover.module.css';
 import { cx } from '../../../lib/cx';
+import { useDismiss } from '../../../lib/use-dismiss';
 
 interface PopoverContextValue {
   open: boolean;
@@ -61,27 +62,14 @@ export function Popover({
 
   useEffect(() => {
     if (!open) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open, setOpen]);
-
-  useEffect(() => {
-    if (!open) return;
     const content = contentRef.current;
     if (!content || content.contains(document.activeElement)) return;
     const target = content.querySelector<HTMLElement>('[data-popover-autofocus]') ?? content;
     target.focus();
   }, [open]);
+
+  const close = useCallback(() => setOpen(false), [setOpen]);
+  useDismiss(wrapperRef, { onDismiss: close, enabled: open });
 
   const wasOpen = useRef(false);
   useEffect(() => {
@@ -109,7 +97,13 @@ export interface PopoverTriggerProps extends React.ButtonHTMLAttributes<HTMLButt
   children: ReactNode;
 }
 
-export function PopoverTrigger({ className, children, onClick, ...rest }: PopoverTriggerProps) {
+export function PopoverTrigger({
+  className,
+  children,
+  onClick,
+  'aria-haspopup': ariaHaspopup = 'dialog',
+  ...rest
+}: PopoverTriggerProps) {
   const popover = usePopover('PopoverTrigger');
   return (
     <button
@@ -117,7 +111,7 @@ export function PopoverTrigger({ className, children, onClick, ...rest }: Popove
       ref={popover.triggerRef}
       type="button"
       className={cx(styles.trigger, className)}
-      aria-haspopup="dialog"
+      aria-haspopup={ariaHaspopup}
       aria-expanded={popover.open}
       aria-controls={popover.open ? popover.contentId : undefined}
       onClick={(event) => {
@@ -138,6 +132,7 @@ export function PopoverContent({
   id,
   tabIndex,
   className,
+  role = 'dialog',
   children,
   ...rest
 }: PopoverContentProps) {
@@ -149,6 +144,7 @@ export function PopoverContent({
       {...rest}
       ref={popover.contentRef}
       id={id ?? popover.contentId}
+      role={role}
       tabIndex={tabIndex ?? -1}
       className={cx(styles.content, className)}
     >

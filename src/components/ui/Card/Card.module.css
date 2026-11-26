@@ -38,7 +38,7 @@
   --tb-card-bg: var(--tb-primary);
   --tb-card-hover: var(--tb-primary-hover);
   --tb-card-fg: var(--tb-on-primary);
-  --tb-card-muted: var(--tb-text-inverse-secondary);
+  --tb-card-muted: var(--tb-on-primary);
   --tb-card-border: var(--tb-border-on-primary);
   --tb-card-border-hover: var(--tb-border-on-primary);
   --tb-card-shadow: none;

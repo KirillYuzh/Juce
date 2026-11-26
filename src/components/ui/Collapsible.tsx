@@ -3,9 +3,10 @@ import {
   useContext,
   useId,
   type ButtonHTMLAttributes,
+  type ComponentProps,
   type HTMLAttributes,
-  type ReactNode,
 } from 'react';
+import { cx } from '../../lib/cx';
 import { useControllableState } from '../../lib/use-controllable-state';
 
 interface CollapsibleContextValue {
@@ -17,13 +18,11 @@ interface CollapsibleContextValue {
 
 const CollapsibleContext = createContext<CollapsibleContextValue | null>(null);
 
-export interface CollapsibleProps {
+export interface CollapsibleProps extends ComponentProps<'div'> {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   keepMounted?: boolean;
-  children: ReactNode;
-  className?: string;
 }
 
 export function Collapsible({
@@ -33,6 +32,7 @@ export function Collapsible({
   keepMounted = false,
   children,
   className,
+  ...rest
 }: CollapsibleProps) {
   const [current, setOpen] = useControllableState({
     value: open,
@@ -45,7 +45,7 @@ export function Collapsible({
     <CollapsibleContext.Provider
       value={{ open: current, contentId: `collapsible-${reactId}`, keepMounted, setOpen }}
     >
-      <div className={className} data-state={current ? 'open' : 'closed'}>
+      <div {...rest} className={cx(className)} data-state={current ? 'open' : 'closed'}>
         {children}
       </div>
     </CollapsibleContext.Provider>

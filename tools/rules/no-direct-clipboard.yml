@@ -13,6 +13,7 @@ rule:
   any:
     - pattern: navigator.clipboard
     - pattern: window.navigator.clipboard
+    - pattern: globalThis.navigator.clipboard
     - kind: subscript_expression
       all:
         - has:
@@ -21,11 +22,26 @@ rule:
         - has:
             field: index
             regex: 'clipboard'
+    - kind: member_expression
+      all:
+        - has:
+            field: object
+            kind: subscript_expression
+            all:
+              - has:
+                  field: object
+                  regex: '^(window|globalThis)$'
+              - has:
+                  field: index
+                  regex: 'navigator'
+        - has:
+            field: property
+            regex: '^clipboard$'
     - kind: variable_declarator
       all:
         - has:
             field: value
-            regex: '^navigator$'
+            regex: '(^|\\.)navigator$'
         - has:
             field: name
             regex: 'clipboard'

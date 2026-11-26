@@ -86,6 +86,8 @@ const ATLAS_CELL_H = 100;
 const ATLAS_COLUMNS = 16;
 const FONT_SCALE = 0.78;
 const DEFAULT_COLORS = ['#1e3fd8', '#f6f8ff', '#a5d8ff', '#38bdf8'];
+// ~2 c кадров при 60 fps: дольше ждать COMPLETION_STATUS_KHR бессмысленно
+const POLL_LIMIT = 120;
 const DEFAULT_CHARACTERS = ' =+xX0S8#@';
 const DEFAULT_FONT = '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 const SHAPES: Record<string, number> = { horizon: 0, pinch: 1, rise: 2, eclipse: 3 };
@@ -522,7 +524,9 @@ const GradientASCII = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wakeRef = useRef<(() => void) | null>(null);
-  const palette = (Array.isArray(colors) && colors.length ? colors : DEFAULT_COLORS).slice(0, MAX_COLORS);
+  // пустой цвет от неразрешённого токена не попадает в палитру: берём дефолты
+  const chosen = Array.isArray(colors) ? colors.filter(Boolean) : [];
+  const palette = (chosen.length ? chosen : DEFAULT_COLORS).slice(0, MAX_COLORS);
   const settings: Settings = {
     colors: palette.length > 1 ? palette : [palette[0], palette[0]],
     shape: SHAPES[shape] ?? 0,
@@ -619,13 +623,15 @@ const GradientASCII = ({
     let visible = true;
     let disposed = false;
     let ready = !parallel;
+    let polls = 0;
 
     const linked = () =>
       !parallel || programs.every(item => gl.getProgramParameter(item.program, parallel.COMPLETION_STATUS_KHR));
 
     const release = () => {
       if (gl.isContextLost()) return;
-      if (!ready && !linked()) {
+      polls += 1;
+      if (!ready && !linked() && polls < POLL_LIMIT) {
         requestAnimationFrame(release);
         return;
       }
@@ -815,7 +821,8 @@ const GradientASCII = ({
       raf = 0;
       if (disposed || !visible || document.hidden) return;
       if (!ready) {
-        if (!gl.isContextLost() && !linked()) {
+        polls += 1;
+        if (!gl.isContextLost() && !linked() && polls < POLL_LIMIT) {
           raf = requestAnimationFrame(frame);
           return;
         }

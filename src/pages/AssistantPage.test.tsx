@@ -35,4 +35,33 @@ describe('AssistantPage', () => {
     expect(screen.getAllByText(/демонстрационный ответ/i)).toHaveLength(1);
     expect(screen.getByLabelText('Отправить сообщение')).toBeTruthy();
   });
+
+  it('answers once when two sends land in the same tick', async () => {
+    render(<AssistantPage />);
+    const suggestion = screen.getByText('Почему утекает горутина?').closest('button');
+    if (!suggestion) throw new Error('suggestion is missing');
+
+    act(() => {
+      suggestion.click();
+      suggestion.click();
+    });
+
+    await act(async () => {
+      vi.advanceTimersByTime(2000);
+    });
+
+    expect(screen.getAllByText(/демонстрационный ответ/i)).toHaveLength(1);
+  });
+
+  it('does not write to state after unmount', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const view = render(<AssistantPage />);
+    typeQuestion('Вопрос');
+    fireEvent.click(screen.getByLabelText('Отправить сообщение'));
+
+    view.unmount();
+    expect(() => vi.advanceTimersByTime(5000)).not.toThrow();
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
+  });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { Tabs } from './Navigation';
+import { Accordion, Tabs } from './Navigation';
 
 const items = [
   { id: 'java', label: 'Java', content: 'Первый раздел' },
@@ -32,5 +32,42 @@ describe('Tabs', () => {
     expect(document.activeElement).toBe(third);
     fireEvent.keyDown(third, { key: 'Home' });
     expect(document.activeElement).toBe(first);
+  });
+});
+
+const accordionItems = [
+  { id: 'a', title: 'Первый', content: 'Тело A' },
+  { id: 'b', title: 'Второй', content: 'Тело B' },
+];
+
+describe('Accordion', () => {
+  it('не меняет controlled openId без onOpenChange', () => {
+    render(<Accordion items={accordionItems} openId="a" />);
+    const [first, second] = screen.getAllByRole('button');
+
+    expect(first.getAttribute('aria-expanded')).toBe('true');
+    fireEvent.click(second);
+
+    expect(first.getAttribute('aria-expanded')).toBe('true');
+    expect(second.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('multiple раскрывает два пункта одновременно', () => {
+    render(<Accordion items={accordionItems} multiple />);
+    const [first, second] = screen.getAllByRole('button');
+
+    fireEvent.click(first);
+    fireEvent.click(second);
+
+    expect(first.getAttribute('aria-expanded')).toBe('true');
+    expect(second.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('defaultOpenIds раскрывает несколько пунктов без multiple', () => {
+    render(<Accordion items={accordionItems} defaultOpenIds={['a', 'b']} />);
+
+    screen.getAllByRole('button').forEach((trigger) => {
+      expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    });
   });
 });

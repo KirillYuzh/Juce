@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { Card, CardBody, CardFooter, CardTitle } from './Card';
 import { DetailCard } from '../../prebuilt/DetailCard';
 import { MediaPanel } from '../../prebuilt/MediaPanel';
@@ -43,21 +43,19 @@ describe('Card', () => {
     expect(link.getAttribute('href')).toBe('/go');
   });
 
-  it('activates a non-link interactive card from the keyboard', () => {
-    const onClick = vi.fn();
+  it('не превращает карточку в кнопку без href', () => {
     render(
-      <Card interactive onClick={onClick}>
+      <Card>
         <CardBody>
           <CardTitle>Диалог</CardTitle>
         </CardBody>
       </Card>
     );
-    const card = screen.getByRole('button');
+    const card = screen.getByRole('article');
 
-    expect(card.getAttribute('tabindex')).toBe('0');
-    fireEvent.keyDown(card, { key: 'Enter' });
-
-    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(card.hasAttribute('role')).toBe(false);
+    expect(card.hasAttribute('tabindex')).toBe(false);
+    expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('keeps the footer on the card surface', () => {

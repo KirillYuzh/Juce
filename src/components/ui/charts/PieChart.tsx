@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartLegend, ChartTooltip } from './ChartParts';
 import { cx } from '../../../lib/cx';
@@ -47,6 +47,10 @@ export function PieChart({
   const colors = seriesColors(
     data.map((row) => ({ key: String(row[nameKey]), label: String(row[nameKey]) }))
   );
+
+  useEffect(() => {
+    setHover(null);
+  }, [data]);
 
   const slices = useMemo(() => {
     const total = data.reduce((sum, row) => sum + toNumber(row[valueKey]), 0) || 1;
@@ -130,6 +134,24 @@ export function PieChart({
           }))}
         />
       )}
+
+      <table className="tb-visually-hidden">
+        <caption>{label}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{nameKey}</th>
+            <th scope="col">{valueKey}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, rowIndex) => (
+            <tr key={`${String(row[nameKey])}-${rowIndex}`}>
+              <th scope="row">{String(row[nameKey])}</th>
+              <td>{valueFormat(toNumber(row[valueKey]))}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

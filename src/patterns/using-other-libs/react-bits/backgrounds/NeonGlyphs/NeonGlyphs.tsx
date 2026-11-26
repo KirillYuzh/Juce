@@ -384,6 +384,9 @@ const PROGRAMS: Record<ProgramName, { source: string; uniforms: string[] }> = {
 
 const NAMES = Object.keys(PROGRAMS) as ProgramName[];
 
+// ~2 c кадров при 60 fps: дольше ждать COMPLETION_STATUS_KHR бессмысленно
+const POLL_LIMIT = 120;
+
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 const num = (value: unknown, fallback: number) => {
@@ -525,7 +528,9 @@ const NeonGlyphs = ({
   const wakeRef = useRef<(() => void) | null>(null);
   const releaseRef = useRef(0);
   const [generation, setGeneration] = useState(0);
-  const palette = (Array.isArray(colors) && colors.length ? colors : DEFAULT_COLORS).slice(0, MAX_COLORS).map(String);
+  // пустой цвет от неразрешённого токена не попадает в палитру: берём дефолты
+  const chosen = Array.isArray(colors) ? colors.filter(Boolean) : [];
+  const palette = (chosen.length ? chosen : DEFAULT_COLORS).slice(0, MAX_COLORS).map(String);
   const settings = {
     colors: palette,
     characters: String(characters || DEFAULT_CHARACTERS),
@@ -633,6 +638,7 @@ const NeonGlyphs = ({
     let visible = true;
     let alive = true;
     let lost = false;
+    let compilePolls = 0;
 
     const toRgb = (value: string): Vec3 => {
       if (!probeContext || !value) return [1, 1, 1];
@@ -927,7 +933,12 @@ const NeonGlyphs = ({
       raf = 0;
       if (!alive || !visible || document.hidden || lost) return;
       if (!ready()) {
-        if (!broken && pending().length) raf = requestAnimationFrame(frame);
+        if (!broken && pending().length) {
+          compilePolls += 1;
+          if (compilePolls < POLL_LIMIT) raf = requestAnimationFrame(frame);
+          else if (finishAll()) raf = requestAnimationFrame(frame);
+          else broken = true;
+        }
         return;
       }
       const s = settingsRef.current;
@@ -1085,7 +1096,8 @@ const NeonGlyphs = ({
         const release = () => {
           const waiting = pending();
           if (!waiting.length || gl.isContextLost()) return;
-          if (compiling()) {
+          compilePolls += 1;
+          if (compiling() && compilePolls < POLL_LIMIT) {
             requestAnimationFrame(release);
             return;
           }

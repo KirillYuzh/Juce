@@ -34,20 +34,30 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/juce-ui.js"
+      "import": "./dist/juce-ui.js",
+      "default": "./dist/juce-ui.js"
     },
-    "./styles.css": "./dist/juce-ui.css",
-    "./reset.css": "./dist/reset.css",
-    "./package.json": "./package.json"
-  },
-  "engines": {
-    "node": ">=20.19"
+    "./styles.css": {
+      "default": "./dist/juce-ui.css"
+    },
+    "./styles-core.css": {
+      "default": "./dist/juce-ui-core.css"
+    },
+    "./fonts.css": {
+      "default": "./dist/juce-ui-fonts.css"
+    },
+    "./reset.css": {
+      "default": "./dist/reset.css"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    }
   },
   "scripts": {
     "dev": "vite",
     "drive": "node scripts/drive.mjs",
     "build": "tsc -b && vite build",
-    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fix-declarations.mjs && node scripts/copy-reset.mjs",
+    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fix-declarations.mjs && node scripts/copy-reset.mjs && node scripts/split-fonts.mjs",
     "lint": "eslint .",
     "lint:rules": "ast-grep scan --config sgconfig.yml --error src",
     "lint:css": "node scripts/check-css.mjs && node scripts/check-css.mjs --test",
@@ -60,13 +70,14 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "check": "npm run typecheck && npm run lint && npm run lint:rules && npm run rules:test && npm run lint:css && npm run build:lib && npm run check:pack && npm run test && npm run spec:validate",
     "prepare": "npm run build:lib",
+    "prepublishOnly": "npm run check",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": ">=19",
+    "react-dom": ">=19"
   },
   "devDependencies": {
     "@antithesishq/bombadil": "^0.8.0",

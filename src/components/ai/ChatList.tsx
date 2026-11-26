@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import styles from './ChatList.module.css';
 import { IconButton } from '../ui/Button';
 import { Icon, type IconName } from '../ui/Icon';
@@ -33,21 +33,38 @@ export interface ChatListProps {
 
 const chatText = (chat: ChatListItem) => [chat.title, chat.preview].filter(Boolean).join('\n\n');
 
+const chatFileName = (title: string) => {
+  const cleaned = Array.from(title, (char) => {
+    const code = char.codePointAt(0) ?? 0;
+    return code < 0x20 || code === 0x7f || char === '/' || char === '\\' ? ' ' : char;
+  })
+    .join('')
+    .replace(/\s+/g, ' ')
+    .replace(/^\.+/, '')
+    .trim()
+    .slice(0, 120)
+    .trim();
+  return `${cleaned || 'chat'}.txt`;
+};
+
 const downloadChat = (chat: ChatListItem) => {
   const url = URL.createObjectURL(new Blob([chatText(chat)], { type: 'text/plain;charset=utf-8' }));
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${chat.title}.txt`;
+  link.download = chatFileName(chat.title);
   link.rel = 'noopener';
-  document.body.append(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  try {
+    document.body.append(link);
+    link.click();
+  } finally {
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 };
 
 interface ChatActionsProps {
   chat: ChatListItem;
-  onCopy?: (chat: ChatListItem) => void;
+  onCopy: (chat: ChatListItem) => void;
   onDownload?: (chat: ChatListItem) => void;
   onDelete?: (chat: ChatListItem, trigger: HTMLButtonElement | null) => void;
 }
@@ -56,7 +73,6 @@ function ChatActions({ chat, onCopy, onDownload, onDelete }: ChatActionsProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<Array<HTMLButtonElement | null>>([]);
-  const { copy } = useCopy(chatText(chat));
 
   const trigger = () =>
     rootRef.current?.querySelector<HTMLButtonElement>('[data-chat-actions-trigger]');
@@ -112,7 +128,7 @@ function ChatActions({ chat, onCopy, onDownload, onDelete }: ChatActionsProps) {
       id: 'copy',
       label: 'Скопировать',
       icon: 'copy',
-      run: () => (onCopy ? onCopy(chat) : void copy()),
+      run: () => onCopy(chat),
     },
     {
       id: 'download',
@@ -188,12 +204,50 @@ export function ChatList({
 }: ChatListProps) {
   const [query, setQuery] = useState('');
   const [pendingDelete, setPendingDelete] = useState<ChatListItem | null>(null);
+  const [focusRequest, setFocusRequest] = useState<number | 'search' | null>(null);
+  const [copySource, setCopySource] = useState<{ id: string; text: string } | null>(null);
+  const copySourceRef = useRef<{ id: string; text: string } | null>(null);
   const deleteTrigger = useRef<HTMLButtonElement | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<Array<HTMLButtonElement | null>>([]);
+  const { copy } = useCopy(copySource?.text ?? '');
+
+  const texts = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const chat of chats) map.set(chat.id, chatText(chat));
+    return map;
+  }, [chats]);
+
+  useEffect(() => {
+    if (!copySource || copySourceRef.current === copySource) return;
+    copySourceRef.current = copySource;
+    void copy();
+  }, [copy, copySource]);
 
   const focusSearch = () => searchRef.current?.querySelector('input')?.focus();
+
+  useEffect(() => {
+    if (focusRequest === null) return;
+    const items = itemsRef.current.filter((item): item is HTMLButtonElement => item !== null);
+    const index = focusRequest === 'search' ? -1 : Math.min(focusRequest, items.length - 1);
+    const item = index >= 0 ? (items[index] ?? items[index - 1] ?? null) : null;
+    if (item) {
+      setActiveIndex(index);
+      item.focus();
+    } else {
+      focusSearch();
+    }
+    setFocusRequest(null);
+  }, [focusRequest]);
+
+  const copyChat = (chat: ChatListItem) => {
+    if (onCopy) {
+      onCopy(chat);
+      return;
+    }
+    setCopySource({ id: chat.id, text: texts.get(chat.id) ?? chatText(chat) });
+  };
 
   const needle = query.trim().toLowerCase();
   const filtered = needle
@@ -325,7 +379,7 @@ export function ChatList({
 
                 <ChatActions
                   chat={chat}
-                  onCopy={onCopy}
+                  onCopy={copyChat}
                   onDownload={onDownload}
                   onDelete={
                     onDelete
@@ -349,18 +403,18 @@ export function ChatList({
           setPendingDelete(null);
           const trigger = deleteTrigger.current;
           deleteTrigger.current = null;
-          if (trigger) {
-            requestAnimationFrame(() => {
-              if (trigger.isConnected) trigger.focus();
-            });
-          }
+          if (trigger?.isConnected) trigger.focus();
         }}
         title={pendingDelete ? `Удалить чат «${pendingDelete.title}»?` : ''}
         description="История переписки удалится без возможности восстановления."
         cancelLabel="Оставить"
         confirmLabel="Удалить"
         onConfirm={() => {
-          if (pendingDelete) onDelete?.(pendingDelete.id);
+          if (!pendingDelete) return;
+          const removed = filtered.findIndex((chat) => chat.id === pendingDelete.id);
+          deleteTrigger.current = null;
+          onDelete?.(pendingDelete.id);
+          setFocusRequest(removed === -1 ? 'search' : removed);
         }}
       />
     </aside>

@@ -41,7 +41,6 @@ export {
   Badge,
   Chip,
   Divider,
-  IconTile,
   Logo,
   Progress,
   Skeleton,

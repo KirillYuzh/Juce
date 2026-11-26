@@ -7,5 +7,6 @@ export function CopyButton({ value }: { value: string }) {
 
 export function platform() {
   const { language } = navigator;
-  return `${navigator.userAgent} ${language}`;
+  const name = window['navigator'].userAgent;
+  return `${navigator.userAgent} ${language} ${globalThis.navigator.language} ${name}`;
 }

@@ -37,8 +37,8 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -5px;
-  right: -5px;
+  left: -12px;
+  right: -12px;
 }
 
 .handle:focus-visible {

@@ -35,6 +35,9 @@ const preview: Preview = {
   },
   parameters: {
     layout: 'centered',
+    a11y: {
+      test: 'error',
+    },
     docs: {
       source: {
         transform: storySource,

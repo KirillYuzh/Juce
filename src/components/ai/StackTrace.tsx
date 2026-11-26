@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import styles from './StackTrace.module.css';
 import {
   Trace,
@@ -54,7 +55,7 @@ export function StackTrace({
   className,
   title,
 }: StackTraceProps) {
-  const { error, frames } = parseStackTrace(stack);
+  const { error, frames } = useMemo(() => parseStackTrace(stack), [stack]);
   const { copied, copy } = useCopy(stack);
 
   return (

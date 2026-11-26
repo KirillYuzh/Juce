@@ -47,6 +47,7 @@
 }
 
 .title {
+  margin: 0;
   font: 500 17px/24px var(--tb-font-heading);
 }
 
@@ -75,12 +76,6 @@
   gap: 8px;
   font: 500 13px/20px var(--tb-font-text);
   color: var(--tb-text-secondary);
-}
-
-@keyframes tb-blink {
-  50% {
-    opacity: 0;
-  }
 }
 
 .empty {

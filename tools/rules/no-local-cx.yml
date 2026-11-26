@@ -3,7 +3,7 @@ language: Tsx
 severity: error
 message: >-
   Локальная копия cx разойдётся с остальными и соберёт классы иначе. Одна
-  утилита — src/lib/cx.ts.
+  утилита — src/lib/cx.
 note: >-
   Импортируй `{ cx }` из src/lib/cx и удали свою реализацию. Не обходи правило
   переименованием: причина — дублирование утилиты, а не её имя.
@@ -15,7 +15,7 @@ rule:
       all:
         - has:
             field: name
-            regex: '^(cx|cn|clsx)$'
+            regex: '^(cx|cn|clsx|classNames|merge)$'
         - has:
             field: value
             kind: arrow_function
@@ -23,11 +23,22 @@ rule:
       all:
         - has:
             field: name
-            regex: '^(cx|cn|clsx)$'
+            regex: '^(cx|cn|clsx|classNames|merge)$'
         - has:
             field: value
             kind: function_expression
+    - kind: variable_declarator
+      all:
+        - has:
+            field: name
+            regex: '^(cx|cn|clsx|classNames|merge)$'
+        - has:
+            field: value
+            kind: call_expression
+            has:
+              field: function
+              regex: '^(twMerge|memo)$'
     - kind: function_declaration
       has:
         field: name
-        regex: '^(cx|cn|clsx)$'
+        regex: '^(cx|cn|clsx|classNames|merge)$'

@@ -22,7 +22,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    sourcemap: true,
+    sourcemap: false,
     cssCodeSplit: false,
     lib: {
       entry: 'src/index.ts',

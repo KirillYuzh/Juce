@@ -42,6 +42,10 @@ interface ScrollerContextValue {
 
 const ScrollerContext = createContext<ScrollerContextValue | null>(null);
 
+function sameIds(a: string[], b: string[]): boolean {
+  return a.length === b.length && b.every((id) => a.includes(id));
+}
+
 export interface MessageScrollerProviderProps {
   autoScroll?: boolean;
   defaultScrollPosition?: ScrollPosition;
@@ -71,6 +75,10 @@ export function MessageScrollerProvider({
   const preserveRef = useRef(true);
   const lastMetrics = useRef({ scrollHeight: 0, scrollTop: 0 });
   const autoscrollTimer = useRef<number | null>(null);
+  const anchorsRef = useRef<HTMLElement[] | null>(null);
+  const programmatic = useRef(false);
+  const programmaticFrame = useRef(0);
+  const mounted = useRef(true);
   const initialized = useRef<{ viewport: HTMLDivElement | null; key: string | null }>({
     viewport: null,
     key: null,
@@ -81,16 +89,32 @@ export function MessageScrollerProvider({
     setViewport(element);
   }, []);
 
+  const runProgrammatic = useCallback((action: () => void) => {
+    programmatic.current = true;
+    window.cancelAnimationFrame(programmaticFrame.current);
+    programmaticFrame.current = window.requestAnimationFrame(() => {
+      programmaticFrame.current = 0;
+      programmatic.current = false;
+    });
+    action();
+  }, []);
+
   const updateScrollState = useCallback(() => {
     if (!viewport) return;
     const { scrollTop, scrollHeight, clientHeight } = viewport;
     const start = scrollTop > scrollEdgeThreshold;
     const end = scrollHeight - scrollTop - clientHeight > scrollEdgeThreshold;
     setScrollable((prev) => (prev.start === start && prev.end === end ? prev : { start, end }));
-    const anchors = viewport.querySelectorAll<HTMLElement>('[data-scroll-anchor="true"]');
+    if (anchorsRef.current === null) {
+      anchorsRef.current = Array.from(
+        viewport.querySelectorAll<HTMLElement>('[data-scroll-anchor="true"]')
+      );
+    }
+    const viewportTop = viewport.getBoundingClientRect().top;
     let anchor: string | null = null;
-    for (const node of anchors) {
-      if (node.getBoundingClientRect().top <= viewport.getBoundingClientRect().top + 48) {
+    for (const node of anchorsRef.current) {
+      if (!node.isConnected) continue;
+      if (node.getBoundingClientRect().top <= viewportTop + 48) {
         anchor = node.dataset.messageId ?? null;
       } else {
         break;
@@ -110,11 +134,11 @@ export function MessageScrollerProvider({
       if (!viewport) return false;
       const behavior = options.behavior ?? 'instant';
       flashAutoscrolling();
-      viewport.scrollTo({ top: viewport.scrollHeight, behavior });
       followRef.current = autoScroll;
+      runProgrammatic(() => viewport.scrollTo({ top: viewport.scrollHeight, behavior }));
       return true;
     },
-    [autoScroll, flashAutoscrolling, viewport]
+    [autoScroll, flashAutoscrolling, runProgrammatic, viewport]
   );
 
   const scrollToStart = useCallback(
@@ -122,11 +146,11 @@ export function MessageScrollerProvider({
       if (!viewport) return false;
       const behavior = options.behavior ?? 'instant';
       flashAutoscrolling();
-      viewport.scrollTo({ top: 0, behavior });
       followRef.current = false;
+      runProgrammatic(() => viewport.scrollTo({ top: 0, behavior }));
       return true;
     },
-    [flashAutoscrolling, viewport]
+    [flashAutoscrolling, runProgrammatic, viewport]
   );
 
   const scrollToMessage = useCallback(
@@ -138,49 +162,54 @@ export function MessageScrollerProvider({
       const behavior = options.behavior ?? 'smooth';
       const margin = options.scrollMargin ?? scrollMargin;
       flashAutoscrolling();
-      if (margin) {
-        const top =
-          node.getBoundingClientRect().top -
-          viewport.getBoundingClientRect().top +
-          viewport.scrollTop -
-          margin;
-        viewport.scrollTo({ top, behavior });
-      } else {
-        node.scrollIntoView({ block: align, behavior, inline: 'nearest' });
-      }
       followRef.current = false;
+      runProgrammatic(() => {
+        if (margin) {
+          const top =
+            node.getBoundingClientRect().top -
+            viewport.getBoundingClientRect().top +
+            viewport.scrollTop -
+            margin;
+          viewport.scrollTo({ top, behavior });
+        } else {
+          node.scrollIntoView({ block: align, behavior, inline: 'nearest' });
+        }
+      });
       return true;
     },
-    [flashAutoscrolling, scrollMargin, viewport]
+    [flashAutoscrolling, runProgrammatic, scrollMargin, viewport]
   );
 
   useEffect(() => {
     if (!viewport) return;
     if (initialized.current.viewport === viewport && initialized.current.key === resetKey) return;
+    const target = { viewport, key: resetKey };
     let frame = 0;
     let second = 0;
     setPendingScroll(defaultScrollPosition !== 'start');
     const apply = () => {
-      initialized.current = { viewport, key: resetKey };
-      if (defaultScrollPosition === 'end') {
-        viewport.scrollTop = viewport.scrollHeight;
-      } else if (defaultScrollPosition === 'last-anchor') {
-        const anchors = viewport.querySelectorAll<HTMLElement>('[data-scroll-anchor="true"]');
-        const last = anchors.item(anchors.length - 1);
-        if (last) {
-          const top =
-            last.getBoundingClientRect().top -
-            viewport.getBoundingClientRect().top +
-            viewport.scrollTop -
-            scrollMargin -
-            scrollPreviousItemPeek;
-          viewport.scrollTop = Math.max(0, top);
-        } else {
+      initialized.current = target;
+      runProgrammatic(() => {
+        if (defaultScrollPosition === 'end') {
           viewport.scrollTop = viewport.scrollHeight;
+        } else if (defaultScrollPosition === 'last-anchor') {
+          const anchors = viewport.querySelectorAll<HTMLElement>('[data-scroll-anchor="true"]');
+          const last = anchors.item(anchors.length - 1);
+          if (last) {
+            const top =
+              last.getBoundingClientRect().top -
+              viewport.getBoundingClientRect().top +
+              viewport.scrollTop -
+              scrollMargin -
+              scrollPreviousItemPeek;
+            viewport.scrollTop = Math.max(0, top);
+          } else {
+            viewport.scrollTop = viewport.scrollHeight;
+          }
+        } else {
+          viewport.scrollTop = 0;
         }
-      } else {
-        viewport.scrollTop = 0;
-      }
+      });
       followRef.current = autoScroll;
       setPendingScroll(false);
       updateScrollState();
@@ -191,11 +220,13 @@ export function MessageScrollerProvider({
     return () => {
       window.cancelAnimationFrame(frame);
       window.cancelAnimationFrame(second);
+      if (initialized.current !== target && mounted.current) setPendingScroll(false);
     };
   }, [
     autoScroll,
     defaultScrollPosition,
     resetKey,
+    runProgrammatic,
     scrollMargin,
     scrollPreviousItemPeek,
     updateScrollState,
@@ -206,13 +237,16 @@ export function MessageScrollerProvider({
     if (!viewport) return;
     let frame = 0;
     const onScroll = () => {
+      const programmaticEvent = programmatic.current;
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         frame = 0;
-        const { scrollTop, scrollHeight, clientHeight } = viewport;
-        const atEnd = scrollHeight - scrollTop - clientHeight <= scrollEdgeThreshold;
-        if (autoScroll && atEnd) followRef.current = true;
-        if (!atEnd && followRef.current) followRef.current = false;
+        if (!programmaticEvent) {
+          const { scrollTop, scrollHeight, clientHeight } = viewport;
+          const atEnd = scrollHeight - scrollTop - clientHeight <= scrollEdgeThreshold;
+          if (autoScroll && atEnd) followRef.current = true;
+          if (!atEnd && followRef.current) followRef.current = false;
+        }
         updateScrollState();
       });
     };
@@ -246,7 +280,7 @@ export function MessageScrollerProvider({
       const grew = scrollHeight > previous.scrollHeight;
       const atEnd = scrollHeight - scrollTop - clientHeight <= scrollEdgeThreshold;
       if (followRef.current && grew) {
-        viewport.scrollTo({ top: scrollHeight, behavior: 'instant' });
+        runProgrammatic(() => viewport.scrollTo({ top: scrollHeight, behavior: 'instant' }));
       } else if (
         preserveRef.current &&
         grew &&
@@ -254,7 +288,9 @@ export function MessageScrollerProvider({
         scrollTop < 48 &&
         previous.scrollHeight > 0
       ) {
-        viewport.scrollTop = scrollTop + (scrollHeight - previous.scrollHeight);
+        runProgrammatic(() => {
+          viewport.scrollTop = scrollTop + (scrollHeight - previous.scrollHeight);
+        });
       }
       lastMetrics.current = { scrollHeight: viewport.scrollHeight, scrollTop: viewport.scrollTop };
       updateScrollState();
@@ -262,10 +298,11 @@ export function MessageScrollerProvider({
     observer.observe(content);
     observer.observe(viewport);
     return () => observer.disconnect();
-  }, [scrollEdgeThreshold, updateScrollState, viewport]);
+  }, [runProgrammatic, scrollEdgeThreshold, updateScrollState, viewport]);
 
   useEffect(() => {
     if (!viewport) return;
+    anchorsRef.current = null;
     const observed = new Set<HTMLElement>();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -277,12 +314,14 @@ export function MessageScrollerProvider({
             if (entry.isIntersecting) next.add(id);
             else next.delete(id);
           }
-          return [...next];
+          const result = [...next];
+          return sameIds(previous, result) ? previous : result;
         });
       },
       { root: viewport, threshold: 0 }
     );
     const sync = () => {
+      anchorsRef.current = null;
       const live = new Set(viewport.querySelectorAll<HTMLElement>('[data-message-id]'));
       for (const element of observed) {
         if (live.has(element)) continue;
@@ -300,7 +339,7 @@ export function MessageScrollerProvider({
       }
       setVisibleIds((previous) => {
         const next = previous.filter((id) => ids.has(id));
-        return next.length === previous.length ? previous : next;
+        return sameIds(previous, next) ? previous : next;
       });
     };
     sync();
@@ -313,8 +352,11 @@ export function MessageScrollerProvider({
   }, [viewport]);
 
   useEffect(() => {
+    mounted.current = true;
     return () => {
+      mounted.current = false;
       if (autoscrollTimer.current) window.clearTimeout(autoscrollTimer.current);
+      window.cancelAnimationFrame(programmaticFrame.current);
     };
   }, []);
 
@@ -410,13 +452,18 @@ function ScrollerViewport({
   role = 'region',
   'aria-label': ariaLabel = 'Сообщения',
   tabIndex = 0,
+  ref,
   ...rest
 }: ComponentProps<'div'> & { preserveScrollOnPrepend?: boolean }) {
   const context = useScrollerContext();
   const { registerViewport } = context;
   const setRef = useCallback(
-    (element: HTMLDivElement | null) => registerViewport(element, preserveScrollOnPrepend),
-    [preserveScrollOnPrepend, registerViewport]
+    (element: HTMLDivElement | null) => {
+      registerViewport(element, preserveScrollOnPrepend);
+      if (typeof ref === 'function') ref(element);
+      else if (ref) ref.current = element;
+    },
+    [preserveScrollOnPrepend, ref, registerViewport]
   );
   return (
     <div
@@ -425,8 +472,8 @@ function ScrollerViewport({
       aria-label={ariaLabel}
       tabIndex={tabIndex}
       className={cx(styles.viewport, 'tb-scroll-fade-y', className)}
-      ref={setRef}
       {...rest}
+      ref={setRef}
     >
       {children}
     </div>
@@ -438,12 +485,14 @@ function ScrollerContent({
   className,
   role = 'log',
   'aria-relevant': ariaRelevant = 'additions',
+  busy,
   ...rest
-}: ComponentProps<'div'>) {
+}: ComponentProps<'div'> & { busy?: boolean }) {
   return (
     <div
       role={role}
       aria-relevant={ariaRelevant}
+      aria-busy={busy || undefined}
       className={cx(styles.content, className)}
       {...rest}
     >

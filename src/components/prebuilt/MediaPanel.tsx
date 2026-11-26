@@ -2,13 +2,8 @@ import type { ReactNode } from 'react';
 import styles from './Prebuilt.module.css';
 import { Button } from '../ui/Button';
 import type { IconName } from '../ui/Icon';
-import {
-  Card,
-  CardBody,
-  CardDescription,
-  CardMedia,
-  CardTitle,
-} from '../ui/Card';
+import { Card, CardBody, CardDescription, CardMedia, CardTitle } from '../ui/Card';
+import { safeHref } from '../../lib/url';
 
 export interface MediaPanelLink {
   label: string;
@@ -25,14 +20,7 @@ export interface MediaPanelProps {
   className?: string;
 }
 
-export function MediaPanel({
-  title,
-  text,
-  media,
-  mediaWidth,
-  links,
-  className,
-}: MediaPanelProps) {
+export function MediaPanel({ title, text, media, mediaWidth, links, className }: MediaPanelProps) {
   return (
     <Card tone="secondary" density="l" mediaWidth={mediaWidth} className={className}>
       <CardBody>
@@ -40,8 +28,12 @@ export function MediaPanel({
         {text && <CardDescription>{text}</CardDescription>}
         {links && links.length > 0 && (
           <div className={styles.actions}>
-            {links.map((link) => (
-              <Button key={link.label} href={link.href} iconLeft={link.icon}>
+            {links.map((link, index) => (
+              <Button
+                key={`${link.href}-${link.label}-${index}`}
+                href={safeHref(link.href)}
+                iconLeft={link.icon}
+              >
                 {link.label}
               </Button>
             ))}

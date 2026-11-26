@@ -47,4 +47,19 @@ describe('Collapsible', () => {
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(trigger.hasAttribute('aria-controls')).toBe(false);
   });
+
+  it('пробрасывает DOM-пропсы на корневой элемент', () => {
+    const { container } = render(
+      <Collapsible id="root-id" data-testid="root" role="group" aria-label="Раздел">
+        <CollapsibleTrigger>Открыть</CollapsibleTrigger>
+      </Collapsible>
+    );
+    const root = screen.getByTestId('root');
+
+    expect(container.firstElementChild).toBe(root);
+    expect(root.id).toBe('root-id');
+    expect(root.getAttribute('role')).toBe('group');
+    expect(root.getAttribute('aria-label')).toBe('Раздел');
+    expect(root.getAttribute('data-state')).toBe('closed');
+  });
 });

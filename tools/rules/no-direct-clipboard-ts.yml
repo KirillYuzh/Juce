@@ -1,0 +1,47 @@
+id: no-direct-clipboard-ts
+language: TypeScript
+severity: error
+message: >-
+  Прямой navigator.clipboard падает в небезопасном контексте и заставляет каждый
+  компонент заново держать состояние «скопировано».
+note: >-
+  Используй useCopy из src/components/ui/clipboard: он делает fallback,
+  сбрасывает состояние по таймеру и чистит его при размонтировании.
+ignores:
+  - 'src/components/ui/clipboard.ts'
+rule:
+  any:
+    - pattern: navigator.clipboard
+    - pattern: window.navigator.clipboard
+    - pattern: globalThis.navigator.clipboard
+    - kind: subscript_expression
+      all:
+        - has:
+            field: object
+            regex: '^navigator$'
+        - has:
+            field: index
+            regex: 'clipboard'
+    - kind: member_expression
+      all:
+        - has:
+            field: object
+            kind: subscript_expression
+            all:
+              - has:
+                  field: object
+                  regex: '^(window|globalThis)$'
+              - has:
+                  field: index
+                  regex: 'navigator'
+        - has:
+            field: property
+            regex: '^clipboard$'
+    - kind: variable_declarator
+      all:
+        - has:
+            field: value
+            regex: '(^|\\.)navigator$'
+        - has:
+            field: name
+            regex: 'clipboard'
