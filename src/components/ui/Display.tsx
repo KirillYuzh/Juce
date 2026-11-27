@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import styles from './Display.module.css';
 import { cx } from '../../lib/cx';
+import { clamp } from '../../lib/clamp';
 import { radiusStyle, type RadiusValue } from '../../lib/radius';
 
 export type BadgeTone = 'neutral' | 'accent' | 'success' | 'error' | 'warning';
@@ -83,7 +84,7 @@ export function Progress({
   tone?: 'accent' | 'brand';
   label?: string;
 }) {
-  const clamped = Math.min(100, Math.max(0, value));
+  const clamped = clamp(value, 0, 100);
   return (
     <div
       className={cx(styles.progress, tone === 'brand' && styles.progressAccent)}

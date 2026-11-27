@@ -12,6 +12,7 @@ import styles from './Questionnaire.module.css';
 import { Button } from './Button';
 import { Icon } from './Icon';
 import { cx } from '../../lib/cx';
+import { clamp } from '../../lib/clamp';
 
 export type QuestionnaireAnswers = Record<string, string | string[]>;
 
@@ -91,7 +92,7 @@ export function Questionnaire({
 
   const goTo = (next: number) => {
     setError(null);
-    setIndex(Math.min(Math.max(next, 0), items.length - 1));
+    setIndex(clamp(next, 0, items.length - 1));
   };
 
   const toggleChoice = (item: QuestionnaireItemConfig, value: string) => {

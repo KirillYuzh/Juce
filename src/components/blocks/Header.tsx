@@ -1,10 +1,11 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Header.module.css';
 import { Logo } from '../ui/Display';
 import { Icon } from '../ui/Icon';
 import { Button, IconButton } from '../ui/Button';
 import type { NavItem } from '../../data/home';
 import { cx } from '../../lib/cx';
+import { useDomId } from '../../lib/use-id';
 
 export interface HeaderProps {
   nav: NavItem[];
@@ -27,7 +28,7 @@ export function Header({
 }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuId = `mobile-menu-${useId().replace(/:/g, '')}`;
+  const menuId = `mobile-menu-${useDomId()}`;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);

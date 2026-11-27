@@ -1,9 +1,10 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import styles from './Navigation.module.css';
 import { Icon } from './Icon';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './Collapsible';
 import { cx } from '../../lib/cx';
 import { useControllableState } from '../../lib/use-controllable-state';
+import { useDomId } from '../../lib/use-id';
 
 export interface TabItem {
   id: string;
@@ -32,7 +33,7 @@ export function Tabs({
   className,
   label = 'Разделы',
 }: TabsProps) {
-  const baseId = useId().replace(/:/g, '');
+  const baseId = useDomId();
   const [active, setActive] = useControllableState({
     value,
     defaultValue: defaultValue ?? items[0]?.id ?? '',

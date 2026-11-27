@@ -15,6 +15,7 @@ import {
 } from 'react';
 import styles from './Resizable.module.css';
 import { cx } from '../../lib/cx';
+import { clamp } from '../../lib/clamp';
 
 export type ResizableOrientation = 'horizontal' | 'vertical';
 
@@ -47,8 +48,6 @@ function useResizable(component: string): ResizableContextValue {
   if (!context) throw new Error(`${component} must be used inside <ResizablePanelGroup>`);
   return context;
 }
-
-const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
 const KEYBOARD_STEP = 4;
 

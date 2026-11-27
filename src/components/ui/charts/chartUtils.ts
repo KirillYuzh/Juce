@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { clamp } from '../../../lib/clamp';
 
 export type ChartCurve = 'smooth' | 'linear' | 'step';
 export type ChartRow = Record<string, string | number>;
@@ -141,12 +142,12 @@ export function lineScale(count: number, plotWidth: number, left: number) {
 export function pointerIndex(position: number, plotWidth: number, left: number, count: number) {
   if (count === 0) return null;
   const ratio = count > 1 ? (position - left) / Math.max(plotWidth, 1) : 0.5;
-  return Math.min(Math.max(Math.round(ratio * (count - 1)), 0), count - 1);
+  return clamp(Math.round(ratio * (count - 1)), 0, count - 1);
 }
 
 export function bandIndex(position: number, band: number, count: number) {
   if (count === 0) return null;
-  return Math.min(Math.max(Math.floor(position / Math.max(band, 1)), 0), count - 1);
+  return clamp(Math.floor(position / Math.max(band, 1)), 0, count - 1);
 }
 
 export function valueExtent(groups: number[][]) {

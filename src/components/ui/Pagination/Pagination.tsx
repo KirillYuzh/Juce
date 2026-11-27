@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import styles from './Pagination.module.css';
 import { Button, IconButton } from '../Button';
 import { cx } from '../../../lib/cx';
+import { clamp } from '../../../lib/clamp';
 
 export interface PaginationLabels {
   previous?: string;
@@ -49,7 +50,7 @@ export function Pagination({
   className,
 }: PaginationProps) {
   const total = Math.max(1, Math.floor(pageCount));
-  const current = Math.min(Math.max(1, Math.floor(page)), total);
+  const current = clamp(Math.floor(page), 1, total);
   const reported = useRef(page);
 
   useEffect(() => {

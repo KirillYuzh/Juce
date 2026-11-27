@@ -1,12 +1,12 @@
 import {
   createContext,
   useContext,
-  useId,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
   type ReactNode,
 } from 'react';
 import { useControllableState } from '../../lib/use-controllable-state';
+import { useDomId } from '../../lib/use-id';
 
 interface CollapsibleContextValue {
   open: boolean;
@@ -39,7 +39,7 @@ export function Collapsible({
     defaultValue: defaultOpen,
     onChange: onOpenChange,
   });
-  const reactId = useId().replace(/:/g, '');
+  const reactId = useDomId();
 
   return (
     <CollapsibleContext.Provider

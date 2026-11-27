@@ -7,6 +7,7 @@ import { Input } from '../ui/Fields';
 import { AlertDialog } from '../ui/AlertDialog';
 import { useCopy } from '../ui/clipboard';
 import { cx } from '../../lib/cx';
+import { useDismiss } from '../../lib/use-dismiss';
 
 export interface ChatListItem {
   id: string;
@@ -69,14 +70,11 @@ function ChatActions({ chat, onCopy, onDownload, onDelete }: ChatActionsProps) {
     if (restoreFocus) trigger()?.focus();
   };
 
+  useDismiss({ open, onDismiss: () => setOpen(false), ref: rootRef, escape: false });
+
   useEffect(() => {
     if (!open) return;
     itemsRef.current[0]?.focus();
-    const onPointer = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener('pointerdown', onPointer);
-    return () => document.removeEventListener('pointerdown', onPointer);
   }, [open]);
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {

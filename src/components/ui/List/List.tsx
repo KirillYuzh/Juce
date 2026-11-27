@@ -1,9 +1,10 @@
-import { Fragment, useId, useState, type ElementType, type ReactNode } from 'react';
+import { Fragment, useState, type ElementType, type ReactNode } from 'react';
 import styles from './List.module.css';
 import { Button } from '../Button';
 import { Stack } from '../Layout';
 import { Text } from '../Typography';
 import { cx } from '../../../lib/cx';
+import { useDomId } from '../../../lib/use-id';
 
 export interface ListProps {
   children: ReactNode;
@@ -90,7 +91,7 @@ export function CollapsibleList({
   className,
 }: CollapsibleListProps) {
   const [expanded, setExpanded] = useState(false);
-  const listId = `collapsible-list-${useId().replace(/:/g, '')}`;
+  const listId = `collapsible-list-${useDomId()}`;
   const visible = expanded ? items : items.slice(0, initial);
   const hidden = items.length - initial;
 

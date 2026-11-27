@@ -5,6 +5,7 @@ import { Icon } from './Icon';
 import { cx } from '../../lib/cx';
 import { radiusStyle, type RadiusValue } from '../../lib/radius';
 import { useControllableState } from '../../lib/use-controllable-state';
+import { useDismiss } from '../../lib/use-dismiss';
 
 interface FieldShellProps {
   label?: string;
@@ -362,14 +363,7 @@ export function Select({
     document.getElementById(`${triggerId}-${activeIndex}`)?.scrollIntoView({ block: 'nearest' });
   }, [open, activeIndex, triggerId]);
 
-  useEffect(() => {
-    if (!open) return;
-    const close = (event: PointerEvent) => {
-      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener('pointerdown', close);
-    return () => document.removeEventListener('pointerdown', close);
-  }, [open]);
+  useDismiss({ open, onDismiss: () => setOpen(false), ref: wrapperRef, escape: false });
 
   const onListKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
     if (!options.length) return;

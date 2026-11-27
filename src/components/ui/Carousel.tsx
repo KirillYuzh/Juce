@@ -12,6 +12,7 @@ import {
 import styles from './Carousel.module.css';
 import { IconButton } from './Button';
 import { cx } from '../../lib/cx';
+import { clamp } from '../../lib/clamp';
 
 export type CarouselOrientation = 'horizontal' | 'vertical';
 
@@ -113,7 +114,7 @@ export function Carousel({
       const list = items();
       const viewport = viewportRef.current;
       if (!list.length || !viewport) return;
-      const target = Math.min(Math.max(index, 0), list.length - 1);
+      const target = clamp(index, 0, list.length - 1);
       const start = itemStart(list[target]);
       viewport.scrollTo(orientation === 'horizontal' ? { left: start } : { top: start });
     },

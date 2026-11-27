@@ -1,8 +1,9 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import styles from './PromptInput.module.css';
 import { Icon } from '../ui/Icon';
 import { Spinner } from '../ui/Display';
 import { cx } from '../../lib/cx';
+import { useDomId } from '../../lib/use-id';
 
 export type PromptInputStatus = 'ready' | 'submitted' | 'streaming' | 'error';
 
@@ -54,7 +55,7 @@ export function PromptInput({
   const fileRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const submitLock = useRef(false);
-  const generatedId = useId().replace(/:/g, '');
+  const generatedId = useDomId();
   const inputId = id ?? `prompt-${generatedId}`;
 
   const update = (next: string) => {

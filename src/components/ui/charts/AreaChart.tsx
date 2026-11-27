@@ -1,7 +1,8 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
 import { cx } from '../../../lib/cx';
+import { useDomId } from '../../../lib/use-id';
 import {
   axisTicks,
   labelStep,
@@ -59,7 +60,7 @@ export function AreaChart({
 }: AreaChartProps) {
   const [plotRef, width] = usePlotWidth();
   const [hovered, setHovered] = useState<number | null>(null);
-  const gradientId = useId().replace(/:/g, '');
+  const gradientId = useDomId();
   const colors = seriesColors(series);
 
   useEffect(() => {

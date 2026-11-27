@@ -11,6 +11,7 @@ import {
 import styles from './Popover.module.css';
 import { cx } from '../../../lib/cx';
 import { focusablesWithin } from '../../../lib/focus';
+import { useDismiss } from '../../../lib/use-dismiss';
 
 interface PopoverContextValue {
   open: boolean;
@@ -60,21 +61,7 @@ export function Popover({
     [openProp, onOpenChange]
   );
 
-  useEffect(() => {
-    if (!open) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open, setOpen]);
+  useDismiss({ open, onDismiss: () => setOpen(false), ref: wrapperRef });
 
   useEffect(() => {
     if (!open) return;

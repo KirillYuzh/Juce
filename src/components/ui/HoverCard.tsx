@@ -1,15 +1,8 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import styles from './HoverCard.module.css';
 import { cx } from '../../lib/cx';
 import { FOCUSABLE } from '../../lib/focus';
+import { useDomId } from '../../lib/use-id';
 
 interface HoverCardContextValue {
   open: boolean;
@@ -40,7 +33,7 @@ export function HoverCard({
   children,
 }: HoverCardProps) {
   const [open, setOpen] = useState(defaultOpen);
-  const reactId = useId().replace(/:/g, '');
+  const reactId = useDomId();
   const contentId = `${reactId}-content`;
   const triggerId = `${reactId}-trigger`;
   const triggerRef = useRef<HTMLSpanElement>(null);
