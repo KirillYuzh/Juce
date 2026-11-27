@@ -67,8 +67,8 @@ export type {
   SwitchProps,
   TextareaProps,
 } from './components/ui/Fields';
-export { Alert, CookieNotice, Tooltip } from './components/ui/Feedback';
-export type { AlertProps, AlertTone, CookieNoticeProps } from './components/ui/Feedback';
+export { CookieNotice, Tooltip } from './components/ui/Feedback';
+export type { CookieNoticeProps } from './components/ui/Feedback';
 export { AlertDialog } from './components/ui/AlertDialog';
 export type { AlertDialogProps } from './components/ui/AlertDialog';
 export { Accordion, Tabs } from './components/ui/Navigation';

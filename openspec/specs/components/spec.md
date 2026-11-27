@@ -233,7 +233,12 @@ The system SHALL express text through `Text`, `Heading`, `Quote`, `Callout`, `Or
 #### Scenario: Тона Callout
 
 - **WHEN** у `Callout` задан `tone`
-- **THEN** допустимы только `note`, `important`, `warning`, `error` и `success`, а иконка и цвет берутся из роли тона
+- **THEN** допустимы только `info`, `note`, `important`, `warning`, `error` и `success`, `info` берёт те же роли, что `note`, а иконка и цвет — из роли тона
+
+#### Scenario: Роль Callout
+
+- **WHEN** у `Callout` не задан `role`
+- **THEN** по умолчанию это `note`, при `tone="error"` — `alert`, а переданный `role` перекрывает оба
 
 #### Scenario: Уровень заголовка
 
