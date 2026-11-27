@@ -5,6 +5,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './Collapsib
 import { cx } from '../../lib/cx';
 import { useControllableState } from '../../lib/use-controllable-state';
 import { useDomId } from '../../lib/use-id';
+import { useRovingFocus } from '../../lib/use-roving-focus';
 
 export interface TabItem {
   id: string;
@@ -63,27 +64,11 @@ export function Tabs({
     tabRefs.current[index]?.focus();
   };
 
-  const onTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
-    if (!items.length) return;
-    switch (event.key) {
-      case 'ArrowRight':
-        event.preventDefault();
-        selectTab((index + 1) % items.length);
-        break;
-      case 'ArrowLeft':
-        event.preventDefault();
-        selectTab((index - 1 + items.length) % items.length);
-        break;
-      case 'Home':
-        event.preventDefault();
-        selectTab(0);
-        break;
-      case 'End':
-        event.preventDefault();
-        selectTab(items.length - 1);
-        break;
-    }
-  };
+  const onTabKeyDown = useRovingFocus({
+    count: items.length,
+    index: currentIndex,
+    onMove: selectTab,
+  });
 
   return (
     <>
@@ -109,7 +94,7 @@ export function Tabs({
               tabIndex={selected ? 0 : -1}
               className={cx(styles.tab, selected && styles.tabActive)}
               onClick={() => setActive(item.id)}
-              onKeyDown={(event) => onTabKeyDown(event, index)}
+              onKeyDown={onTabKeyDown}
             >
               {item.label}
             </button>

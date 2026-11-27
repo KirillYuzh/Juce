@@ -3,6 +3,7 @@ import styles from './ColorPicker.module.css';
 import { Input } from '../Fields';
 import { cx } from '../../../lib/cx';
 import { useControllableState } from '../../../lib/use-controllable-state';
+import { useRovingFocus } from '../../../lib/use-roving-focus';
 
 export const COLOR_PRESETS = [
   '#ff6574',
@@ -81,36 +82,17 @@ export function ColorPicker({
     setDraft(color);
   };
 
-  const onSwatchKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!swatches.length) return;
-    const index = currentIndex >= 0 ? currentIndex : 0;
-    let next = index;
-
-    switch (event.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-        next = (index + 1) % swatches.length;
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-        next = (index - 1 + swatches.length) % swatches.length;
-        break;
-      case 'Home':
-        next = 0;
-        break;
-      case 'End':
-        next = swatches.length - 1;
-        break;
-      default:
-        return;
-    }
-
-    const swatch = swatches[next];
-    if (!swatch) return;
-    event.preventDefault();
-    choose(swatch);
-    swatchRefs.current[next]?.focus();
-  };
+  const onSwatchKeyDown = useRovingFocus({
+    count: swatches.length,
+    index: currentIndex,
+    orientation: 'both',
+    onMove: (next) => {
+      const swatch = swatches[next];
+      if (!swatch) return;
+      choose(swatch);
+      swatchRefs.current[next]?.focus();
+    },
+  });
 
   const onHexChange = (raw: string) => {
     setDraft(raw);

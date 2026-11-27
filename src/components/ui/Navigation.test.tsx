@@ -39,4 +39,18 @@ describe('Tabs', () => {
     fireEvent.keyDown(third, { key: 'Home' });
     expect(document.activeElement).toBe(first);
   });
+
+  it('переводит фокус с последнего таба на первый', () => {
+    render(<Tabs items={items} label="Разделы" />);
+    const [first, second, third] = screen.getAllByRole('tab');
+
+    fireEvent.keyDown(first, { key: 'ArrowRight' });
+    expect(document.activeElement).toBe(second);
+    fireEvent.keyDown(second, { key: 'ArrowRight' });
+    expect(document.activeElement).toBe(third);
+
+    fireEvent.keyDown(third, { key: 'ArrowRight' });
+    expect(document.activeElement).toBe(first);
+    expect(first.getAttribute('aria-selected')).toBe('true');
+  });
 });
