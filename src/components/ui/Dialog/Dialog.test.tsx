@@ -167,4 +167,24 @@ describe('Dialog', () => {
     expect(dialog().getAttribute('data-size')).toBe('s');
     expect(screen.queryByRole('button', { name: 'Закрыть' })).toBeNull();
   });
+
+  it('блокирует прокрутку документа, пока открыт', () => {
+    render(<Harness />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Открыть' }));
+    expect(document.body.style.overflow).toBe('hidden');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Закрыть' }));
+    expect(document.body.style.overflow).toBe('');
+  });
+
+  it('снимает блокировку, когда открытый DialogContent размонтирован', () => {
+    const { unmount } = render(<Harness />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Открыть' }));
+    expect(document.body.style.overflow).toBe('hidden');
+
+    unmount();
+    expect(document.body.style.overflow).toBe('');
+  });
 });

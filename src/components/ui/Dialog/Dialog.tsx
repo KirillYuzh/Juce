@@ -10,6 +10,7 @@ import {
 import styles from './Dialog.module.css';
 import { Button, IconButton } from '../Button';
 import { cx } from '../../../lib/cx';
+import { lockScroll } from '../../../lib/scroll-lock';
 
 export type DialogSize = 's' | 'm' | 'l';
 export type DialogRole = 'dialog' | 'alertdialog';
@@ -98,6 +99,11 @@ export function DialogContent({
       restoreRef.current = null;
       if (restore?.isConnected) restore.focus();
     };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    return lockScroll();
   }, [open]);
 
   useEffect(() => {
