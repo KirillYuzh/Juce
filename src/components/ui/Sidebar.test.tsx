@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarRail,
+  SidebarTrigger,
 } from './Sidebar';
 
 const cssSource = readFileSync(
@@ -131,5 +132,46 @@ describe('SidebarRail', () => {
   it('держит хитзону не уже 24px при видимых 10px', () => {
     const inset = -px(ruleBody('.rail::before'), 'left');
     expect(px(ruleBody('.rail'), 'width') + 2 * inset).toBeGreaterThanOrEqual(24);
+  });
+});
+
+describe('Sidebar в мобильном режиме', () => {
+  function MobileSidebar() {
+    return (
+      <SidebarProvider>
+        <Sidebar>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton>Профиль</SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </Sidebar>
+        <SidebarTrigger />
+      </SidebarProvider>
+    );
+  }
+
+  function stubMobile() {
+    window.matchMedia = ((query: string) => ({
+      matches: query === '(max-width: 767px)',
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    })) as unknown as typeof window.matchMedia;
+  }
+
+  it('блокирует прокрутку, пока открыт drawer, и снимает после закрытия', () => {
+    stubMobile();
+    render(<MobileSidebar />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Переключить панель' }));
+    expect(document.body.style.overflow).toBe('hidden');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Переключить панель' }));
+    expect(document.body.style.overflow).toBe('');
   });
 });

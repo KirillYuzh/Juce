@@ -15,6 +15,7 @@ import { IconButton } from './Button';
 import { Skeleton } from './Display';
 import { cx } from '../../lib/cx';
 import { FOCUSABLE } from '../../lib/focus';
+import { lockScroll } from '../../lib/scroll-lock';
 import { useControllableState } from '../../lib/use-controllable-state';
 
 export const SIDEBAR_WIDTH = '16rem';
@@ -189,6 +190,11 @@ export function Sidebar({
     if (!isMobile || !openMobile) return;
     const first = asideRef.current?.querySelector<HTMLElement>(FOCUSABLE);
     first?.focus();
+  }, [isMobile, openMobile]);
+
+  useEffect(() => {
+    if (!isMobile || !openMobile) return;
+    return lockScroll();
   }, [isMobile, openMobile]);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
