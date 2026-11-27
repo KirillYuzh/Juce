@@ -304,7 +304,7 @@ export function Select({
 
   const [current, setCurrent] = useControllableState({
     value,
-    defaultValue: defaultValue ?? options[0]?.value ?? '',
+    defaultValue: defaultValue ?? '',
     onChange,
   });
   const selectedIndex = options.findIndex((option) => option.value === current);
@@ -331,15 +331,8 @@ export function Select({
   };
 
   useEffect(() => {
-    if (value !== undefined) return;
-    if (!options.length) {
-      if (current !== '') setCurrent('');
-      return;
-    }
-    if (!options.some((option) => option.value === current)) {
-      const first = options[0];
-      if (first) setCurrent(first.value);
-    }
+    if (value !== undefined || current === '') return;
+    if (!options.some((option) => option.value === current)) setCurrent('');
   }, [options, value, current, setCurrent]);
 
   useEffect(() => {
