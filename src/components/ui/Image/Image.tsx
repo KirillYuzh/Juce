@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ImgHTMLAttributes, type ReactNode } from 'react';
 import styles from './Image.module.css';
 import { cx } from '../../../lib/cx';
 
@@ -16,6 +16,7 @@ export interface ImageProps {
   imgClassName?: string;
   loading?: 'eager' | 'lazy';
   decoding?: 'async' | 'sync' | 'auto';
+  referrerPolicy?: ImgHTMLAttributes<HTMLImageElement>['referrerPolicy'];
   srcSet?: string;
   sizes?: string;
   onLoad?: () => void;
@@ -39,6 +40,7 @@ export function Image({
   imgClassName,
   loading = 'lazy',
   decoding = 'async',
+  referrerPolicy = 'no-referrer',
   srcSet,
   sizes,
   onLoad,
@@ -74,6 +76,7 @@ export function Image({
             alt={alt}
             loading={loading}
             decoding={decoding}
+            referrerPolicy={referrerPolicy}
             onLoad={() => {
               setStatus('loaded');
               onLoad?.();

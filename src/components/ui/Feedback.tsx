@@ -106,7 +106,12 @@ export function CookieNotice({
   const [visible, setVisible] = useState(true);
   if (!visible) return null;
   return (
-    <div className={cx(styles.cookie, className)} role="dialog" aria-label="Использование куки">
+    <div
+      className={cx(styles.cookie, className)}
+      role="region"
+      aria-live="polite"
+      aria-label="Использование куки"
+    >
       <span className={styles.cookieText}>{text}</span>
       <span className={styles.cookieAction}>
         <Button

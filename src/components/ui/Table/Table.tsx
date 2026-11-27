@@ -268,7 +268,7 @@ export function Table<Row>({
                     <Input
                       size="s"
                       placeholder="Фильтр"
-                      aria-label={`Фильтр: ${column.id}`}
+                      aria-label={`Фильтр: ${typeof column.header === 'string' ? column.header : column.id}`}
                       value={filters?.[column.id] ?? ''}
                       onChange={(event) =>
                         onFiltersChange({ ...filters, [column.id]: event.target.value })

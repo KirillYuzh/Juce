@@ -63,7 +63,7 @@ export function Sources({
         <TraceCollapsibleContent>
           <Trace>
             {unique.map((source) => {
-              const target = source.href ?? safeHref(source.url);
+              const target = safeHref(source.href ?? source.url);
               const onOpen = source.onOpen;
               const external = source.href === undefined && onOpen === undefined;
               const line = (
@@ -116,7 +116,7 @@ export function Sources({
                     key={source.url}
                     href={target}
                     target={external ? '_blank' : undefined}
-                    rel={external ? 'noreferrer' : undefined}
+                    rel={external ? 'noreferrer noopener' : undefined}
                   >
                     {line}
                   </Link>
@@ -129,7 +129,7 @@ export function Sources({
                   key={source.url}
                   href={target}
                   target={external ? '_blank' : undefined}
-                  rel={external ? 'noreferrer' : undefined}
+                  rel={external ? 'noreferrer noopener' : undefined}
                 >
                   {line}
                 </a>

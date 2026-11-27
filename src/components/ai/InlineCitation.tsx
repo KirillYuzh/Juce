@@ -88,7 +88,7 @@ export function InlineCitationSource({
   linkComponent: Link,
 }: InlineCitationSourceProps) {
   const source: CitationSource = { url, title, host, description, icon, href, onOpen };
-  const target = href ?? safeHref(url);
+  const target = safeHref(href ?? url);
   const external = href === undefined && onOpen === undefined;
   const label = title ?? sourceHost({ url, host });
 
@@ -115,7 +115,7 @@ export function InlineCitationSource({
           className={styles.sourceLink}
           href={target}
           target={external ? '_blank' : undefined}
-          rel={external ? 'noreferrer' : undefined}
+          rel={external ? 'noreferrer noopener' : undefined}
         >
           {content}
         </Link>
@@ -124,7 +124,7 @@ export function InlineCitationSource({
           className={styles.sourceLink}
           href={target}
           target={external ? '_blank' : undefined}
-          rel={external ? 'noreferrer' : undefined}
+          rel={external ? 'noreferrer noopener' : undefined}
         >
           {content}
         </a>

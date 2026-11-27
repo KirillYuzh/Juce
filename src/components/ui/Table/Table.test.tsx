@@ -138,15 +138,49 @@ describe('Table', () => {
   it('filters value columns and gives node columns no filter input', () => {
     render(<FilterableTable />);
 
-    expect(screen.getByLabelText('Фильтр: name')).toBeTruthy();
-    expect(screen.getByLabelText('Фильтр: score')).toBeTruthy();
+    expect(screen.getByLabelText('Фильтр: Имя')).toBeTruthy();
+    expect(screen.getByLabelText('Фильтр: Баллы')).toBeTruthy();
     expect(screen.queryByLabelText('Фильтр: status')).toBeNull();
 
-    fireEvent.change(screen.getByLabelText('Фильтр: name'), { target: { value: 'ал' } });
+    fireEvent.change(screen.getByLabelText('Фильтр: Имя'), { target: { value: 'ал' } });
 
     expect(screen.getByText('Алан')).toBeTruthy();
     expect(screen.queryByText('Ада')).toBeNull();
     expect(screen.queryByText('Грейс')).toBeNull();
+  });
+
+  it('names a filter input by the visible header, falling back to the column id', () => {
+    render(
+      <Table
+        columns={[
+          {
+            kind: 'value',
+            id: 'name',
+            header: 'Имя',
+            filterable: true,
+            value: (row: User) => row.name,
+          },
+          {
+            kind: 'value',
+            id: 'score',
+            header: <span>Баллы</span>,
+            filterable: true,
+            value: (row: User) => row.score,
+          },
+        ]}
+        rows={rows}
+        rowKey={rowKey}
+        filters={{}}
+        onFiltersChange={() => {}}
+        selectable
+        selectedKeys={new Set()}
+        onSelectionChange={() => {}}
+      />
+    );
+
+    expect(screen.getByLabelText('Фильтр: Имя')).toBeTruthy();
+    expect(screen.getByLabelText('Фильтр: score')).toBeTruthy();
+    expect(screen.getByRole('checkbox', { name: 'Выбрать все' })).toBeTruthy();
   });
 
   it('selects a row and all rows through onSelectionChange', () => {

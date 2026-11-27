@@ -60,6 +60,16 @@ describe('Image', () => {
     expect(img.getAttribute('decoding')).toBe('async');
   });
 
+  it('blocks the referrer by default and lets it be overridden', () => {
+    const { container, rerender } = render(<Image src="/cover.png" alt="Обложка" />);
+    const policy = () => container.querySelector('img')?.getAttribute('referrerpolicy');
+
+    expect(policy()).toBe('no-referrer');
+
+    rerender(<Image src="/cover.png" alt="Обложка" referrerPolicy="origin" />);
+    expect(policy()).toBe('origin');
+  });
+
   it('shows the fallback inside CardMedia', () => {
     const { container } = render(
       <Card>

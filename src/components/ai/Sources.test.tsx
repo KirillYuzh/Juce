@@ -16,9 +16,7 @@ describe('Sources', () => {
     render(
       <Sources
         defaultOpen
-        sources={[
-          { url: 'https://go.dev/', title: 'go.dev', description: 'Документация по Go' },
-        ]}
+        sources={[{ url: 'https://go.dev/', title: 'go.dev', description: 'Документация по Go' }]}
       />
     );
     expect(screen.getByText('Документация по Go')).toBeTruthy();
@@ -48,14 +46,20 @@ describe('Sources', () => {
     expect(link.hasAttribute('target')).toBe(false);
   });
 
-  it('renders a button when onOpen is given and calls it', () => {
-    const onOpen = vi.fn();
+  it('drops an unsafe explicit href and keeps the plain text', () => {
     render(
       <Sources
         defaultOpen
-        sources={[{ url: 'https://go.dev/', title: 'go.dev', onOpen }]}
+        sources={[{ url: 'https://go.dev/', title: 'go.dev', href: 'javascript:alert(1)' }]}
       />
     );
+    expect(screen.queryByRole('link')).toBeNull();
+    expect(screen.getByText('go.dev')).toBeTruthy();
+  });
+
+  it('renders a button when onOpen is given and calls it', () => {
+    const onOpen = vi.fn();
+    render(<Sources defaultOpen sources={[{ url: 'https://go.dev/', title: 'go.dev', onOpen }]} />);
     expect(screen.queryByRole('link')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'go.dev' }));
     expect(onOpen).toHaveBeenCalledTimes(1);
