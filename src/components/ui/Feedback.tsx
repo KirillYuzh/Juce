@@ -70,6 +70,9 @@ export function Tooltip({ text, children }: { text: string; children: ReactNode 
       onPointerLeave={() => setOpen(false)}
       onFocus={() => setOpen(true)}
       onBlur={handleBlur}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') setOpen(false);
+      }}
     >
       {trigger}
       <span id={id} className={styles.tooltip} role="tooltip" aria-hidden={open ? undefined : true}>

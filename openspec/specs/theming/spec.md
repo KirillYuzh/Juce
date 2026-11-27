@@ -173,3 +173,27 @@ The system SHALL accept radius only through the typed `radius` prop and named to
 
 - **WHEN** нужен радиус, которого нет в шкале
 - **THEN** добавляют роль в структурный набор `structure.css`, а не число в компонент
+
+### Requirement: ThemeProvider меняет только `data-theme`
+
+The system SHALL let `ThemeProvider`/`useTheme` switch the document theme by setting `data-theme` on the document element only, SHALL keep persistence opt-in through `storageKey`, and SHALL keep `ThemeScope` for local scopes.
+
+#### Scenario: Смена темы
+
+- **WHEN** компонент вызывает `setTheme('dark')`
+- **THEN** на `document.documentElement` появляется `data-theme="dark"`, а класс `.dark` и вторая ось не появляются
+
+#### Scenario: Без сохранения
+
+- **WHEN** `storageKey` не передан
+- **THEN** выбор темы не пишется в `localStorage`, и страница не восстанавливает её сама
+
+#### Scenario: С сохранением
+
+- **WHEN** передан `storageKey`
+- **THEN** выбранная тема сохраняется и восстанавливается из хранилища при следующем монтировании
+
+#### Scenario: Локальная область
+
+- **WHEN** тема нужна только части страницы
+- **THEN** используется `ThemeScope` со своим `data-theme`, а не второй провайдер

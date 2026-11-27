@@ -290,14 +290,11 @@
 }
 
 .tb-shimmer {
-  --tb-shimmer-duration: 2s;
-  --tb-shimmer-angle: 20deg;
-
   --tb-shimmer-spread: calc(3ch + 40px);
   --tb-shimmer-color: color-mix(in oklab, currentColor 45%, transparent);
 
   background-image: linear-gradient(
-    var(--tb-shimmer-angle),
+    var(--tb-shimmer-angle, 20deg),
     currentColor 0%,
     currentColor calc(50% - var(--tb-shimmer-spread)),
     var(--tb-shimmer-color) 50%,
@@ -310,7 +307,7 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: tb-shimmer var(--tb-shimmer-duration) linear infinite;
+  animation: tb-shimmer var(--tb-shimmer-duration, 2s) linear infinite;
 }
 
 .tb-shimmer-once {

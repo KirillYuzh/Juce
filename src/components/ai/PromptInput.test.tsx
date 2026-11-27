@@ -48,4 +48,50 @@ describe('PromptInput', () => {
     pressEnter();
     expect(onSubmit).toHaveBeenCalledWith({ text: 'Вопрос', files: [] });
   });
+
+  it('ignores repeated Enter keydowns until the value changes', () => {
+    const onSubmit = vi.fn();
+    render(<PromptInput value="Вопрос" onSubmit={onSubmit} />);
+
+    pressEnter();
+    fireEvent.keyDown(screen.getByLabelText('Сообщение ассистенту'), {
+      key: 'Enter',
+      repeat: true,
+    });
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('blocks a second submit until the value changes', () => {
+    const onSubmit = vi.fn();
+    render(<PromptInput value="Вопрос" onSubmit={onSubmit} />);
+
+    pressEnter();
+    pressEnter();
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('asks the parent to clear the value in controlled mode', () => {
+    const onSubmit = vi.fn();
+    const onValueChange = vi.fn();
+    render(<PromptInput value="Вопрос" onValueChange={onValueChange} onSubmit={onSubmit} />);
+
+    pressEnter();
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenCalledWith('');
+  });
+
+  it('submits the same text again after the value changes', () => {
+    const onSubmit = vi.fn();
+    const { rerender } = render(<PromptInput value="Вопрос" onSubmit={onSubmit} />);
+
+    pressEnter();
+    rerender(<PromptInput value="" onSubmit={onSubmit} />);
+    rerender(<PromptInput value="Вопрос" onSubmit={onSubmit} />);
+    pressEnter();
+
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+  });
 });

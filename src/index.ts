@@ -41,7 +41,6 @@ export {
   Badge,
   Chip,
   Divider,
-  IconTile,
   Logo,
   Progress,
   Skeleton,
@@ -73,11 +72,129 @@ export type { AlertProps, AlertTone, CookieNoticeProps } from './components/ui/F
 export { AlertDialog } from './components/ui/AlertDialog';
 export type { AlertDialogProps } from './components/ui/AlertDialog';
 export { Accordion, Tabs } from './components/ui/Navigation';
-export type { AccordionItem, AccordionProps, TabItem, TabsProps } from './components/ui/Navigation';
+export type {
+  AccordionItem,
+  AccordionProps,
+  TabItem,
+  TabsProps,
+  TabsVariant,
+} from './components/ui/Navigation';
 export { Collapsible, CollapsibleContent, CollapsibleTrigger } from './components/ui/Collapsible';
 export type { CollapsibleProps } from './components/ui/Collapsible';
 export { HoverCard, HoverCardContent, HoverCardTrigger } from './components/ui/HoverCard';
 export type { HoverCardProps } from './components/ui/HoverCard';
+
+export { Image } from './components/ui/Image';
+export type { ImageProps, ImageRatio, ImageStatus } from './components/ui/Image';
+export {
+  Callout,
+  Heading,
+  InlineCode,
+  ListItem,
+  OrderedList,
+  Quote,
+  Text,
+  UnorderedList,
+} from './components/ui/Typography';
+export type {
+  CalloutAction,
+  CalloutProps,
+  CalloutTone,
+  HeadingLevel,
+  HeadingProps,
+  QuoteProps,
+  TextLinkVariant,
+  TextProps,
+  TextSize,
+  TextTone,
+  TextWeight,
+} from './components/ui/Typography';
+export { Grid, Stack } from './components/ui/Layout';
+export type {
+  GridColumns,
+  GridMinItemWidth,
+  GridProps,
+  Space,
+  StackAlign,
+  StackDirection,
+  StackJustify,
+  StackProps,
+} from './components/ui/Layout';
+export { ScrollFade } from './components/ui/ScrollFade';
+export type { ScrollFadeDirection, ScrollFadeProps } from './components/ui/ScrollFade';
+export { Shimmer } from './components/ui/Shimmer';
+export type { ShimmerProps } from './components/ui/Shimmer';
+export { Table } from './components/ui/Table';
+export type {
+  TableAlign,
+  TableColumn,
+  TableColumnBase,
+  TableDensity,
+  TableFilters,
+  TableNodeColumn,
+  TableProps,
+  TableSort,
+  TableSortDirection,
+  TableValue,
+  TableValueColumn,
+} from './components/ui/Table';
+export { Breadcrumbs, Page, PageContent, PageHeader } from './components/ui/Page';
+export type {
+  BreadcrumbItem,
+  BreadcrumbsProps,
+  PageHeaderProps,
+  PageProps,
+} from './components/ui/Page';
+export { Section } from './components/ui/Section';
+export type { SectionProps } from './components/ui/Section';
+export { DescriptionList } from './components/ui/DescriptionList';
+export type { DescriptionListItem, DescriptionListProps } from './components/ui/DescriptionList';
+export { CollapsibleList, List, ListRow } from './components/ui/List';
+export type { CollapsibleListProps, ListProps, ListRowProps } from './components/ui/List';
+export { StateMessage } from './components/ui/StateMessage';
+export type { StateMessageProps, StateMessageTone } from './components/ui/StateMessage';
+export { Pagination } from './components/ui/Pagination';
+export type { PaginationLabels, PaginationProps } from './components/ui/Pagination';
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './components/ui/Dialog';
+export type {
+  DialogContentProps,
+  DialogProps,
+  DialogRole,
+  DialogSize,
+} from './components/ui/Dialog';
+export { PhotoGallery } from './components/ui/PhotoGallery';
+export type { PhotoGalleryItem, PhotoGalleryProps } from './components/ui/PhotoGallery';
+export { ToastProvider, useToast } from './components/ui/Toast';
+export type {
+  ToastAction,
+  ToastApi,
+  ToastOptions,
+  ToastPosition,
+  ToastProviderProps,
+  ToastTone,
+} from './components/ui/Toast';
+export { FileUpload } from './components/ui/FileUpload';
+export type { FileUploadProps } from './components/ui/FileUpload';
+export { Timeline } from './components/ui/Timeline';
+export type { TimelineItem, TimelineProps, TimelineTone } from './components/ui/Timeline';
+export { ThemeProvider, useTheme } from './components/ui/ThemeProvider';
+export type { ThemeContextValue, ThemeProviderProps } from './components/ui/ThemeProvider';
+export { COLOR_PRESETS, ColorPicker, normalizeHex } from './components/ui/ColorPicker';
+export type { ColorPickerProps } from './components/ui/ColorPicker';
+export { ThemePicker } from './components/ui/ThemePicker';
+export type { ThemePickerProps } from './components/ui/ThemePicker';
+export { THEMES } from './styles/themes';
+export type { ThemeName } from './styles/themes';
+export type { LinkRenderer, LinkRendererProps } from './lib/link';
 
 export * from './components/ui/date-picker';
 export * from './components/ui/code-block';
@@ -97,7 +214,8 @@ export {
   MessageContent,
   MessageFooter,
 } from './components/ai/Message';
-export type { BubbleVariant, MessageAlign } from './components/ai/Message';
+export { MessageReactions } from './components/ai/Message';
+export type { BubbleVariant, MessageAlign, MessageReactionsProps } from './components/ai/Message';
 export {
   InlineCitation,
   InlineCitationCard,
@@ -107,7 +225,7 @@ export {
   InlineCitationSource,
   InlineCitationText,
 } from './components/ai/InlineCitation';
-export type { CitationSource } from './components/ai/InlineCitation';
+export type { CitationSource, InlineCitationSourceProps } from './components/ai/InlineCitation';
 export { PromptInput } from './components/ai/PromptInput';
 export type {
   PromptInputPayload,
@@ -123,7 +241,16 @@ export type { StackFrame, StackTraceProps } from './components/ai/StackTrace';
 export { Suggestion, Suggestions } from './components/ai/Suggestion';
 export { Task, TaskItem, TaskItemFile } from './components/ai/Task';
 export type { TaskProps, TaskStatus, TaskStep } from './components/ai/Task';
-export { Trace, TraceDescription, TraceIcon, TraceLine, TraceTitle } from './components/ai/Trace';
+export {
+  Trace,
+  TraceCollapsible,
+  TraceCollapsibleContent,
+  TraceCollapsibleTrigger,
+  TraceDescription,
+  TraceIcon,
+  TraceLine,
+  TraceTitle,
+} from './components/ai/Trace';
 export type { TraceStatus } from './components/ai/Trace';
 export { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './components/ui/Resizable';
 export type {
@@ -210,7 +337,11 @@ export type {
   QuestionnaireProps,
 } from './components/ui/Questionnaire';
 export { Markdown } from './components/ai/Markdown';
-export type { MarkdownProps } from './components/ai/Markdown';
+export type {
+  MarkdownComponents,
+  MarkdownLinkTarget,
+  MarkdownProps,
+} from './components/ai/Markdown';
 export { Chat } from './components/ai/Chat';
 export type { ChatMessage, ChatProps } from './components/ai/Chat';
 export { radiusStyle } from './lib/radius';

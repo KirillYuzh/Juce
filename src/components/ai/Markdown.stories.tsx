@@ -1,5 +1,7 @@
+import type { ComponentPropsWithoutRef, CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Markdown } from './Markdown';
+import type { LinkRendererProps } from '../../lib/link';
 
 const meta: Meta<typeof Markdown> = {
   title: 'Chat/Markdown',
@@ -64,10 +66,49 @@ export const Streaming: Story = {
   args: { children: answer.slice(0, 240), streaming: true },
 };
 
+const inlineText =
+  'Класс `String` неизменяемый, поэтому `s + "a"` создаёт новый объект. Подробнее — в [javadoc](https://docs.oracle.com/en/java/).';
+
+const stubLink: CSSProperties = {
+  padding: '2px 8px',
+  borderRadius: 'var(--tb-radius-xs)',
+  background: 'var(--tb-bg-tertiary)',
+  color: 'var(--tb-text-link)',
+  font: '500 13px/20px var(--tb-font-text)',
+};
+
+const customLink: CSSProperties = {
+  color: 'var(--tb-accent)',
+  textDecoration: 'none',
+  borderBottom: '1px dashed var(--tb-accent)',
+};
+
+function RouterLink({ href, children }: LinkRendererProps) {
+  return (
+    <span style={stubLink} data-href={href}>
+      {children}
+    </span>
+  );
+}
+
+function CustomAnchor({ children }: ComponentPropsWithoutRef<'a'>) {
+  return <span style={customLink}>{children}</span>;
+}
+
 export const Inline: Story = {
   name: 'Inline only',
-  args: {
-    children:
-      'Класс `String` неизменяемый, поэтому `s + "a"` создаёт новый объект. Подробнее — в [javadoc](https://docs.oracle.com/en/java/).',
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <Markdown linkComponent={RouterLink}>{inlineText}</Markdown>
+      <Markdown components={{ a: CustomAnchor }}>{inlineText}</Markdown>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<Markdown linkComponent={RouterLink}>{text}</Markdown>
+<Markdown components={{ a: CustomAnchor }}>{text}</Markdown>`,
+      },
+    },
   },
 };

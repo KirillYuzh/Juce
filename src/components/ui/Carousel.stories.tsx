@@ -112,7 +112,7 @@ export const Vertical: Story = {
   ),
 };
 
-function ApiDemo() {
+function CarouselApiExample() {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -148,5 +148,30 @@ function ApiDemo() {
 
 export const Api: Story = {
   name: 'setApi',
-  render: () => <ApiDemo />,
+  render: () => <CarouselApiExample />,
+  parameters: {
+    docs: {
+      source: {
+        code: `const [api, setApi] = useState<CarouselApi>();
+const [current, setCurrent] = useState(0);
+
+<Carousel
+  setApi={(next) => {
+    setApi(next);
+    setCurrent(next.selectedScrollSnap() + 1);
+    next.on('select', () => setCurrent(next.selectedScrollSnap() + 1));
+  }}
+>
+  <CarouselContent>
+    {slides.map((slide, index) => (
+      <CarouselItem key={slide}>{card(slide, index)}</CarouselItem>
+    ))}
+  </CarouselContent>
+</Carousel>
+<Button variant="ghost" onClick={() => api?.scrollPrev()}>Назад</Button>
+<Text size="s">Слайд {current} из {api?.scrollSnapList().length ?? 0}</Text>
+<Button variant="ghost" onClick={() => api?.scrollNext()}>Вперёд</Button>`,
+      },
+    },
+  },
 };

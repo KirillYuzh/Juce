@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Avatar, Badge, Chip, Divider, Logo, Progress, Skeleton, Spinner } from './Display';
 import { Icon } from './Icon';
+import { Stack } from './Layout';
 
 const meta: Meta = {
   title: 'Primitives/Display',
@@ -119,13 +120,11 @@ export const Skeletons: Story = {
 
 export const Dividers: Story = {
   render: () => (
-    <div style={{ width: 360 }}>
+    <Stack gap="4" style={{ width: 360 }}>
       <p className="tb-text-m">До раздела</p>
       <Divider />
-      <p className="tb-text-m" style={{ paddingTop: 16 }}>
-        После раздела
-      </p>
-    </div>
+      <p className="tb-text-m">После раздела</p>
+    </Stack>
   ),
 };
 

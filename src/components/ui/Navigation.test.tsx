@@ -9,6 +9,12 @@ const items = [
 ];
 
 describe('Tabs', () => {
+  it('renders the underline variant on the tablist', () => {
+    render(<Tabs variant="underline" items={items} label="Разделы" />);
+
+    expect(screen.getByRole('tablist').getAttribute('data-variant')).toBe('underline');
+  });
+
   it('переключает табы стрелками и синхронизирует панель', () => {
     render(<Tabs items={items} label="Разделы" />);
     const [first, second, third] = screen.getAllByRole('tab');

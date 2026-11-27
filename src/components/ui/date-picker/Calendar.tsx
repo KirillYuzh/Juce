@@ -20,6 +20,7 @@ import {
   startOfDay,
   startOfMonth,
   startOfWeek,
+  toValidDate,
   type DateRange,
 } from '../../../lib/date';
 import { cx } from '../../../lib/cx';
@@ -55,13 +56,20 @@ export function Calendar({
   autoFocus = true,
   className,
 }: CalendarProps) {
-  const selectedDay = mode === 'single' ? ((value as Date | null | undefined) ?? null) : null;
-  const range = mode === 'range' ? ((value as DateRange | null | undefined) ?? null) : null;
+  const selectedDay = mode === 'single' ? toValidDate(value as Date | null | undefined) : null;
+  const rangeValue = mode === 'range' ? (value as DateRange | null | undefined) : null;
+  const range: DateRange | null = rangeValue
+    ? { from: toValidDate(rangeValue.from), to: toValidDate(rangeValue.to) }
+    : null;
+  const safeMonth = toValidDate(month);
+  const safeDefaultMonth = toValidDate(defaultMonth);
+  const safeMin = toValidDate(min) ?? undefined;
+  const safeMax = toValidDate(max) ?? undefined;
 
   const [innerMonth, setInnerMonth] = useState(() =>
-    startOfMonth(defaultMonth ?? selectedDay ?? range?.from ?? new Date())
+    startOfMonth(safeDefaultMonth ?? selectedDay ?? range?.from ?? new Date())
   );
-  const visibleMonth = month ? startOfMonth(month) : innerMonth;
+  const visibleMonth = safeMonth ? startOfMonth(safeMonth) : innerMonth;
 
   const [focusedDay, setFocusedDay] = useState(() =>
     startOfDay(selectedDay ?? range?.from ?? new Date())
@@ -72,12 +80,12 @@ export function Calendar({
   const wantFocus = useRef(true);
 
   const setMonth = (next: Date) => {
-    if (!month) setInnerMonth(next);
+    if (!safeMonth) setInnerMonth(next);
     onMonthChange?.(next);
   };
 
   const moveFocus = (next: Date) => {
-    const target = clampDate(next, min, max);
+    const target = clampDate(next, safeMin, safeMax);
     wantFocus.current = true;
     setFocusedDay(target);
     if (!isSameMonth(target, visibleMonth)) setMonth(startOfMonth(target));
@@ -90,7 +98,7 @@ export function Calendar({
   }, [focusedDay, visibleMonth, autoFocus]);
 
   const goMonth = (amount: number) => {
-    setFocusedDay(shiftFocusedDay(focusedDay, amount, min, max));
+    setFocusedDay(shiftFocusedDay(focusedDay, amount, safeMin, safeMax));
     setMonth(addMonths(visibleMonth, amount));
   };
 
@@ -142,8 +150,8 @@ export function Calendar({
     moveFocus(next);
   };
 
-  const canGoPrev = !min || isBefore(min, startOfMonth(visibleMonth));
-  const canGoNext = !max || isBefore(endOfMonth(visibleMonth), max);
+  const canGoPrev = !safeMin || isBefore(safeMin, startOfMonth(visibleMonth));
+  const canGoNext = !safeMax || isBefore(endOfMonth(visibleMonth), safeMax);
   const todayKey = dateKey(new Date());
 
   return (
@@ -195,7 +203,7 @@ export function Calendar({
               }
 
               const key = dateKey(day);
-              const disabled = isDateDisabled(day, min, max);
+              const disabled = isDateDisabled(day, safeMin, safeMax);
               const isFrom = mode === 'range' && !!range?.from && isSameDay(day, range.from);
               const isTo = mode === 'range' && !!range?.to && isSameDay(day, range.to);
               const isSelected =

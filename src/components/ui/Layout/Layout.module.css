@@ -1,0 +1,70 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: var(--tb-stack-gap, var(--tb-space-4));
+}
+
+.stack[data-direction='row'] {
+  flex-direction: row;
+}
+
+.stack[data-wrap] {
+  flex-wrap: wrap;
+}
+
+.stack[data-align='start'] {
+  align-items: flex-start;
+}
+
+.stack[data-align='center'] {
+  align-items: center;
+}
+
+.stack[data-align='end'] {
+  align-items: flex-end;
+}
+
+.stack[data-align='baseline'] {
+  align-items: baseline;
+}
+
+.stack[data-justify='center'] {
+  justify-content: center;
+}
+
+.stack[data-justify='end'] {
+  justify-content: flex-end;
+}
+
+.stack[data-justify='between'] {
+  justify-content: space-between;
+}
+
+.stack[data-justify='around'] {
+  justify-content: space-around;
+}
+
+.grid {
+  display: grid;
+  gap: var(--tb-grid-gap, var(--tb-space-4));
+  grid-template-columns: repeat(var(--tb-grid-columns, 1), minmax(0, 1fr));
+}
+
+.grid[data-min-item-width] {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--tb-grid-min)), 1fr));
+}
+
+.grid[data-min-item-width='s'] {
+  --tb-grid-min: 160px;
+}
+
+.grid[data-min-item-width='m'] {
+  --tb-grid-min: 240px;
+}
+
+.grid[data-min-item-width='l'] {
+  --tb-grid-min: 280px;
+}

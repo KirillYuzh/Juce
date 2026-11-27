@@ -3,11 +3,16 @@ import styles from './InlineCitation.module.css';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/HoverCard';
 import { cx } from '../../lib/cx';
 import { hostOf, safeHref } from '../../lib/url';
+import type { LinkRenderer } from '../../lib/link';
 
 export interface CitationSource {
   url: string;
   title?: string;
   host?: string;
+  description?: ReactNode;
+  icon?: ReactNode;
+  href?: string;
+  onOpen?: (source: CitationSource) => void;
 }
 
 const sourceHost = (source: CitationSource) => source.host ?? hostOf(source.url);
@@ -68,19 +73,63 @@ export function InlineCitationCardBody({ children }: { children: ReactNode }) {
   );
 }
 
-export function InlineCitationSource({ url, title, host }: CitationSource) {
-  const href = safeHref(url);
+export interface InlineCitationSourceProps extends CitationSource {
+  linkComponent?: LinkRenderer;
+}
+
+export function InlineCitationSource({
+  url,
+  title,
+  host,
+  description,
+  icon,
+  href,
+  onOpen,
+  linkComponent: Link,
+}: InlineCitationSourceProps) {
+  const source: CitationSource = { url, title, host, description, icon, href, onOpen };
+  const target = href ?? safeHref(url);
+  const external = href === undefined && onOpen === undefined;
   const label = title ?? sourceHost({ url, host });
+
+  const content = (
+    <>
+      {icon !== undefined && <span className={styles.sourceIcon}>{icon}</span>}
+      {label}
+      {external && target && (
+        <span className="tb-visually-hidden"> (открывается в новой вкладке)</span>
+      )}
+    </>
+  );
+
   return (
     <span className={styles.source}>
-      {href ? (
-        <a className={styles.sourceLink} href={href} target="_blank" rel="noreferrer">
-          {label}
-          <span className="tb-visually-hidden"> (открывается в новой вкладке)</span>
-        </a>
+      {onOpen ? (
+        <button type="button" className={styles.sourceLink} onClick={() => onOpen(source)}>
+          {content}
+        </button>
+      ) : !target ? (
+        <span className={styles.sourceLink}>{content}</span>
+      ) : Link ? (
+        <Link
+          className={styles.sourceLink}
+          href={target}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noreferrer' : undefined}
+        >
+          {content}
+        </Link>
       ) : (
-        <span className={styles.sourceLink}>{label}</span>
+        <a
+          className={styles.sourceLink}
+          href={target}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noreferrer' : undefined}
+        >
+          {content}
+        </a>
       )}
+      {description !== undefined && <span className={styles.sourceDescription}>{description}</span>}
       <span className={styles.sourceHost}>{sourceHost({ url, host })}</span>
     </span>
   );

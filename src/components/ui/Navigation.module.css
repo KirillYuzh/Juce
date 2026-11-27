@@ -42,6 +42,55 @@
   outline-offset: 2px;
 }
 
+.tabs[data-variant='underline'] {
+  display: flex;
+  gap: var(--tb-space-5);
+  width: 100%;
+  padding: 0;
+  border-bottom: 1px solid var(--tb-border);
+  border-radius: 0;
+  background: none;
+}
+
+.tabs[data-variant='underline'] .tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-2);
+  margin-bottom: -1px;
+  padding: var(--tb-space-3) 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--tb-text-secondary);
+}
+
+@media (hover: hover) {
+  .tabs[data-variant='underline'] .tab:hover {
+    border-bottom-color: var(--tb-border-strong);
+    background: none;
+    box-shadow: none;
+    color: var(--tb-text-primary);
+  }
+}
+
+.tabs[data-variant='underline'] .tabActive {
+  border-bottom-color: var(--tb-primary);
+  background: none;
+  box-shadow: none;
+  color: var(--tb-text-primary);
+  font-weight: 500;
+}
+
+@media (hover: hover) {
+  .tabs[data-variant='underline'] .tabActive:hover {
+    border-bottom-color: var(--tb-primary);
+    background: none;
+    box-shadow: none;
+    color: var(--tb-text-primary);
+  }
+}
+
 .accordion {
   display: flex;
   flex-direction: column;

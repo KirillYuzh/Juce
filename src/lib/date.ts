@@ -45,8 +45,13 @@ export const WEEKDAYS_FULL = [
   'воскресенье',
 ];
 
+export function toValidDate(date: Date | null | undefined): Date | null {
+  return date instanceof Date && !Number.isNaN(date.getTime()) ? date : null;
+}
+
 export function weekdayIndex(date: Date): number {
-  return (date.getDay() + 6) % 7;
+  const day = date.getDay();
+  return Number.isNaN(day) ? 0 : (day + 6) % 7;
 }
 
 export function startOfDay(date: Date): Date {
@@ -130,6 +135,7 @@ export function clampDate(date: Date, min?: Date | null, max?: Date | null): Dat
 }
 
 export function dateKey(date: Date): string {
+  if (!toValidDate(date)) return '';
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${date.getFullYear()}-${month}-${day}`;
@@ -156,10 +162,12 @@ export function getMonthWeeks(month: Date): Array<Array<Date | null>> {
 }
 
 export function formatDate(date: Date): string {
+  if (!toValidDate(date)) return '';
   return `${date.getDate()} ${MONTHS_GENITIVE[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 export function formatDateFull(date: Date): string {
+  if (!toValidDate(date)) return '';
   return `${formatDate(date)}, ${WEEKDAYS_FULL[weekdayIndex(date)]}`;
 }
 
@@ -169,7 +177,8 @@ function formatDayMonth(date: Date): string {
 
 export function formatDateRange(range: DateRange | null | undefined): string {
   if (!range) return '';
-  const { from, to } = range;
+  const from = toValidDate(range.from);
+  const to = toValidDate(range.to);
   if (!from && !to) return '';
 
   if (from && to) {

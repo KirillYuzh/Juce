@@ -3,8 +3,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Chat, type ChatMessage } from './Chat';
 import { ChatLayout, ChatSidebarToggle } from './ChatLayout';
 import { ChatList, type ChatListItem } from './ChatList';
-import type { PromptInputPayload, PromptInputStatus } from './PromptInput';
+import type { PromptInputPayload } from './PromptInput';
 import { demoAssistantMessage, demoChatReplyDelay } from './chat-demo';
+import { Callout, Heading, Text } from '../ui/Typography';
+import { Grid, Stack } from '../ui/Layout';
+import { Avatar, Badge, Chip, type BadgeTone } from '../ui/Display';
+import { Button } from '../ui/Button';
+import { Checkbox, Input, Select, Switch } from '../ui/Fields';
+import { DatePicker } from '../ui/date-picker';
+import { Table, type TableColumn } from '../ui/Table';
 
 const meta: Meta = {
   title: 'Chat/Conversation',
@@ -176,6 +183,7 @@ function ChatDemo({
   showAuthor = false,
   showReasoning = false,
   showSources = false,
+  height = 680,
 }: {
   initial?: ChatMessage[];
   suggestions?: string[];
@@ -183,9 +191,10 @@ function ChatDemo({
   showAuthor?: boolean;
   showReasoning?: boolean;
   showSources?: boolean;
+  height?: number;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initial);
-  const [status, setStatus] = useState<PromptInputStatus>('ready');
+  const busy = messages.some((message) => message.streaming);
   const timer = useRef<number | null>(null);
 
   useEffect(() => {
@@ -195,13 +204,22 @@ function ChatDemo({
   }, []);
 
   const send = ({ text }: PromptInputPayload) => {
-    if (status === 'streaming') return;
-    setMessages((current) => [...current, { id: `u-${Date.now()}`, role: 'user', content: text }]);
-    if (!withSimulation) return;
-    setStatus('streaming');
+    if (busy) return;
+    const userId = `u-${Date.now()}`;
+    if (!withSimulation) {
+      setMessages((current) => [...current, { id: userId, role: 'user', content: text }]);
+      return;
+    }
+    const replyId = `a-${Date.now()}`;
+    setMessages((current) => [
+      ...current,
+      { id: userId, role: 'user', content: text },
+      { id: replyId, role: 'assistant', content: '', streaming: true },
+    ]);
     timer.current = window.setTimeout(() => {
-      setMessages((current) => [...current, demoAssistantMessage(`a-${Date.now()}`)]);
-      setStatus('ready');
+      setMessages((current) =>
+        current.map((message) => (message.id === replyId ? demoAssistantMessage(replyId) : message))
+      );
       timer.current = null;
     }, demoChatReplyDelay);
   };
@@ -209,16 +227,15 @@ function ChatDemo({
   const stop = () => {
     if (timer.current) window.clearTimeout(timer.current);
     timer.current = null;
-    setStatus('ready');
+    setMessages((current) => current.filter((message) => !message.streaming));
   };
 
   return (
-    <div style={{ width: 620, height: 680 }}>
+    <div style={{ width: 620, height }}>
       <Chat
         messages={messages}
         onSend={send}
         onStop={stop}
-        status={status}
         suggestions={suggestions}
         showAuthor={showAuthor}
         showReasoning={showReasoning}
@@ -231,7 +248,6 @@ function ChatDemo({
 
 const conversationSource = `<Chat
   messages={messages}
-  status={status}
   onSend={handleSend}
   onStop={handleStop}
   onRetry={handleRetry}
@@ -335,6 +351,269 @@ export const MarkdownAnswer: Story = {
     docs: {
       source: {
         code: `<Chat messages={messages} onSend={handleSend} />`,
+      },
+    },
+  },
+};
+
+const formatOptions = [
+  { value: 'tech', label: 'Техническое интервью' },
+  { value: 'system', label: 'Системный дизайн' },
+  { value: 'final', label: 'Финальная встреча' },
+];
+
+const topicOptions = [
+  { value: 'go', label: 'Go' },
+  { value: 'algorithms', label: 'Алгоритмы' },
+  { value: 'system', label: 'Системный дизайн' },
+];
+
+interface InterviewStage {
+  id: string;
+  stage: string;
+  length: string;
+  status: string;
+  tone: BadgeTone;
+}
+
+const interviewStages: InterviewStage[] = [
+  { id: 'intro', stage: 'Знакомство', length: '30 минут', status: 'Готово', tone: 'success' },
+  { id: 'code', stage: 'Код на Go', length: '60 минут', status: 'В работе', tone: 'accent' },
+  {
+    id: 'system',
+    stage: 'Системный дизайн',
+    length: '45 минут',
+    status: 'Дальше',
+    tone: 'neutral',
+  },
+];
+
+const interviewColumns: TableColumn<InterviewStage>[] = [
+  { id: 'stage', kind: 'value', header: 'Этап', value: (row) => row.stage },
+  { id: 'length', kind: 'value', header: 'Длительность', value: (row) => row.length },
+  {
+    id: 'status',
+    kind: 'node',
+    header: 'Статус',
+    cell: (row) => <Badge tone={row.tone}>{row.status}</Badge>,
+  },
+];
+
+function InterviewResponse() {
+  const [format, setFormat] = useState('tech');
+  const [topics, setTopics] = useState<string[]>(['go']);
+  const [record, setRecord] = useState(true);
+
+  const toggleTopic = (topic: string) =>
+    setTopics((current) =>
+      current.includes(topic) ? current.filter((item) => item !== topic) : [...current, topic]
+    );
+
+  return (
+    <Stack gap="4">
+      <Stack direction="row" gap="3" align="center" wrap>
+        <Avatar size="l" initials="АК" />
+        <Stack gap="1">
+          <Heading level={3}>Собеседование по Go</Heading>
+          <Text size="s" tone="secondary">
+            Анна Ковалёва · кандидат на позицию Backend
+          </Text>
+        </Stack>
+        <Badge tone="accent">Senior</Badge>
+      </Stack>
+
+      <Text size="s" tone="secondary">
+        Проверьте формат и темы — расписание и этапы обновятся ниже.
+      </Text>
+
+      <Grid columns={2} gap="3">
+        <Input label="Имя" defaultValue="Анна Ковалёва" />
+        <Input label="Почта" type="email" defaultValue="anna@juce.dev" />
+      </Grid>
+
+      <Grid columns={2} gap="3">
+        <Select label="Формат" value={format} onChange={setFormat} options={formatOptions} />
+        <Stack gap="1">
+          <Text as="span" size="s" tone="secondary">
+            Дата
+          </Text>
+          <DatePicker placeholder="Дата интервью" />
+        </Stack>
+      </Grid>
+
+      <Stack gap="2">
+        <Text as="span" size="s" tone="secondary">
+          Темы
+        </Text>
+        <Stack direction="row" gap="2" wrap>
+          {topicOptions.map((topic) => (
+            <Chip
+              key={topic.value}
+              variant="outline"
+              active={topics.includes(topic.value)}
+              onClick={() => toggleTopic(topic.value)}
+            >
+              {topic.label}
+            </Chip>
+          ))}
+        </Stack>
+      </Stack>
+
+      <Stack direction="row" gap="6" wrap>
+        <Checkbox label="Прислать тестовое задание" defaultChecked />
+        <Switch
+          label="Записать встречу"
+          checked={record}
+          onChange={(event) => setRecord(event.target.checked)}
+        />
+      </Stack>
+
+      <Callout tone="note" title="Что взять на встречу">
+        <Text size="s">Ноутбук, доступ к репозиторию и 20 минут на разбор решения.</Text>
+      </Callout>
+
+      <Table
+        columns={interviewColumns}
+        rows={interviewStages}
+        rowKey={(row) => row.id}
+        density="s"
+        caption="Этапы интервью"
+      />
+
+      <Stack direction="row" gap="2" wrap>
+        <Button size="s">Подтвердить слот</Button>
+        <Button size="s" variant="secondary">
+          Перенести
+        </Button>
+        <Button size="s" variant="ghost">
+          Отклонить
+        </Button>
+      </Stack>
+    </Stack>
+  );
+}
+
+const a2uiMessages: ChatMessage[] = [
+  {
+    id: 'u1',
+    role: 'user',
+    content: 'Собери план подготовки к интервью по Go',
+  },
+  {
+    id: 'a1',
+    role: 'assistant',
+    extra: <InterviewResponse />,
+  },
+];
+
+export const A2UI: Story = {
+  name: 'A2UI response',
+  render: () => <ChatDemo initial={a2uiMessages} withSimulation={false} height={1080} />,
+  parameters: {
+    docs: {
+      source: {
+        code: `const stageColumns: TableColumn<InterviewStage>[] = [
+  { id: 'stage', kind: 'value', header: 'Этап', value: (row) => row.stage },
+  { id: 'length', kind: 'value', header: 'Длительность', value: (row) => row.length },
+  {
+    id: 'status',
+    kind: 'node',
+    header: 'Статус',
+    cell: (row) => <Badge tone={row.tone}>{row.status}</Badge>,
+  },
+];
+
+function InterviewResponse() {
+  const [format, setFormat] = useState('tech');
+  const [topics, setTopics] = useState<string[]>(['go']);
+  const [record, setRecord] = useState(true);
+
+  const toggleTopic = (topic: string) =>
+    setTopics((current) =>
+      current.includes(topic) ? current.filter((item) => item !== topic) : [...current, topic]
+    );
+
+  return (
+    <Stack gap="4">
+      <Stack direction="row" gap="3" align="center" wrap>
+        <Avatar size="l" initials="АК" />
+        <Stack gap="1">
+          <Heading level={3}>Собеседование по Go</Heading>
+          <Text size="s" tone="secondary">
+            Анна Ковалёва · кандидат на позицию Backend
+          </Text>
+        </Stack>
+        <Badge tone="accent">Senior</Badge>
+      </Stack>
+
+      <Grid columns={2} gap="3">
+        <Input label="Имя" defaultValue="Анна Ковалёва" />
+        <Input label="Почта" type="email" defaultValue="anna@juce.dev" />
+      </Grid>
+
+      <Grid columns={2} gap="3">
+        <Select label="Формат" value={format} onChange={setFormat} options={formatOptions} />
+        <Stack gap="1">
+          <Text as="span" size="s" tone="secondary">
+            Дата
+          </Text>
+          <DatePicker placeholder="Дата интервью" />
+        </Stack>
+      </Grid>
+
+      <Stack direction="row" gap="2" wrap>
+        {topicOptions.map((topic) => (
+          <Chip
+            key={topic.value}
+            variant="outline"
+            active={topics.includes(topic.value)}
+            onClick={() => toggleTopic(topic.value)}
+          >
+            {topic.label}
+          </Chip>
+        ))}
+      </Stack>
+
+      <Stack direction="row" gap="6" wrap>
+        <Checkbox label="Прислать тестовое задание" defaultChecked />
+        <Switch
+          label="Записать встречу"
+          checked={record}
+          onChange={(event) => setRecord(event.target.checked)}
+        />
+      </Stack>
+
+      <Callout tone="note" title="Что взять на встречу">
+        <Text size="s">Ноутбук, доступ к репозиторию и 20 минут на разбор решения.</Text>
+      </Callout>
+
+      <Table
+        columns={stageColumns}
+        rows={interviewStages}
+        rowKey={(row) => row.id}
+        density="s"
+        caption="Этапы интервью"
+      />
+
+      <Stack direction="row" gap="2" wrap>
+        <Button size="s">Подтвердить слот</Button>
+        <Button size="s" variant="secondary">
+          Перенести
+        </Button>
+        <Button size="s" variant="ghost">
+          Отклонить
+        </Button>
+      </Stack>
+    </Stack>
+  );
+}
+
+const messages: ChatMessage[] = [
+  { id: 'u1', role: 'user', content: 'Собери план подготовки к интервью по Go' },
+  { id: 'a1', role: 'assistant', extra: <InterviewResponse /> },
+];
+
+<Chat messages={messages} onSend={handleSend} />`,
       },
     },
   },

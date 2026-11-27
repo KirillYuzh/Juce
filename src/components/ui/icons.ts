@@ -40,13 +40,25 @@ export type IconName =
   | 'doc'
   | 'more'
   | 'download'
+  | 'upload'
+  | 'folder'
+  | 'branch'
+  | 'issue'
+  | 'eye'
+  | 'fork'
+  | 'tag'
+  | 'clock'
+  | 'play'
   | 'apple'
   | 'android'
   | 'telegram'
   | 'vk'
   | 'ok';
 
-type AntdIconName = Exclude<IconName, 'vk' | 'ok'>;
+type AntdIconName = Exclude<
+  IconName,
+  'vk' | 'ok' | 'upload' | 'folder' | 'branch' | 'issue' | 'eye' | 'fork' | 'tag' | 'clock' | 'play'
+>;
 
 export const antdIcons: Record<AntdIconName, readonly string[]> = {
   search: [

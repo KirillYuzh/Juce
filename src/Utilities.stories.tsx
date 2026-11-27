@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ScrollFade } from './components/ui/ScrollFade';
+import { Shimmer } from './components/ui/Shimmer';
 
 const meta: Meta = {
   title: 'Utilities/Effects',
@@ -11,88 +14,111 @@ type Story = StoryObj;
 
 const items = Array.from({ length: 30 }, (_, index) => `Строка ${index + 1}`);
 
-export const ScrollFadeVertical: Story = {
+const steps = ['Исследую источник 1', 'Исследую источник 2', 'Сверяю документацию'];
+
+const shimmerSource = `const steps = ['Исследую источник 1', 'Исследую источник 2', 'Сверяю документацию'];
+
+function ModelDrivenShimmer() {
+  const [step, setStep] = useState(0);
+
+  return (
+    <>
+      <Shimmer value={steps[step]} />
+      <button type="button" onClick={() => setStep((current) => (current + 1) % steps.length)}>
+        Следующий шаг
+      </button>
+    </>
+  );
+}
+
+<Shimmer>Генерирую ответ…</Shimmer>
+
+<Shimmer values={steps} interval={2000} />
+
+<ModelDrivenShimmer />`;
+
+function ModelDrivenShimmer() {
+  const [step, setStep] = useState(0);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
+      <Shimmer value={steps[step]} style={{ font: '500 17px/24px var(--tb-font-text)' }} />
+      <button
+        type="button"
+        style={{ font: '500 15px/24px var(--tb-font-text)', padding: '4px 12px' }}
+        onClick={() => setStep((current) => (current + 1) % steps.length)}
+      >
+        Следующий шаг
+      </button>
+    </div>
+  );
+}
+
+export const ScrollFadeStory: Story = {
+  name: 'ScrollFade',
   render: () => (
-    <div
-      style={{
-        width: 320,
-        height: 260,
-        borderRadius: 16,
-        background: 'var(--tb-bg-secondary)',
-        overflow: 'hidden',
-      }}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div
-        className="tb-scroll-fade-y"
         style={{
-          height: '100%',
-          padding: 16,
-          fontSize: 15,
-          lineHeight: '28px',
+          width: 320,
+          height: 260,
+          borderRadius: 16,
+          background: 'var(--tb-bg-secondary)',
+          overflow: 'hidden',
         }}
       >
-        {items.map((item) => (
-          <div key={item}>{item}</div>
-        ))}
-      </div>
-    </div>
-  ),
-};
-
-export const ScrollFadeHorizontal: Story = {
-  render: () => (
-    <div
-      className="tb-scroll-fade-x"
-      style={{ display: 'flex', gap: 8, width: 420, paddingBlock: 8 }}
-    >
-      {Array.from({ length: 12 }, (_, index) => (
-        <div
-          key={index}
-          style={{
-            flex: 'none',
-            width: 120,
-            height: 80,
-            borderRadius: 12,
-            background: 'var(--tb-secondary-soft)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            font: '500 13px/18px var(--tb-font-text)',
-          }}
+        <ScrollFade
+          direction="y"
+          style={{ height: '100%', padding: 16, fontSize: 15, lineHeight: '28px' }}
         >
-          Карточка {index + 1}
-        </div>
-      ))}
+          {items.map((item) => (
+            <div key={item}>{item}</div>
+          ))}
+        </ScrollFade>
+      </div>
+      <ScrollFade direction="x" style={{ display: 'flex', gap: 8, width: 420, paddingBlock: 8 }}>
+        {Array.from({ length: 12 }, (_, index) => (
+          <div
+            key={index}
+            style={{
+              flex: 'none',
+              width: 120,
+              height: 80,
+              borderRadius: 12,
+              background: 'var(--tb-secondary-soft)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              font: '500 13px/18px var(--tb-font-text)',
+            }}
+          >
+            Карточка {index + 1}
+          </div>
+        ))}
+      </ScrollFade>
     </div>
   ),
 };
 
-export const Shimmer: Story = {
+export const ShimmerStory: Story = {
+  name: 'Shimmer',
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: 420 }}>
-      <p className="tb-shimmer" style={{ margin: 0, font: '500 17px/24px var(--tb-font-text)' }}>
-        Генерирую ответ…
-      </p>
-      <p
-        className="tb-shimmer tb-shimmer-reverse"
-        style={{ margin: 0, font: '500 17px/24px var(--tb-font-text)' }}
-      >
+      <Shimmer style={{ font: '500 17px/24px var(--tb-font-text)' }}>Генерирую ответ…</Shimmer>
+      <Shimmer reverse style={{ font: '500 17px/24px var(--tb-font-text)' }}>
         Думаю над задачей…
-      </p>
-      <p
-        className="tb-shimmer"
-        style={{
-          margin: 0,
-          font: '500 17px/24px var(--tb-font-text)',
-          ['--tb-shimmer-duration' as string]: '1s',
-          ['--tb-shimmer-angle' as string]: '45deg',
-        }}
-      >
+      </Shimmer>
+      <Shimmer duration="1s" angle="45deg" style={{ font: '500 17px/24px var(--tb-font-text)' }}>
         Быстрый вариант
-      </p>
-      <p className="tb-shimmer tb-shimmer-none" style={{ margin: 0 }}>
-        Без эффекта
-      </p>
+      </Shimmer>
+      <Shimmer active={false}>Без эффекта</Shimmer>
+      <Shimmer
+        values={steps}
+        interval={2000}
+        style={{ font: '500 17px/24px var(--tb-font-text)' }}
+      />
+      <ModelDrivenShimmer />
     </div>
   ),
+  parameters: { docs: { source: { code: shimmerSource } } },
 };

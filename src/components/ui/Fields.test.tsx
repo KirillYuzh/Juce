@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Input, Select, Textarea } from './Fields';
 
@@ -64,6 +64,21 @@ describe('Select', () => {
     { value: 'go', label: 'Go' },
   ];
 
+  const scrollCalls: { target: Element; options?: ScrollIntoViewOptions }[] = [];
+
+  beforeEach(() => {
+    scrollCalls.length = 0;
+    Element.prototype.scrollIntoView = function (
+      this: Element,
+      options?: boolean | ScrollIntoViewOptions
+    ) {
+      scrollCalls.push({
+        target: this,
+        options: typeof options === 'object' ? options : undefined,
+      });
+    };
+  });
+
   it('возвращает фокус на триггер после Escape', () => {
     render(<Select label="Язык" options={options} />);
     const trigger = screen.getByRole('button', { name: 'Язык' });
@@ -76,6 +91,70 @@ describe('Select', () => {
 
     expect(screen.queryByRole('listbox')).toBeNull();
     expect(document.activeElement).toBe(trigger);
+  });
+
+  it('не отбирает фокус у поля, в которое кликнули', () => {
+    render(
+      <>
+        <Select label="Язык" options={options} />
+        <Input placeholder="Почта" />
+      </>
+    );
+    const trigger = screen.getByRole('button', { name: 'Язык' });
+
+    fireEvent.click(trigger);
+    expect(document.activeElement).toBe(screen.getByRole('listbox'));
+
+    const input = screen.getByRole('textbox', { name: 'Почта' });
+    input.focus();
+    fireEvent.pointerDown(input);
+
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(document.activeElement).toBe(input);
+  });
+
+  it('не возвращает фокус на триггер при закрытии по Tab', () => {
+    render(<Select label="Язык" options={options} />);
+    const trigger = screen.getByRole('button', { name: 'Язык' });
+
+    fireEvent.click(trigger);
+    fireEvent.keyDown(screen.getByRole('listbox'), { key: 'Tab' });
+
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(document.activeElement).not.toBe(trigger);
+  });
+
+  it('прокручивает список к активному пункту', () => {
+    const many = Array.from({ length: 20 }, (_, index) => ({
+      value: `v${index}`,
+      label: `Опция ${index}`,
+    }));
+    render(<Select label="Язык" options={many} />);
+    const trigger = screen.getByRole('button', { name: 'Язык' });
+
+    fireEvent.click(trigger);
+    fireEvent.keyDown(screen.getByRole('listbox'), { key: 'ArrowDown' });
+
+    const last = scrollCalls[scrollCalls.length - 1];
+    expect(last.target).toBe(document.getElementById(`${trigger.id}-1`));
+    expect(last.options).toEqual({ block: 'nearest' });
+  });
+
+  it('отправляет значение в форме через hidden input', () => {
+    render(
+      <form data-testid="form">
+        <Select name="lang" label="Язык" options={options} defaultValue="go" />
+      </form>
+    );
+    const form = screen.getByTestId('form') as HTMLFormElement;
+
+    expect(new FormData(form).get('lang')).toBe('go');
+    expect(screen.getByRole('button', { name: 'Язык' }).hasAttribute('name')).toBe(false);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Язык' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Java' }));
+
+    expect(new FormData(form).get('lang')).toBe('java');
   });
 
   it('не открывает пустой список', () => {

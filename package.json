@@ -22,6 +22,7 @@
   "homepage": "https://github.com/KirillYuzh/Juce#readme",
   "files": [
     "dist",
+    "!dist/**/*.map",
     "LICENSES",
     "THIRD-PARTY-NOTICES.md"
   ],
@@ -60,13 +61,14 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "check": "npm run typecheck && npm run lint && npm run lint:rules && npm run rules:test && npm run lint:css && npm run build:lib && npm run check:pack && npm run test && npm run spec:validate",
     "prepare": "npm run build:lib",
+    "prepublishOnly": "npm run check",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": ">=19",
+    "react-dom": ">=19"
   },
   "devDependencies": {
     "@antithesishq/bombadil": "^0.8.0",

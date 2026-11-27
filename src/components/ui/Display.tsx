@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import styles from './Display.module.css';
-import { Icon, type IconName } from './Icon';
 import { cx } from '../../lib/cx';
 import { radiusStyle, type RadiusValue } from '../../lib/radius';
 
@@ -139,8 +138,4 @@ export function Logo({ className, label = 'Джус' }: { className?: string; la
       <span className={styles.logoWord}>{label}</span>
     </span>
   );
-}
-
-export function IconTile({ icon, size = 36 }: { icon: IconName; size?: number }) {
-  return <Icon name={icon} size={size} />;
 }

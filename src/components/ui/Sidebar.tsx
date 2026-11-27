@@ -14,14 +14,13 @@ import styles from './Sidebar.module.css';
 import { IconButton } from './Button';
 import { Skeleton } from './Display';
 import { cx } from '../../lib/cx';
+import { FOCUSABLE } from '../../lib/focus';
 import { useControllableState } from '../../lib/use-controllable-state';
 
 export const SIDEBAR_WIDTH = '16rem';
 export const SIDEBAR_WIDTH_MOBILE = '18rem';
 export const SIDEBAR_WIDTH_ICON = '3.25rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 interface SidebarContextValue {
   open: boolean;

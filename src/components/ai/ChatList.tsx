@@ -40,9 +40,12 @@ const downloadChat = (chat: ChatListItem) => {
   link.download = `${chat.title}.txt`;
   link.rel = 'noopener';
   document.body.append(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  try {
+    link.click();
+  } finally {
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 };
 
 interface ChatActionsProps {

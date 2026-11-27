@@ -1,5 +1,7 @@
 const SAFE_PROTOCOLS = new Set(['http:', 'https:', 'mailto:']);
 
+const RELATIVE_BASE = 'https://relative.invalid';
+
 export function hostOf(url: string): string {
   try {
     const { hostname } = new URL(url);
@@ -10,9 +12,10 @@ export function hostOf(url: string): string {
 }
 
 export function safeHref(url: string): string | undefined {
+  if (!url.trim()) return undefined;
   try {
-    const parsed = new URL(url);
-    return SAFE_PROTOCOLS.has(parsed.protocol) ? parsed.href : undefined;
+    const parsed = new URL(url, RELATIVE_BASE);
+    return SAFE_PROTOCOLS.has(parsed.protocol) ? url : undefined;
   } catch {
     return undefined;
   }

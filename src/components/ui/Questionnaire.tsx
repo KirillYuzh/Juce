@@ -137,11 +137,12 @@ export function Questionnaire({
     const result: QuestionnaireAnswers = {};
     items.forEach((item) => {
       const other = answers[otherKey(item.name)];
+      const value = answers[item.name];
       if (typeof other === 'string' && other.trim()) {
-        result[item.name] = other.trim();
+        const selected = Array.isArray(value) ? value : [];
+        result[item.name] = item.multiple ? [...selected, other.trim()] : other.trim();
         return;
       }
-      const value = answers[item.name];
       if (Array.isArray(value) ? value.length : value) result[item.name] = value;
     });
     onSubmit(result);

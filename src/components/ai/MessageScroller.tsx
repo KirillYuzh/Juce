@@ -155,6 +155,10 @@ export function MessageScrollerProvider({
   );
 
   useEffect(() => {
+    followRef.current = autoScroll;
+  }, [autoScroll]);
+
+  useEffect(() => {
     if (!viewport) return;
     if (initialized.current.viewport === viewport && initialized.current.key === resetKey) return;
     let frame = 0;

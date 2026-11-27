@@ -4,6 +4,8 @@ import {
   addDays,
   addMonths,
   dateKey,
+  formatDate,
+  formatDateRange,
   getMonthWeeks,
   isBefore,
   isSameDay,
@@ -92,5 +94,21 @@ describe('isSameDay', () => {
   it('ignores the time of day', () => {
     expect(isSameDay(new Date(2024, 0, 1, 0, 0), new Date(2024, 0, 1, 23, 59))).toBe(true);
     expect(isSameDay(startOfDay(new Date(2024, 0, 1, 15)), new Date(2024, 0, 1))).toBe(true);
+  });
+});
+
+describe('invalid dates', () => {
+  const invalid = new Date('не дата');
+
+  it('keeps weekdayIndex finite so the month grid cannot throw', () => {
+    expect(Number.isNaN(weekdayIndex(invalid))).toBe(false);
+    expect(() => getMonthWeeks(invalid)).not.toThrow();
+  });
+
+  it('does not leak NaN into keys and labels', () => {
+    expect(dateKey(invalid)).toBe('');
+    expect(formatDate(invalid)).toBe('');
+    expect(formatDateRange({ from: invalid, to: invalid })).toBe('');
+    expect(formatDateRange({ from: invalid, to: null })).toBe('');
   });
 });

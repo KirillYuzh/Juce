@@ -163,7 +163,8 @@
   padding: 12px 16px;
   border: 0;
   border-radius: var(--tb-radius-control);
-  background: var(--tb-field);
+  background: var(--tb-surface);
+  box-shadow: inset 0 0 0 1px var(--tb-border);
   color: var(--tb-text-primary);
   font: 400 15px/24px var(--tb-font-text);
   outline: none;
@@ -178,7 +179,7 @@
 
 @media (hover: hover) {
   .input:hover {
-    background: var(--tb-field-hover);
+    background: var(--tb-bg-secondary);
   }
 }
 

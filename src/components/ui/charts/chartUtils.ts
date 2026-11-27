@@ -92,20 +92,28 @@ export function arcPath(
     cx + radius * Math.cos(angle),
     cy + radius * Math.sin(angle),
   ];
-  const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
+  const sweep = endAngle - startAngle;
+  const full = Math.abs(sweep) >= Math.PI * 2 - 1e-9;
+  const largeArc = full || sweep > Math.PI ? 1 : 0;
+  const arcs = (radius: number, outer: boolean, angles: number[]) =>
+    angles
+      .map((angle) => {
+        const [x, y] = point(angle, radius);
+        return `A${radius},${radius} 0 ${largeArc} ${outer ? 1 : 0} ${x},${y}`;
+      })
+      .join('');
   const [x1, y1] = point(startAngle, outerRadius);
-  const [x2, y2] = point(endAngle, outerRadius);
+  const outerArcs = arcs(outerRadius, true, full ? [startAngle + sweep / 2, endAngle] : [endAngle]);
   if (innerRadius <= 0) {
-    return `M${cx},${cy}L${x1},${y1}A${outerRadius},${outerRadius} 0 ${largeArc} 1 ${x2},${y2}Z`;
+    return `M${cx},${cy}L${x1},${y1}${outerArcs}Z`;
   }
   const [x3, y3] = point(endAngle, innerRadius);
-  const [x4, y4] = point(startAngle, innerRadius);
-  return (
-    `M${x1},${y1}` +
-    `A${outerRadius},${outerRadius} 0 ${largeArc} 1 ${x2},${y2}` +
-    `L${x3},${y3}` +
-    `A${innerRadius},${innerRadius} 0 ${largeArc} 0 ${x4},${y4}Z`
+  const innerArcs = arcs(
+    innerRadius,
+    false,
+    full ? [endAngle - sweep / 2, startAngle] : [startAngle]
   );
+  return `M${x1},${y1}${outerArcs}L${x3},${y3}${innerArcs}Z`;
 }
 
 export function labelStep(count: number, plotWidth: number, minGap = 64) {

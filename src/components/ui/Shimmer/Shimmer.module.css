@@ -1,0 +1,37 @@
+.root {
+  display: inline-grid;
+  justify-items: start;
+}
+
+.layer {
+  grid-area: 1 / 1;
+}
+
+.current {
+  transition:
+    opacity var(--tb-duration-base) var(--tb-ease-standard),
+    transform var(--tb-duration-base) var(--tb-ease-out);
+}
+
+@starting-style {
+  .current {
+    opacity: 0;
+    transform: translateY(0.2em);
+  }
+}
+
+.previous {
+  animation: tb-shimmer-swap-out var(--tb-duration-slow) var(--tb-ease-standard) both;
+}
+
+@keyframes tb-shimmer-swap-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-0.2em);
+  }
+}

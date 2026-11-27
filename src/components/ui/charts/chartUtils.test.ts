@@ -75,6 +75,15 @@ describe('arcPath', () => {
     expect(path.endsWith('Z')).toBe(true);
     expect(path).toContain('A40,40');
   });
+
+  it('draws a full turn as two arcs so the circle is visible', () => {
+    const pie = arcPath(50, 50, 0, 40, -Math.PI / 2, (Math.PI * 3) / 2);
+    expect(pie.match(/A40,40/g)).toHaveLength(2);
+
+    const ring = arcPath(50, 50, 20, 40, -Math.PI / 2, (Math.PI * 3) / 2);
+    expect(ring.match(/A40,40/g)).toHaveLength(2);
+    expect(ring.match(/A20,20/g)).toHaveLength(2);
+  });
 });
 
 describe('labelStep', () => {

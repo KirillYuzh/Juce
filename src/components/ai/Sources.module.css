@@ -1,10 +1,38 @@
 .link {
   display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
   border-radius: var(--tb-radius-xs);
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+button.link {
+  cursor: pointer;
+}
+
+.link:focus-visible {
+  outline: var(--tb-focus-ring);
+  outline-offset: 2px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .title {
   transition: color var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
+.description {
+  font: 400 11px/14px var(--tb-font-text);
+  color: var(--tb-text-muted);
+  overflow-wrap: anywhere;
 }
 
 @media (hover: hover) {

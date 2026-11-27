@@ -53,8 +53,36 @@
 }
 
 .sourceLink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   font: 500 13px/20px var(--tb-font-text);
   color: var(--tb-text-link);
+  overflow-wrap: anywhere;
+}
+
+button.sourceLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sourceLink:focus-visible {
+  outline: var(--tb-focus-ring);
+  outline-offset: 2px;
+}
+
+.sourceIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.sourceDescription {
+  font: 400 11px/14px var(--tb-font-text);
+  color: var(--tb-text-muted);
   overflow-wrap: anywhere;
 }
 

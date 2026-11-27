@@ -288,6 +288,7 @@ export function Select({
   options,
   fieldClassName,
   id,
+  name,
   className,
   value,
   defaultValue,
@@ -314,6 +315,7 @@ export function Select({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const wasOpen = useRef(false);
+  const restoreFocusRef = useRef(false);
 
   const openSelect = () => {
     if (disabled || !options.length) return;
@@ -349,9 +351,16 @@ export function Select({
     }
     if (wasOpen.current) {
       wasOpen.current = false;
-      triggerRef.current?.focus();
+      const restore = restoreFocusRef.current;
+      restoreFocusRef.current = false;
+      if (restore) triggerRef.current?.focus();
     }
   }, [open, selectedIndex]);
+
+  useEffect(() => {
+    if (!open) return;
+    document.getElementById(`${triggerId}-${activeIndex}`)?.scrollIntoView({ block: 'nearest' });
+  }, [open, activeIndex, triggerId]);
 
   useEffect(() => {
     if (!open) return;
@@ -384,9 +393,13 @@ export function Select({
       case 'Enter':
       case ' ':
         event.preventDefault();
+        restoreFocusRef.current = true;
         choose(activeIndex);
         break;
       case 'Escape':
+        restoreFocusRef.current = true;
+        setOpen(false);
+        break;
       case 'Tab':
         setOpen(false);
         break;
@@ -404,6 +417,7 @@ export function Select({
       className={fieldClassName}
     >
       <div ref={wrapperRef} className={styles.selectWrap}>
+        {name && <input type="hidden" name={name} value={current} />}
         <button
           {...rest}
           ref={triggerRef}

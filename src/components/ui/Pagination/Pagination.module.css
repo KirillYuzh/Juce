@@ -1,0 +1,25 @@
+.pagination {
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tb-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ellipsis {
+  display: inline-flex;
+  justify-content: center;
+  min-width: var(--tb-space-8);
+  color: var(--tb-text-tertiary);
+}

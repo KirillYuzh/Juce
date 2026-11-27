@@ -7,15 +7,18 @@ import { useControllableState } from '../../lib/use-controllable-state';
 
 export interface TabItem {
   id: string;
-  label: string;
+  label: ReactNode;
   content?: ReactNode;
 }
+
+export type TabsVariant = 'segmented' | 'underline';
 
 export interface TabsProps {
   items: TabItem[];
   value?: string;
   defaultValue?: string;
   onChange?: (id: string) => void;
+  variant?: TabsVariant;
   className?: string;
   label?: string;
 }
@@ -25,6 +28,7 @@ export function Tabs({
   value,
   defaultValue,
   onChange,
+  variant = 'segmented',
   className,
   label = 'Разделы',
 }: TabsProps) {
@@ -81,6 +85,7 @@ export function Tabs({
     <>
       <div
         className={cx(styles.tabs, 'tb-scrollbar-hidden', className)}
+        data-variant={variant}
         role="tablist"
         aria-label={label}
       >

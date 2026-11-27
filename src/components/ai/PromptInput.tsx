@@ -53,6 +53,7 @@ export function PromptInput({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const submitLock = useRef(false);
   const generatedId = useId().replace(/:/g, '');
   const inputId = id ?? `prompt-${generatedId}`;
 
@@ -68,14 +69,19 @@ export function PromptInput({
     element.style.height = `${Math.min(element.scrollHeight, 200)}px`;
   }, [text]);
 
+  useEffect(() => {
+    submitLock.current = false;
+  }, [text, status]);
+
   const blocked = status === 'streaming' || status === 'submitted';
   const canSend = text.trim().length > 0 && !blocked && !disabled;
 
   const submit = () => {
     const trimmed = text.trim();
-    if (!trimmed || disabled || blocked) return;
+    if (!trimmed || disabled || blocked || submitLock.current) return;
+    submitLock.current = true;
     onSubmit?.({ text: trimmed, files });
-    if (!controlled) setInner('');
+    update('');
     setFiles([]);
     if (fileRef.current) fileRef.current.value = '';
   };
@@ -130,10 +136,10 @@ export function PromptInput({
           rows={1}
           onChange={(event) => update(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
-              event.preventDefault();
-              formRef.current?.requestSubmit();
-            }
+            if (event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) return;
+            event.preventDefault();
+            if (event.repeat) return;
+            formRef.current?.requestSubmit();
           }}
         />
 

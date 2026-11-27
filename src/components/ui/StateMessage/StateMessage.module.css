@@ -1,0 +1,18 @@
+.message {
+  padding: var(--tb-space-8) var(--tb-space-4);
+  text-align: center;
+}
+
+.icon {
+  display: inline-flex;
+  color: var(--tb-text-secondary);
+}
+
+.message[data-tone='error'] .icon {
+  color: var(--tb-error);
+}
+
+.action {
+  display: flex;
+  justify-content: center;
+}

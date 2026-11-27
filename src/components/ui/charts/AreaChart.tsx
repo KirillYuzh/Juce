@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
 import { cx } from '../../../lib/cx';
@@ -12,6 +12,7 @@ import {
   seriesColors,
   toNumber,
   usePlotWidth,
+  valueExtent,
   type ChartCurve,
   type ChartRow,
   type ChartSeries,
@@ -61,6 +62,10 @@ export function AreaChart({
   const gradientId = useId().replace(/:/g, '');
   const colors = seriesColors(series);
 
+  useEffect(() => {
+    setHovered((current) => (current !== null && current >= data.length ? null : current));
+  }, [data.length]);
+
   const geometry = useMemo(() => {
     const padding = { top: 8, right: 8, bottom: 24, left: grid ? 44 : 8 };
     const plot = plotSize(width, height, padding);
@@ -80,7 +85,8 @@ export function AreaChart({
       rowValues.map((value, pointIndex) => value + lower[seriesIndex][pointIndex])
     );
 
-    const { max: axisMax, values: tickValues } = axisTicks(Math.max(1, ...upper.flat()), ticks);
+    const { max } = valueExtent(upper);
+    const { max: axisMax, values: tickValues } = axisTicks(max, ticks);
 
     const x = lineScale(data.length, plot.width, padding.left);
     const y = (value: number) => padding.top + plot.height * (1 - value / axisMax);
@@ -117,7 +123,8 @@ export function AreaChart({
   };
 
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
-  const tooltipX = hovered === null ? 0 : geometry.x(hovered);
+  const active = hovered !== null && hovered < data.length ? hovered : null;
+  const tooltipX = active === null ? 0 : geometry.x(active);
   const flipTooltip = width - tooltipX < 190 && tooltipX > 190;
 
   return (
@@ -168,7 +175,8 @@ export function AreaChart({
               every={geometry.every}
             />
 
-            {fill === 'gradient' &&
+            {data.length > 0 &&
+              fill === 'gradient' &&
               geometry.bands.map((band, index) => (
                 <path
                   key={`area-${series[index].key}`}
@@ -179,25 +187,26 @@ export function AreaChart({
                 />
               ))}
 
-            {geometry.bands.map((band, index) => (
-              <path
-                key={`line-${series[index].key}`}
-                className={styles.line}
-                style={{ animationDelay: `${index * 60}ms`, stroke: colors[index] }}
-                d={band.line}
-                pathLength={1}
-                fill="none"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            ))}
+            {data.length > 0 &&
+              geometry.bands.map((band, index) => (
+                <path
+                  key={`line-${series[index].key}`}
+                  className={styles.line}
+                  style={{ animationDelay: `${index * 60}ms`, stroke: colors[index] }}
+                  d={band.line}
+                  pathLength={1}
+                  fill="none"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              ))}
 
-            {hovered !== null && (
+            {active !== null && (
               <g pointerEvents="none">
                 <line
-                  x1={geometry.x(hovered)}
-                  x2={geometry.x(hovered)}
+                  x1={geometry.x(active)}
+                  x2={geometry.x(active)}
                   y1={geometry.padding.top}
                   y2={height - geometry.padding.bottom}
                   style={{ stroke: 'var(--tb-border-strong)' }}
@@ -205,8 +214,8 @@ export function AreaChart({
                 {geometry.bands.map((band, index) => (
                   <circle
                     key={`dot-${series[index].key}`}
-                    cx={band.top[hovered][0]}
-                    cy={band.top[hovered][1]}
+                    cx={band.top[active][0]}
+                    cy={band.top[active][1]}
                     r={4}
                     strokeWidth={2}
                     style={{ fill: colors[index], stroke: 'var(--tb-surface)' }}
@@ -217,15 +226,15 @@ export function AreaChart({
           </svg>
         )}
 
-        {tooltip && hovered !== null && data[hovered] && (
+        {tooltip && active !== null && (
           <ChartTooltip
             left={flipTooltip ? tooltipX - 14 : tooltipX + 14}
             flip={flipTooltip}
             indicator={tooltipIndicator}
-            title={String(data[hovered][xKey])}
+            title={String(data[active][xKey])}
             rows={series.map((item, index) => ({
               label: item.label,
-              value: valueFormat(toNumber(data[hovered][item.key])),
+              value: valueFormat(toNumber(data[active][item.key])),
               color: colors[index],
             }))}
             top={8}

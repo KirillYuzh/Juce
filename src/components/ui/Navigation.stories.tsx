@@ -22,6 +22,23 @@ export const SegmentedTabs: Story = {
   ),
 };
 
+export const UnderlineTabs: Story = {
+  name: 'Underline',
+  render: () => (
+    <div style={{ width: 720 }}>
+      <Tabs
+        variant="underline"
+        items={[
+          { id: 'code', label: 'Код' },
+          { id: 'issues', label: 'Задачи 12' },
+          { id: 'pulls', label: 'Пул-реквесты 3' },
+          { id: 'actions', label: 'Действия' },
+        ]}
+      />
+    </div>
+  ),
+};
+
 export const AccordionExample: Story = {
   render: () => (
     <div
@@ -29,7 +46,8 @@ export const AccordionExample: Story = {
         width: 640,
         padding: 24,
         borderRadius: 24,
-        background: 'var(--tb-white)',
+        background: 'var(--tb-surface)',
+        border: '1px solid var(--tb-border)',
         boxShadow: 'var(--tb-shadow-popover)',
       }}
     >

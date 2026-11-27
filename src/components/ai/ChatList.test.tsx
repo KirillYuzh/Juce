@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { ChatList, type ChatListItem } from './ChatList';
 
 const chats: ChatListItem[] = [
@@ -10,6 +10,10 @@ const chats: ChatListItem[] = [
 const items = () => Array.from(document.querySelectorAll<HTMLButtonElement>('[data-chat-item]'));
 
 describe('ChatList', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
   it('shows every chat and marks the active one', () => {
     render(<ChatList chats={chats} activeId="b" />);
     expect(screen.getByText('Первый диалог')).toBeTruthy();
@@ -50,6 +54,36 @@ describe('ChatList', () => {
     fireEvent.click(screen.getByLabelText('Действия с чатом «Второй диалог»'));
     fireEvent.click(screen.getByRole('menuitem', { name: /Скачать/ }));
     expect(onDownload).toHaveBeenCalledWith(chats[1]);
+  });
+
+  it('revokes the download blob and removes the link even when the click throws', () => {
+    vi.useFakeTimers();
+    const createObjectURL = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:chat');
+    const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {
+      throw new Error('click failed');
+    });
+    const absorb = () => undefined;
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    window.addEventListener('error', absorb);
+    try {
+      render(<ChatList chats={chats} />);
+      fireEvent.click(screen.getByLabelText('Действия с чатом «Второй диалог»'));
+      expect(() =>
+        fireEvent.click(screen.getByRole('menuitem', { name: /Скачать/ }))
+      ).not.toThrow();
+
+      expect(createObjectURL).toHaveBeenCalledTimes(1);
+      expect(click).toHaveBeenCalledTimes(1);
+      expect(document.querySelector('a[download]')).toBeNull();
+      expect(revokeObjectURL).not.toHaveBeenCalled();
+
+      act(() => vi.advanceTimersByTime(1000));
+      expect(revokeObjectURL).toHaveBeenCalledWith('blob:chat');
+    } finally {
+      window.removeEventListener('error', absorb);
+      consoleError.mockRestore();
+    }
   });
 
   it('closes the actions menu on a pointer down outside', () => {

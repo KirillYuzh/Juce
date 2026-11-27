@@ -1,8 +1,8 @@
-import { memo, type ReactNode } from 'react';
+import { Fragment, memo, useId, type ReactNode } from 'react';
 import styles from './Chat.module.css';
 import { MessageScroller } from './MessageScroller';
 import { Bubble, BubbleContent, Message, MessageContent, MessageReactions } from './Message';
-import { PromptInput, type PromptInputPayload, type PromptInputStatus } from './PromptInput';
+import { PromptInput, type PromptInputPayload } from './PromptInput';
 import { Suggestions, Suggestion } from './Suggestion';
 import { Reasoning } from './Reasoning';
 import { Sources, type SourceItem } from './Sources';
@@ -13,7 +13,8 @@ import { cx } from '../../lib/cx';
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
-  content: string;
+  content?: string;
+  extra?: ReactNode;
   reasoning?: string;
   reasoningDuration?: number | null;
   reasoningStreaming?: boolean;
@@ -23,18 +24,22 @@ export interface ChatMessage {
   errorText?: string;
 }
 
+type MessageActions = (message: ChatMessage) => ReactNode;
+
 export interface ChatProps {
   messages: ChatMessage[];
   onSend: (payload: PromptInputPayload) => void;
   onStop?: () => void;
   onRetry?: (id: string) => void;
-  status?: PromptInputStatus;
-  suggestions?: string[];
+  suggestions?: readonly (string | ReactNode)[];
   title?: string;
+  titleLevel?: 2 | 3 | 4;
   subtitle?: string;
   placeholder?: string;
   emptyTitle?: string;
   emptyText?: string;
+  emptyState?: ReactNode;
+  messageActions?: MessageActions;
   className?: string;
   footnote?: string;
   headerLeading?: ReactNode;
@@ -45,7 +50,7 @@ export interface ChatProps {
   showSources?: boolean;
   authorName?: string;
   authorInitials?: string;
-  conversationKey?: string;
+  conversationKey?: string | number;
 }
 
 export function Chat({
@@ -53,13 +58,15 @@ export function Chat({
   onSend,
   onStop,
   onRetry,
-  status = 'ready',
   suggestions = [],
   title = 'Джупсик',
+  titleLevel = 2,
   subtitle = 'ИИ-ассистент по Java, Go и математике',
   placeholder = 'Спросите про код, алгоритм или теорему…',
   emptyTitle = 'Чем помочь?',
   emptyText = 'Разберите код, объясните алгоритм или проверьте доказательство.',
+  emptyState,
+  messageActions,
   className,
   footnote = 'Джупсик может ошибаться. Проверяйте код и выкладки по первоисточникам.',
   headerLeading,
@@ -72,7 +79,12 @@ export function Chat({
   authorInitials = 'Дж',
   conversationKey,
 }: ChatProps) {
-  const scrollKey = conversationKey ?? messages[0]?.id ?? '';
+  const emptyKey = useId();
+  const scrollKey =
+    conversationKey !== undefined ? String(conversationKey) : (messages[0]?.id ?? emptyKey);
+  const anyStreaming = messages.some((message) => message.streaming);
+  const lastIndex = messages.length - 1;
+  const Heading = `h${titleLevel}` as 'h2' | 'h3' | 'h4';
 
   return (
     <div className={cx(styles.chat, !framed && styles.plain, className)}>
@@ -80,7 +92,7 @@ export function Chat({
         <div className={styles.headerMain}>
           {headerLeading}
           <div className={styles.headerText}>
-            <span className={styles.title}>{title}</span>
+            <Heading className={styles.title}>{title}</Heading>
             <span className={styles.subtitle}>{subtitle}</span>
           </div>
         </div>
@@ -91,18 +103,27 @@ export function Chat({
         <MessageScroller.Provider autoScroll defaultScrollPosition="end" resetKey={scrollKey}>
           <MessageScroller.Root className={styles.scroller}>
             <MessageScroller.Viewport className={styles.viewport}>
-              <MessageScroller.Content className={styles.content}>
+              <MessageScroller.Content
+                className={styles.content}
+                aria-busy={anyStreaming || undefined}
+              >
                 {messages.length === 0 ? (
-                  <div className={styles.empty}>
-                    <span className={styles.emptyTitle}>{emptyTitle}</span>
-                    <span className={styles.emptyText}>{emptyText}</span>
-                  </div>
+                  emptyState !== undefined ? (
+                    emptyState
+                  ) : (
+                    <div className={styles.empty}>
+                      <span className={styles.emptyTitle}>{emptyTitle}</span>
+                      <span className={styles.emptyText}>{emptyText}</span>
+                    </div>
+                  )
                 ) : (
-                  messages.map((message) => (
+                  messages.map((message, index) => (
                     <MessageScroller.Item
                       key={message.id}
                       messageId={message.id}
                       scrollAnchor={message.role === 'user'}
+                      role="article"
+                      aria-label={message.role === 'user' ? 'Ваше сообщение' : authorName}
                     >
                       {message.role === 'user' ? (
                         <UserMessage message={message} />
@@ -112,7 +133,10 @@ export function Chat({
                           showAuthor={showAuthor}
                           showReasoning={showReasoning}
                           showSources={showSources}
-                          onRetry={onRetry}
+                          onRetry={
+                            onRetry && (message.error || index === lastIndex) ? onRetry : undefined
+                          }
+                          messageActions={messageActions}
                           authorName={authorName}
                           authorInitials={authorInitials}
                         />
@@ -130,18 +154,27 @@ export function Chat({
       <div className={styles.composer}>
         {suggestions.length > 0 && (
           <Suggestions>
-            {suggestions.map((suggestion) => (
-              <Suggestion
-                key={suggestion}
-                onClick={() => onSend({ text: suggestion, files: [] })}
-                disabled={status !== 'ready'}
-              >
-                {suggestion}
-              </Suggestion>
-            ))}
+            {suggestions.map((suggestion, index) =>
+              typeof suggestion === 'string' ? (
+                <Suggestion
+                  key={`${index}-${suggestion}`}
+                  onClick={() => onSend({ text: suggestion, files: [] })}
+                  disabled={anyStreaming}
+                >
+                  {suggestion}
+                </Suggestion>
+              ) : (
+                <Fragment key={index}>{suggestion}</Fragment>
+              )
+            )}
           </Suggestions>
         )}
-        <PromptInput onSubmit={onSend} onStop={onStop} status={status} placeholder={placeholder} />
+        <PromptInput
+          onSubmit={onSend}
+          onStop={onStop}
+          status={anyStreaming ? 'streaming' : 'ready'}
+          placeholder={placeholder}
+        />
         {footnote && <p className={styles.footnote}>{footnote}</p>}
       </div>
     </div>
@@ -153,7 +186,9 @@ const UserMessage = memo(function UserMessage({ message }: { message: ChatMessag
     <Message align="end">
       <MessageContent>
         <Bubble align="end" variant="muted">
-          <BubbleContent>{message.content}</BubbleContent>
+          <BubbleContent>
+            {message.extra !== undefined ? message.extra : message.content}
+          </BubbleContent>
         </Bubble>
       </MessageContent>
     </Message>
@@ -166,6 +201,7 @@ const AssistantMessage = memo(function AssistantMessage({
   showReasoning,
   showSources,
   onRetry,
+  messageActions,
   authorName,
   authorInitials,
 }: {
@@ -174,6 +210,7 @@ const AssistantMessage = memo(function AssistantMessage({
   showReasoning: boolean;
   showSources: boolean;
   onRetry?: (id: string) => void;
+  messageActions?: MessageActions;
   authorName: string;
   authorInitials: string;
 }) {
@@ -193,9 +230,11 @@ const AssistantMessage = memo(function AssistantMessage({
             duration={message.reasoningDuration}
           />
         )}
-        {message.content.trim() && (
+        {message.extra !== undefined ? (
+          message.extra
+        ) : message.content?.trim() ? (
           <Markdown streaming={message.streaming}>{message.content}</Markdown>
-        )}
+        ) : null}
         {message.error && (
           <span role="alert" className={styles.subtitle}>
             {message.errorText ?? 'Не удалось получить ответ. Попробуйте ещё раз.'}
@@ -204,13 +243,16 @@ const AssistantMessage = memo(function AssistantMessage({
         {showSources && message.sources && message.sources.length > 0 && (
           <Sources sources={message.sources} />
         )}
-        {!message.streaming && (
-          <MessageReactions
-            content={message.content}
-            onRetry={onRetry ? () => onRetry(message.id) : undefined}
-            retryOnly={message.error}
-          />
-        )}
+        {!message.streaming &&
+          (messageActions ? (
+            messageActions(message)
+          ) : (
+            <MessageReactions
+              content={message.content ?? ''}
+              onRetry={onRetry ? () => onRetry(message.id) : undefined}
+              retryOnly={message.error}
+            />
+          ))}
       </MessageContent>
     </Message>
   );

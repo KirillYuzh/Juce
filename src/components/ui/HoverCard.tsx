@@ -9,13 +9,12 @@ import {
 } from 'react';
 import styles from './HoverCard.module.css';
 import { cx } from '../../lib/cx';
-
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+import { FOCUSABLE } from '../../lib/focus';
 
 interface HoverCardContextValue {
   open: boolean;
   setOpen: (open: boolean) => void;
+  openWithDelay: () => void;
   cancelClose: () => void;
   scheduleClose: () => void;
   openOnFocus: () => void;
@@ -87,6 +86,7 @@ export function HoverCard({
       value={{
         open,
         setOpen,
+        openWithDelay,
         cancelClose: clearTimers,
         scheduleClose,
         openOnFocus,
@@ -126,8 +126,16 @@ function useContextCard(component: string) {
 }
 
 export function HoverCardTrigger({ children }: { children: ReactNode }) {
-  const { open, setOpen, cancelClose, scheduleClose, contentId, triggerId, triggerRef } =
-    useContextCard('HoverCardTrigger');
+  const {
+    open,
+    setOpen,
+    openWithDelay,
+    cancelClose,
+    scheduleClose,
+    contentId,
+    triggerId,
+    triggerRef,
+  } = useContextCard('HoverCardTrigger');
   const localRef = useRef<HTMLSpanElement>(null);
   const [ownsFocus, setOwnsFocus] = useState(false);
 
@@ -146,10 +154,7 @@ export function HoverCardTrigger({ children }: { children: ReactNode }) {
       tabIndex={ownsFocus ? undefined : 0}
       aria-expanded={open}
       aria-controls={open ? contentId : undefined}
-      onMouseEnter={() => {
-        cancelClose();
-        setOpen(true);
-      }}
+      onMouseEnter={openWithDelay}
       onMouseLeave={scheduleClose}
       onClick={() => {
         cancelClose();

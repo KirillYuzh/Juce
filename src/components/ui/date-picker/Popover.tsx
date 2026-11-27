@@ -10,6 +10,7 @@ import {
 } from 'react';
 import styles from './Popover.module.css';
 import { cx } from '../../../lib/cx';
+import { focusablesWithin } from '../../../lib/focus';
 
 interface PopoverContextValue {
   open: boolean;
@@ -139,18 +140,49 @@ export function PopoverContent({
   tabIndex,
   className,
   children,
+  onKeyDown,
   ...rest
 }: PopoverContentProps) {
   const popover = usePopover('PopoverContent');
   if (!popover.open) return null;
+
+  const trapFocus = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented || event.key !== 'Tab') return;
+
+    const content = event.currentTarget;
+    const focusable = focusablesWithin(content);
+    if (focusable.length === 0) {
+      event.preventDefault();
+      content.focus();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+    const index = active instanceof HTMLElement ? focusable.indexOf(active) : -1;
+    if (event.shiftKey) {
+      if (index <= 0) {
+        event.preventDefault();
+        last.focus();
+      }
+    } else if (index === -1 || index === focusable.length - 1) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
 
   return (
     <div
       {...rest}
       ref={popover.contentRef}
       id={id ?? popover.contentId}
+      role="dialog"
+      aria-modal="true"
       tabIndex={tabIndex ?? -1}
       className={cx(styles.content, className)}
+      onKeyDown={trapFocus}
     >
       {children}
     </div>

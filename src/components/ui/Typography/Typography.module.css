@@ -1,0 +1,256 @@
+.text {
+  margin: 0;
+  font-family: var(--tb-font-text);
+}
+
+.sizeXl {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.sizeL {
+  font-size: 17px;
+  line-height: 24px;
+}
+
+.sizeM {
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.sizeS {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.sizeXs {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.weightRegular {
+  font-weight: 400;
+}
+
+.weightMedium {
+  font-weight: 500;
+}
+
+.weightBold {
+  font-weight: 700;
+}
+
+.tonePrimary {
+  color: var(--tb-text-primary);
+}
+
+.toneSecondary {
+  color: var(--tb-text-secondary);
+}
+
+.toneTertiary {
+  color: var(--tb-text-tertiary);
+}
+
+.toneMuted {
+  color: var(--tb-text-muted);
+}
+
+.toneInverse {
+  color: var(--tb-text-inverse);
+}
+
+.toneError {
+  color: var(--tb-error-text);
+}
+
+.toneLink {
+  color: var(--tb-text-link);
+}
+
+.linkText {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
+.linkTextHover {
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .linkTextHover:hover {
+    text-decoration: underline;
+  }
+}
+
+.linkText:focus-visible {
+  outline: var(--tb-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--tb-radius-xxs);
+}
+
+@media (hover: hover) {
+  .linkText.toneLink:hover {
+    color: var(--tb-text-link-hover);
+  }
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--tb-font-heading);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.level1 {
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.level2 {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+.level3 {
+  font-size: 17px;
+  line-height: 24px;
+}
+
+.level4 {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.level5 {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.level6 {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.quote {
+  margin: 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--tb-secondary);
+  color: var(--tb-text-secondary);
+  font-family: var(--tb-font-quote);
+  font-size: 17px;
+  line-height: 28px;
+}
+
+.quoteFooter {
+  margin-top: 8px;
+  color: var(--tb-text-tertiary);
+  font: 400 13px/20px var(--tb-font-text);
+}
+
+.quoteFooter cite {
+  font-style: normal;
+}
+
+.callout {
+  display: flex;
+  gap: var(--tb-space-3);
+  padding: var(--tb-space-4);
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-control);
+  background: var(--tb-bg-secondary);
+  color: var(--tb-text-primary);
+  font: 400 15px/24px var(--tb-font-text);
+}
+
+.callout[data-tone='important'] {
+  border-color: color-mix(in oklab, var(--tb-accent-text) 24%, transparent);
+  background: var(--tb-accent-soft);
+  color: var(--tb-accent-text);
+}
+
+.callout[data-tone='warning'] {
+  border-color: color-mix(in oklab, var(--tb-warning) 40%, transparent);
+  background: color-mix(in oklab, var(--tb-warning) 16%, transparent);
+  color: var(--tb-warning-text);
+}
+
+.callout[data-tone='error'] {
+  border-color: color-mix(in oklab, var(--tb-error-text) 24%, transparent);
+  background: var(--tb-error-soft);
+  color: var(--tb-error-text);
+}
+
+.callout[data-tone='success'] {
+  border-color: color-mix(in oklab, var(--tb-success-text) 24%, transparent);
+  background: var(--tb-success-soft);
+  color: var(--tb-success-text);
+}
+
+.calloutIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+}
+
+.calloutBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--tb-space-1);
+  min-width: 0;
+}
+
+.calloutTitle {
+  margin: 0;
+  font: 600 15px/22px var(--tb-font-text);
+}
+
+.calloutRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--tb-space-3);
+}
+
+.calloutContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.calloutAction {
+  flex: none;
+  margin-left: auto;
+}
+
+.list {
+  margin: 0;
+  padding-left: 22px;
+  color: var(--tb-text-primary);
+  font: 400 15px/24px var(--tb-font-text);
+}
+
+.ordered {
+  list-style: decimal;
+}
+
+.unordered {
+  list-style: disc;
+}
+
+.item + .item {
+  margin-top: 4px;
+}
+
+.item::marker {
+  color: var(--tb-text-muted);
+}
+
+.inlineCode {
+  padding: 2px 6px;
+  border-radius: var(--tb-radius-xxs);
+  background: var(--tb-bg-tertiary);
+  font: 400 13px/20px var(--tb-font-mono);
+}

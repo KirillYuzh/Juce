@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './Chart.module.css';
 import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
 import { cx } from '../../../lib/cx';
@@ -12,6 +12,7 @@ import {
   seriesColors,
   toNumber,
   usePlotWidth,
+  valueExtent,
   type ChartCurve,
   type ChartRow,
   type ChartSeries,
@@ -56,12 +57,17 @@ export function LineChart({
   const [hovered, setHovered] = useState<number | null>(null);
   const colors = seriesColors(series);
 
+  useEffect(() => {
+    setHovered((current) => (current !== null && current >= data.length ? null : current));
+  }, [data.length]);
+
   const geometry = useMemo(() => {
     const padding = { top: 8, right: 8, bottom: 24, left: grid ? 44 : 8 };
     const plot = plotSize(width, height, padding);
 
     const values = series.map((item) => data.map((row) => toNumber(row[item.key])));
-    const { max: axisMax, values: tickValues } = axisTicks(Math.max(1, ...values.flat()), ticks);
+    const { max } = valueExtent(values);
+    const { max: axisMax, values: tickValues } = axisTicks(max, ticks);
 
     const x = lineScale(data.length, plot.width, padding.left);
     const y = (value: number) => padding.top + plot.height * (1 - value / axisMax);
@@ -95,7 +101,8 @@ export function LineChart({
   };
 
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
-  const tooltipX = hovered === null ? 0 : geometry.x(hovered);
+  const active = hovered !== null && hovered < data.length ? hovered : null;
+  const tooltipX = active === null ? 0 : geometry.x(active);
   const flipTooltip = width - tooltipX < 190 && tooltipX > 190;
 
   return (
@@ -156,11 +163,11 @@ export function LineChart({
                 ))
               )}
 
-            {hovered !== null && (
+            {active !== null && (
               <g pointerEvents="none">
                 <line
-                  x1={geometry.x(hovered)}
-                  x2={geometry.x(hovered)}
+                  x1={geometry.x(active)}
+                  x2={geometry.x(active)}
                   y1={geometry.padding.top}
                   y2={height - geometry.padding.bottom}
                   style={{ stroke: 'var(--tb-border-strong)' }}
@@ -168,8 +175,8 @@ export function LineChart({
                 {geometry.lines.map((line, index) => (
                   <circle
                     key={`hover-${series[index].key}`}
-                    cx={line.points[hovered][0]}
-                    cy={line.points[hovered][1]}
+                    cx={line.points[active][0]}
+                    cy={line.points[active][1]}
                     r={4}
                     strokeWidth={2}
                     style={{ fill: colors[index], stroke: 'var(--tb-surface)' }}
@@ -180,15 +187,15 @@ export function LineChart({
           </svg>
         )}
 
-        {tooltip && hovered !== null && data[hovered] && (
+        {tooltip && active !== null && (
           <ChartTooltip
             left={flipTooltip ? tooltipX - 14 : tooltipX + 14}
             flip={flipTooltip}
             indicator={tooltipIndicator}
-            title={String(data[hovered][xKey])}
+            title={String(data[active][xKey])}
             rows={series.map((item, index) => ({
               label: item.label,
-              value: valueFormat(toNumber(data[hovered][item.key])),
+              value: valueFormat(toNumber(data[active][item.key])),
               color: colors[index],
             }))}
             top={8}

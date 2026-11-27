@@ -1,0 +1,43 @@
+.gallery {
+  display: block;
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--tb-radius-control);
+  background: var(--tb-bg-secondary);
+  color: inherit;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.thumb:focus-visible {
+  outline: var(--tb-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .thumb:hover {
+    box-shadow: var(--tb-shadow-card);
+  }
+}
+
+.photo {
+  border-radius: var(--tb-radius-control);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tb-space-3);
+}
+
+.counter {
+  color: var(--tb-text-secondary);
+  font: 400 14px/20px var(--tb-font-text);
+  font-variant-numeric: tabular-nums;
+}

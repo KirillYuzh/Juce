@@ -32,8 +32,8 @@ export function ChartTooltip({
       style={{ left, top, transform: flip ? 'translateX(-100%)' : undefined }}
     >
       {title && <span className={styles.tooltipTitle}>{title}</span>}
-      {rows.map((row) => (
-        <span key={row.label} className={styles.tooltipRow}>
+      {rows.map((row, index) => (
+        <span key={`${row.label}-${index}`} className={styles.tooltipRow}>
           {indicator !== 'none' && (
             <span
               className={cx(styles.tooltipIndicator, styles[`indicator-${indicator}`])}
@@ -55,8 +55,8 @@ export interface ChartLegendProps {
 export function ChartLegend({ items }: ChartLegendProps) {
   return (
     <ul className={styles.legend}>
-      {items.map((item) => (
-        <li key={item.label} className={styles.legendItem}>
+      {items.map((item, index) => (
+        <li key={`${item.label}-${index}`} className={styles.legendItem}>
           <span className={styles.legendDot} style={{ background: item.color }} />
           {item.label}
         </li>

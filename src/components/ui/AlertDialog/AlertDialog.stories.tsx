@@ -13,7 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-function Demo() {
+function AlertDialogExample() {
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState('ничего');
 
@@ -35,5 +35,20 @@ function Demo() {
 }
 
 export const Default: Story = {
-  render: () => <Demo />,
+  render: () => <AlertDialogExample />,
+  parameters: {
+    docs: {
+      source: {
+        code: `<AlertDialog
+  open={open}
+  onOpenChange={setOpen}
+  title="Удалить чат «Утечка горутины»?"
+  description="История переписки удалится без возможности восстановления."
+  cancelLabel="Оставить"
+  confirmLabel="Удалить"
+  onConfirm={handleConfirm}
+/>`,
+      },
+    },
+  },
 };

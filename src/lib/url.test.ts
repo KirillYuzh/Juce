@@ -15,12 +15,19 @@ describe('hostOf', () => {
 });
 
 describe('safeHref', () => {
-  it.each(['https://go.dev/doc', 'http://example.com/a', 'mailto:support@juce.edu'])(
-    'allows %s',
-    (input) => {
-      expect(safeHref(input)).toBe(input);
-    }
-  );
+  it.each([
+    'https://go.dev/doc',
+    'http://example.com/a',
+    'mailto:support@juce.edu',
+    '#anchor',
+    '/docs',
+    './a.png',
+    '../up/a.png',
+    '?page=2',
+    '//evil.example/logo.png',
+  ])('allows %s', (input) => {
+    expect(safeHref(input)).toBe(input);
+  });
 
   it.each([
     'javascript:alert(1)',
@@ -28,9 +35,8 @@ describe('safeHref', () => {
     'data:text/html,<script>alert(1)</script>',
     'vbscript:msgbox(1)',
     'file:///etc/passwd',
-    '//evil.example',
-    '/relative/path',
     '',
+    '   ',
   ])('rejects %s', (input) => {
     expect(safeHref(input)).toBeUndefined();
   });

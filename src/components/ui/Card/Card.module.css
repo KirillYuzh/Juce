@@ -98,6 +98,27 @@
   aspect-ratio: 16 / 10;
 }
 
+.media > [data-slot='image'] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.media > [data-slot='image'] > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media[data-position='block'] > [data-slot='image'],
+.media[data-position='top'] > [data-slot='image'],
+.media[data-position='bottom'] > [data-slot='image'] {
+  height: auto;
+  aspect-ratio: 16 / 10;
+}
+
 .media[data-position='top'] {
   order: -1;
 }

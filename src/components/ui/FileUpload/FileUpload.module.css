@@ -1,0 +1,99 @@
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tb-space-2);
+  min-width: 0;
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tb-space-1);
+  width: 100%;
+  padding: var(--tb-space-8) var(--tb-space-6);
+  border: 1px dashed var(--tb-border-strong);
+  border-radius: var(--tb-radius-surface);
+  background: var(--tb-bg-secondary);
+  color: var(--tb-text-primary);
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background-color var(--tb-duration-fast) var(--tb-ease-standard),
+    border-color var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
+@media (hover: hover) {
+  .zone:hover {
+    border-color: var(--tb-primary);
+    background: var(--tb-bg-tertiary);
+  }
+}
+
+.zone:focus-visible {
+  outline: var(--tb-focus-ring);
+  outline-offset: 2px;
+}
+
+.zone[data-dragging='true'] {
+  border-color: var(--tb-primary);
+  background: var(--tb-bg-tertiary);
+}
+
+.zone[data-invalid='true'] {
+  border-color: var(--tb-error);
+}
+
+.zone[data-disabled='true'] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.zoneIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--tb-space-2);
+  border-radius: var(--tb-radius-pill);
+  background: var(--tb-accent-soft);
+  color: var(--tb-accent-text);
+}
+
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 6px 6px 12px;
+  border-radius: var(--tb-radius-control);
+  background: var(--tb-bg-secondary);
+}
+
+.fileName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 13px/20px var(--tb-font-text);
+  color: var(--tb-text-primary);
+}

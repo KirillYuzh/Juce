@@ -1,0 +1,128 @@
+.wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--tb-border);
+  border-radius: var(--tb-radius-control);
+  background: var(--tb-surface);
+}
+
+.table {
+  --tb-table-pad-block: var(--tb-space-3);
+  --tb-table-pad-inline: var(--tb-space-4);
+
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--tb-text-primary);
+  font: 400 15px/24px var(--tb-font-text);
+  text-align: start;
+}
+
+.table[data-density='s'] {
+  --tb-table-pad-block: var(--tb-space-2);
+  --tb-table-pad-inline: var(--tb-space-3);
+}
+
+.table[data-density='l'] {
+  --tb-table-pad-block: var(--tb-space-4);
+  --tb-table-pad-inline: var(--tb-space-5);
+}
+
+.caption {
+  padding: var(--tb-table-pad-block) var(--tb-table-pad-inline);
+  border-bottom: 1px solid var(--tb-border);
+  color: var(--tb-text-secondary);
+  font: 500 13px/18px var(--tb-font-text);
+  text-align: start;
+}
+
+.cell {
+  padding: var(--tb-table-pad-block) var(--tb-table-pad-inline);
+  border-bottom: 1px solid var(--tb-border);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.cell[data-align='center'] {
+  text-align: center;
+}
+
+.cell[data-align='end'] {
+  text-align: end;
+}
+
+.headCell {
+  color: var(--tb-text-secondary);
+  font: 500 13px/18px var(--tb-font-text);
+  white-space: nowrap;
+}
+
+.filterCell {
+  padding-block: var(--tb-space-2);
+}
+
+.row[data-interactive] {
+  cursor: pointer;
+  transition: background-color var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
+.row[data-interactive]:focus-visible {
+  outline: var(--tb-focus-ring);
+  outline-offset: -2px;
+}
+
+.row[data-selected] {
+  background: var(--tb-option-selected);
+}
+
+@media (hover: hover) {
+  .row[data-interactive]:hover {
+    background: var(--tb-bg-hover);
+  }
+}
+
+.row:last-child .cell {
+  border-bottom: 0;
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-space-1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--tb-radius-xxs);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sortButton:focus-visible {
+  outline: var(--tb-focus-ring);
+  outline-offset: var(--tb-space-1);
+}
+
+.sortIcon {
+  display: inline-flex;
+  color: var(--tb-text-muted);
+  transition: color var(--tb-duration-fast) var(--tb-ease-standard);
+}
+
+.sortIcon[data-active] {
+  color: var(--tb-primary);
+}
+
+.select {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.selectInner {
+  display: flex;
+  align-items: center;
+}
+
+.empty {
+  padding: var(--tb-space-8) var(--tb-space-4);
+  color: var(--tb-text-secondary);
+  text-align: center;
+}
