@@ -8,6 +8,14 @@ const series = [{ key: 'a', label: 'A' }];
 const rows = (count: number) =>
   Array.from({ length: count }, (_, index) => ({ x: `p${index}`, a: index + 1 }));
 
+const longRows = Array.from({ length: 6 }, (_, index) => ({
+  x: `Неделя ${index + 1}, январь 2025 г.`,
+  a: index + 1,
+}));
+
+const xLabels = (container: HTMLElement) =>
+  Array.from(container.querySelectorAll('text')).filter((node) => node.getAttribute('y') === '234');
+
 const fixed = [
   { x: 'a', v: 0 },
   { x: 'b', v: 50 },
@@ -89,5 +97,21 @@ describe('AreaChart', () => {
     fireEvent.pointerMove(screen.getByRole('img'), { clientX: 400 });
 
     expect(() => rerender(<AreaChart data={rows(1)} series={series} xKey="x" />)).not.toThrow();
+  });
+
+  it('drops long x labels that do not fit the plot', () => {
+    stubPlotWidth(400);
+    const { container } = render(<AreaChart data={longRows} series={series} xKey="x" />);
+    const rendered = xLabels(container);
+
+    expect(rendered.length).toBeGreaterThan(0);
+    expect(rendered.length).toBeLessThan(longRows.length);
+  });
+
+  it('keeps short x labels spaced as before', () => {
+    stubPlotWidth(400);
+    const { container } = render(<AreaChart data={rows(6)} series={series} xKey="x" />);
+
+    expect(xLabels(container)).toHaveLength(4);
   });
 });
