@@ -5,6 +5,12 @@ import { stubPlotWidth } from './chartTestUtils';
 
 const paths = (container: HTMLElement) => Array.from(container.querySelectorAll('path'));
 
+const dataTable = (container: HTMLElement) => {
+  const table = container.querySelector('table');
+  if (!(table instanceof HTMLTableElement)) throw new Error('chart data table is missing');
+  return table;
+};
+
 describe('PieChart', () => {
   it('draws a lone 100% slice as a full circle', () => {
     stubPlotWidth(240);
@@ -68,5 +74,32 @@ describe('PieChart', () => {
       expect(d.match(/A/g)).toHaveLength(2);
     }
     expect(container.textContent).toContain('b');
+  });
+
+  it('exposes the categories and values as a caption table for screen readers', () => {
+    stubPlotWidth(240);
+    const { container } = render(
+      <PieChart
+        data={[
+          { name: 'Яблоки', value: 30 },
+          { name: 'Груши', value: 70 },
+        ]}
+        nameKey="name"
+        valueKey="value"
+        valueFormat={(value) => `${value}%`}
+      />
+    );
+    const table = dataTable(container);
+    const head = Array.from(table.querySelectorAll('thead th')).map((cell) => cell.textContent);
+    const body = Array.from(table.querySelectorAll('tbody tr')).map((row) =>
+      Array.from(row.querySelectorAll('th, td')).map((cell) => cell.textContent)
+    );
+
+    expect(table.querySelector('caption')?.textContent).toBe('Диаграмма: Яблоки, Груши');
+    expect(head).toEqual(['name', 'value']);
+    expect(body).toEqual([
+      ['Яблоки', '30%'],
+      ['Груши', '70%'],
+    ]);
   });
 });

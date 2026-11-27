@@ -65,6 +65,45 @@ export function ChartLegend({ items }: ChartLegendProps) {
   );
 }
 
+// ponytail: таблица из 200k строк вешает браузер и бесполезна для скринридера;
+// потолок 500 строк, путь апгрейда — пагинация или виртуализация таблицы.
+export const CHART_TABLE_ROW_LIMIT = 500;
+
+export interface ChartDataTableProps {
+  caption: string;
+  rowHeader: string;
+  rows: Array<{ key: string; header: string; cells: string[] }>;
+  columns: string[];
+}
+
+export function ChartDataTable({ caption, rowHeader, rows, columns }: ChartDataTableProps) {
+  return (
+    <table className="tb-visually-hidden">
+      <caption>{caption}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{rowHeader}</th>
+          {columns.map((column, index) => (
+            <th key={`${column}-${index}`} scope="col">
+              {column}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
+          <tr key={row.key}>
+            <th scope="row">{row.header}</th>
+            {row.cells.map((cell, index) => (
+              <td key={`${row.key}-${index}`}>{cell}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 export interface ChartGridProps {
   ticks: number[];
   format: (value: number) => string;

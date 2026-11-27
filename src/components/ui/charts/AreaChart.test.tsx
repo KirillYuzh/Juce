@@ -33,6 +33,19 @@ const hasNaN = (container: HTMLElement) =>
     ['d', 'cx', 'cy'].some((name) => (node.getAttribute(name) ?? '').includes('NaN'))
   );
 
+const dataTable = (container: HTMLElement) => {
+  const table = container.querySelector('table');
+  if (!(table instanceof HTMLTableElement)) throw new Error('chart data table is missing');
+  return table;
+};
+
+const tableGrid = (table: HTMLTableElement) => ({
+  head: Array.from(table.querySelectorAll('thead th')).map((cell) => cell.textContent),
+  rows: Array.from(table.querySelectorAll('tbody tr')).map((row) =>
+    Array.from(row.querySelectorAll('th, td')).map((cell) => cell.textContent)
+  ),
+});
+
 const nonNegativePath = [
   'M44,216',
   'C73,198.66666666666666 160,146.66666666666666 218,112',
@@ -113,5 +126,34 @@ describe('AreaChart', () => {
     const { container } = render(<AreaChart data={rows(6)} series={series} xKey="x" />);
 
     expect(xLabels(container)).toHaveLength(4);
+  });
+
+  it('exposes the data as a caption table for screen readers', () => {
+    stubPlotWidth(400);
+    const { container } = render(
+      <AreaChart
+        data={[
+          { x: 'p0', a: 1, b: 10 },
+          { x: 'p1', a: 2, b: 20 },
+          { x: 'p2', a: 3, b: 30 },
+        ]}
+        series={[
+          { key: 'a', label: 'A' },
+          { key: 'b', label: 'B' },
+        ]}
+        xKey="x"
+        valueFormat={(value) => `${value.toFixed(1)} кг`}
+      />
+    );
+    const table = dataTable(container);
+    const { head, rows: body } = tableGrid(table);
+
+    expect(table.querySelector('caption')?.textContent).toBe('График: A, B');
+    expect(head).toEqual(['x', 'A', 'B']);
+    expect(body).toEqual([
+      ['p0', '1.0 кг', '10.0 кг'],
+      ['p1', '2.0 кг', '20.0 кг'],
+      ['p2', '3.0 кг', '30.0 кг'],
+    ]);
   });
 });

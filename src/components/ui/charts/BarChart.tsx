@@ -1,6 +1,13 @@
 import { useMemo, useState } from 'react';
 import styles from './Chart.module.css';
-import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
+import {
+  CHART_TABLE_ROW_LIMIT,
+  ChartDataTable,
+  ChartGrid,
+  ChartLegend,
+  ChartTooltip,
+  ChartXAxis,
+} from './ChartParts';
 import { cx } from '../../../lib/cx';
 import {
   bandIndex,
@@ -260,29 +267,16 @@ export function BarChart({
         />
       )}
 
-      <table className="tb-visually-hidden">
-        <caption>{label}</caption>
-        <thead>
-          <tr>
-            <th scope="col">{xKey}</th>
-            {series.map((item) => (
-              <th key={item.key} scope="col">
-                {item.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={`${String(row[xKey])}-${rowIndex}`}>
-              <th scope="row">{String(row[xKey])}</th>
-              {series.map((item) => (
-                <td key={item.key}>{valueFormat(toNumber(row[item.key]))}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <ChartDataTable
+        caption={label}
+        rowHeader={xKey}
+        columns={series.map((item) => item.label)}
+        rows={data.slice(0, CHART_TABLE_ROW_LIMIT).map((row, rowIndex) => ({
+          key: `${String(row[xKey])}-${rowIndex}`,
+          header: String(row[xKey]),
+          cells: series.map((item) => valueFormat(toNumber(row[item.key]))),
+        }))}
+      />
     </div>
   );
 }

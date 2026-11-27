@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import styles from './Chart.module.css';
-import { ChartLegend, ChartTooltip } from './ChartParts';
+import { CHART_TABLE_ROW_LIMIT, ChartDataTable, ChartLegend, ChartTooltip } from './ChartParts';
 import { cx } from '../../../lib/cx';
 import {
   arcPath,
@@ -135,6 +135,17 @@ export function PieChart({
           }))}
         />
       )}
+
+      <ChartDataTable
+        caption={label}
+        rowHeader={nameKey}
+        columns={[valueKey]}
+        rows={data.slice(0, CHART_TABLE_ROW_LIMIT).map((row, rowIndex) => ({
+          key: `${String(row[nameKey])}-${rowIndex}`,
+          header: String(row[nameKey]),
+          cells: [valueFormat(toNumber(row[valueKey]))],
+        }))}
+      />
     </div>
   );
 }
