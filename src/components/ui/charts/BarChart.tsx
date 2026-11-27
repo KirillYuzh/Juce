@@ -5,6 +5,7 @@ import { cx } from '../../../lib/cx';
 import {
   bandIndex,
   labelStep,
+  paletteColor,
   plotSize,
   seriesColors,
   signedTicks,
@@ -63,13 +64,17 @@ export function BarChart({
     const plot = plotSize(width, height, padding);
 
     const values = series.map((item) => data.map((row) => toNumber(row[item.key])));
-    const starts = series.map(() => data.map(() => 0));
-    const ends = series.map(() => data.map(() => 0));
+    const starts = values.map((rowValues) => rowValues.map(() => 0));
+    const ends = values.map((rowValues) => rowValues.map(() => 0));
     values.forEach((rowValues, seriesIndex) => {
+      const startRow = starts[seriesIndex];
+      const endRow = ends[seriesIndex];
+      const previousEndRow = ends[seriesIndex - 1];
+      if (startRow === undefined || endRow === undefined) return;
       rowValues.forEach((value, pointIndex) => {
-        const previousTop = seriesIndex === 0 ? 0 : ends[seriesIndex - 1][pointIndex];
-        starts[seriesIndex][pointIndex] = stacked ? previousTop : 0;
-        ends[seriesIndex][pointIndex] = starts[seriesIndex][pointIndex] + value;
+        const previousTop = stacked ? (previousEndRow?.[pointIndex] ?? 0) : 0;
+        startRow[pointIndex] = previousTop;
+        endRow[pointIndex] = previousTop + value;
       });
     });
 
@@ -92,8 +97,8 @@ export function BarChart({
         const groupStart =
           (horizontal ? padding.top : padding.left) + band * pointIndex + band * 0.16;
         const offset = groupStart + barSize * (stacked ? 0 : seriesIndex);
-        const from = center(starts[seriesIndex][pointIndex]);
-        const to = center(ends[seriesIndex][pointIndex]);
+        const from = center(starts[seriesIndex]?.[pointIndex] ?? 0);
+        const to = center(ends[seriesIndex]?.[pointIndex] ?? 0);
         return {
           start: Math.min(from, to),
           size: Math.max(Math.abs(to - from), 0.5),
@@ -129,6 +134,8 @@ export function BarChart({
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
   const flipTooltip = hover !== null && width - hover.x < 200;
   const every = labelStep(data.length, geometry.plotWidth);
+  const singleSeries = series.length === 1 ? series[0] : undefined;
+  const hoveredRow = hover === null ? undefined : data[hover.index];
 
   return (
     <div className={cx(styles.chart, className)}>
@@ -185,7 +192,7 @@ export function BarChart({
             )}
 
             {series.map((item, seriesIndex) =>
-              geometry.bars[seriesIndex].map((bar, pointIndex) => (
+              geometry.bars[seriesIndex]?.map((bar, pointIndex) => (
                 <rect
                   key={`${item.key}-${pointIndex}`}
                   className={horizontal ? styles.barHorizontal : styles.barVertical}
@@ -201,34 +208,38 @@ export function BarChart({
             )}
 
             {labels &&
-              series.length === 1 &&
-              geometry.bars[0].map((bar, pointIndex) => (
-                <text
-                  key={`label-${pointIndex}`}
-                  x={horizontal ? bar.start + bar.size + 6 : bar.offset + geometry.barSize / 2}
-                  y={horizontal ? bar.offset + geometry.barSize / 2 : bar.start - 6}
-                  textAnchor={horizontal ? 'start' : 'middle'}
-                  dominantBaseline={horizontal ? 'middle' : 'auto'}
-                  className={styles.tick}
-                  style={{ fill: 'var(--tb-text-secondary)' }}
-                >
-                  {valueFormat(toNumber(data[pointIndex][series[0].key]))}
-                </text>
-              ))}
+              singleSeries !== undefined &&
+              geometry.bars[0]?.map((bar, pointIndex) => {
+                const row = data[pointIndex];
+                if (row === undefined) return null;
+                return (
+                  <text
+                    key={`label-${pointIndex}`}
+                    x={horizontal ? bar.start + bar.size + 6 : bar.offset + geometry.barSize / 2}
+                    y={horizontal ? bar.offset + geometry.barSize / 2 : bar.start - 6}
+                    textAnchor={horizontal ? 'start' : 'middle'}
+                    dominantBaseline={horizontal ? 'middle' : 'auto'}
+                    className={styles.tick}
+                    style={{ fill: 'var(--tb-text-secondary)' }}
+                  >
+                    {valueFormat(toNumber(row[singleSeries.key]))}
+                  </text>
+                );
+              })}
           </svg>
         )}
 
-        {tooltip && hover !== null && data[hover.index] && (
+        {tooltip && hover !== null && hoveredRow !== undefined && (
           <ChartTooltip
             left={flipTooltip ? hover.x - 14 : hover.x + 14}
             flip={flipTooltip}
             top={Math.min(Math.max(hover.y - 12, 0), Math.max(height - 80, 0))}
             indicator={tooltipIndicator}
-            title={String(data[hover.index][xKey])}
+            title={String(hoveredRow[xKey])}
             rows={series.map((item, index) => ({
               label: item.label,
-              value: valueFormat(toNumber(data[hover.index][item.key])),
-              color: colors[index],
+              value: valueFormat(toNumber(hoveredRow[item.key])),
+              color: item.color ?? paletteColor(index),
             }))}
           />
         )}
@@ -236,7 +247,10 @@ export function BarChart({
 
       {legend && (
         <ChartLegend
-          items={series.map((item, index) => ({ label: item.label, color: colors[index] }))}
+          items={series.map((item, index) => ({
+            label: item.label,
+            color: item.color ?? paletteColor(index),
+          }))}
         />
       )}
 

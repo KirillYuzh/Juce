@@ -4,6 +4,7 @@ import { ChartLegend, ChartTooltip } from './ChartParts';
 import { cx } from '../../../lib/cx';
 import {
   arcPath,
+  paletteColor,
   seriesColors,
   toNumber,
   usePlotWidth,
@@ -59,9 +60,9 @@ export function PieChart({
       const sweep = (value / total) * Math.PI * 2;
       const path = arcPath(width / 2, height / 2, inner, radius, angle, angle + sweep);
       angle += sweep;
-      return { path, value };
+      return { path, value, label: String(row[nameKey]) };
     });
-  }, [data, height, innerRadius, valueKey, width]);
+  }, [data, height, innerRadius, nameKey, valueKey, width]);
 
   const onPointerMove = (event: React.PointerEvent<SVGPathElement>, index: number) => {
     const bounds = event.currentTarget.ownerSVGElement?.getBoundingClientRect();
@@ -71,6 +72,7 @@ export function PieChart({
 
   const label = ariaLabel ?? `Диаграмма: ${data.map((row) => String(row[nameKey])).join(', ')}`;
   const flipTooltip = hover !== null && width - hover.x < 200;
+  const hoveredSlice = hover === null ? undefined : slices[hover.index];
 
   return (
     <div className={cx(styles.chart, className)}>
@@ -86,7 +88,7 @@ export function PieChart({
           >
             {slices.map((slice, index) => (
               <path
-                key={`${String(data[index][nameKey])}-${index}`}
+                key={`${slice.label}-${index}`}
                 className={styles.slice}
                 style={{ animationDelay: `${index * 60}ms`, fill: colors[index] }}
                 d={slice.path}
@@ -105,7 +107,7 @@ export function PieChart({
           </div>
         )}
 
-        {tooltip && hover !== null && data[hover.index] && (
+        {tooltip && hover !== null && hoveredSlice !== undefined && (
           <ChartTooltip
             left={flipTooltip ? hover.x - 14 : hover.x + 14}
             flip={flipTooltip}
@@ -113,9 +115,9 @@ export function PieChart({
             indicator={tooltipIndicator}
             rows={[
               {
-                label: String(data[hover.index][nameKey]),
-                value: valueFormat(toNumber(data[hover.index][valueKey])),
-                color: colors[hover.index],
+                label: hoveredSlice.label,
+                value: valueFormat(hoveredSlice.value),
+                color: paletteColor(hover.index),
               },
             ]}
           />
@@ -126,7 +128,7 @@ export function PieChart({
         <ChartLegend
           items={data.map((row, index) => ({
             label: String(row[nameKey]),
-            color: colors[index],
+            color: paletteColor(index),
           }))}
         />
       )}

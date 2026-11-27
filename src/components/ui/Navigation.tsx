@@ -44,7 +44,10 @@ export function Tabs({
   useEffect(() => {
     if (value !== undefined) return;
     if (!items.length) return;
-    if (!items.some((item) => item.id === active)) setActive(items[0].id);
+    if (!items.some((item) => item.id === active)) {
+      const first = items[0];
+      if (first) setActive(first.id);
+    }
   }, [items, value, active, setActive]);
 
   const activeIndex = items.findIndex((item) => item.id === active);

@@ -10,7 +10,7 @@ export type TextTone =
 export type TextWeight = 'regular' | 'medium' | 'bold';
 export type TextLinkVariant = 'underline' | 'hover';
 
-const textSize: Record<TextSize, string> = {
+const textSize: Record<TextSize, string | undefined> = {
   m: styles.sizeM,
   s: styles.sizeS,
   xs: styles.sizeXs,
@@ -18,7 +18,7 @@ const textSize: Record<TextSize, string> = {
   xl: styles.sizeXl,
 };
 
-const textTone: Record<TextTone, string> = {
+const textTone: Record<TextTone, string | undefined> = {
   primary: styles.tonePrimary,
   secondary: styles.toneSecondary,
   tertiary: styles.toneTertiary,
@@ -28,7 +28,7 @@ const textTone: Record<TextTone, string> = {
   link: styles.toneLink,
 };
 
-const textWeight: Record<TextWeight, string> = {
+const textWeight: Record<TextWeight, string | undefined> = {
   regular: styles.weightRegular,
   medium: styles.weightMedium,
   bold: styles.weightBold,
@@ -89,7 +89,7 @@ const headingTag: Record<HeadingLevel, 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'> 
   6: 'h6',
 };
 
-const headingLevel: Record<HeadingLevel, string> = {
+const headingLevel: Record<HeadingLevel, string | undefined> = {
   1: styles.level1,
   2: styles.level2,
   3: styles.level3,

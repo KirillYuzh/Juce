@@ -57,6 +57,7 @@ npm run test:bombadil          # property-based UI-тест чата в Storyboo
 - Правила: `tools/rules/*.yml`, фикстуры — `tools/rules/fixtures/<id>/{bad,good}`.
 - Темы и структура: блоки токенов рукописные — цвет и темы в `src/styles/tokens.css`, тёмные пресеты в `src/styles/themes-presets.css`, радиусы/шрифты/движение в `src/styles/structure.css`, список тем — `src/styles/themes.ts`; генератора нет.
 - Тесты: `src/**/*.test.{ts,tsx}`, базовая линия — `tools/test-baseline.json`.
+- Типы публичного графа: `tsconfig.lib.json` включает `noUncheckedIndexedAccess`. Флаг живёт там, а не в `tsconfig.app.json`, потому что в проверку попадает только то, что уезжает в пакет (`src/index.ts`); вендорные копии в `src/patterns/**` под флаг не попадают. Проверяется в `npm run check` через `build:lib`.
 - Тестов стало меньше или появился `skip` — `npm run test` падает. Добавили тесты — `npm run test:update`, чтобы поднять базу.
 - `test:bombadil` в `check` не входит: ему нужен живой Storybook и браузер. Подробности — в `docs/runtime.md`.
 

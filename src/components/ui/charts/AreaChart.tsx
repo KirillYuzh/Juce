@@ -8,6 +8,7 @@ import {
   labelStep,
   linePath,
   lineScale,
+  paletteColor,
   plotSize,
   pointerIndex,
   seriesColors,
@@ -74,17 +75,21 @@ export function AreaChart({
     const lower = series.map(() => data.map(() => 0));
     const values = series.map((item) => data.map((row) => toNumber(row[item.key])));
     if (stacked) {
-      values.forEach((rowValues, seriesIndex) => {
-        if (seriesIndex === 0) return;
-        rowValues.forEach((_, pointIndex) => {
-          lower[seriesIndex][pointIndex] =
-            lower[seriesIndex - 1][pointIndex] + values[seriesIndex - 1][pointIndex];
-        });
-      });
+      for (let seriesIndex = 1; seriesIndex < values.length; seriesIndex += 1) {
+        const currentLower = lower[seriesIndex];
+        const previousLower = lower[seriesIndex - 1];
+        const previousValues = values[seriesIndex - 1];
+        if (currentLower === undefined || previousLower === undefined) continue;
+        for (let pointIndex = 0; pointIndex < currentLower.length; pointIndex += 1) {
+          currentLower[pointIndex] =
+            (previousLower[pointIndex] ?? 0) + (previousValues?.[pointIndex] ?? 0);
+        }
+      }
     }
-    const upper = values.map((rowValues, seriesIndex) =>
-      rowValues.map((value, pointIndex) => value + lower[seriesIndex][pointIndex])
-    );
+    const upper = values.map((rowValues, seriesIndex) => {
+      const lowerRow = lower[seriesIndex];
+      return rowValues.map((value, pointIndex) => value + (lowerRow?.[pointIndex] ?? 0));
+    });
 
     const { max } = valueExtent(upper);
     const { max: axisMax, values: tickValues } = axisTicks(max, ticks);
@@ -92,12 +97,14 @@ export function AreaChart({
     const x = lineScale(data.length, plot.width, padding.left);
     const y = (value: number) => padding.top + plot.height * (1 - value / axisMax);
 
-    const bands = series.map((_, seriesIndex) => {
-      const top = upper[seriesIndex].map((value, index) => [x(index), y(value)] as Point);
-      const bottom = lower[seriesIndex].map((value, index) => [x(index), y(value)] as Point);
+    const bands = series.map((item, seriesIndex) => {
+      const upperRow = upper[seriesIndex] ?? [];
+      const lowerRow = lower[seriesIndex] ?? [];
+      const top = upperRow.map((value, index) => [x(index), y(value)] as Point);
+      const bottom = lowerRow.map((value, index) => [x(index), y(value)] as Point);
       const line = linePath(top, curve);
       const area = `${line}${linePath([...bottom].reverse(), curve).replace(/^M/, 'L')}Z`;
-      return { line, area, top };
+      return { key: item.key, line, area, top };
     });
 
     return {
@@ -125,6 +132,7 @@ export function AreaChart({
 
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
   const active = hovered !== null && hovered < data.length ? hovered : null;
+  const activeRow = active === null ? undefined : data[active];
   const tooltipX = active === null ? 0 : geometry.x(active);
   const flipTooltip = width - tooltipX < 190 && tooltipX > 190;
 
@@ -180,7 +188,7 @@ export function AreaChart({
               fill === 'gradient' &&
               geometry.bands.map((band, index) => (
                 <path
-                  key={`area-${series[index].key}`}
+                  key={`area-${band.key}`}
                   className={styles.area}
                   style={{ animationDelay: `${index * 60}ms` }}
                   d={band.area}
@@ -191,7 +199,7 @@ export function AreaChart({
             {data.length > 0 &&
               geometry.bands.map((band, index) => (
                 <path
-                  key={`line-${series[index].key}`}
+                  key={`line-${band.key}`}
                   className={styles.line}
                   style={{ animationDelay: `${index * 60}ms`, stroke: colors[index] }}
                   d={band.line}
@@ -212,31 +220,35 @@ export function AreaChart({
                   y2={height - geometry.padding.bottom}
                   style={{ stroke: 'var(--tb-border-strong)' }}
                 />
-                {geometry.bands.map((band, index) => (
-                  <circle
-                    key={`dot-${series[index].key}`}
-                    cx={band.top[active][0]}
-                    cy={band.top[active][1]}
-                    r={4}
-                    strokeWidth={2}
-                    style={{ fill: colors[index], stroke: 'var(--tb-surface)' }}
-                  />
-                ))}
+                {geometry.bands.map((band, index) => {
+                  const point = band.top[active];
+                  if (point === undefined) return null;
+                  return (
+                    <circle
+                      key={`dot-${band.key}`}
+                      cx={point[0]}
+                      cy={point[1]}
+                      r={4}
+                      strokeWidth={2}
+                      style={{ fill: colors[index], stroke: 'var(--tb-surface)' }}
+                    />
+                  );
+                })}
               </g>
             )}
           </svg>
         )}
 
-        {tooltip && active !== null && (
+        {tooltip && active !== null && activeRow !== undefined && (
           <ChartTooltip
             left={flipTooltip ? tooltipX - 14 : tooltipX + 14}
             flip={flipTooltip}
             indicator={tooltipIndicator}
-            title={String(data[active][xKey])}
+            title={String(activeRow[xKey])}
             rows={series.map((item, index) => ({
               label: item.label,
-              value: valueFormat(toNumber(data[active][item.key])),
-              color: colors[index],
+              value: valueFormat(toNumber(activeRow[item.key])),
+              color: item.color ?? paletteColor(index),
             }))}
             top={8}
           />
@@ -245,7 +257,10 @@ export function AreaChart({
 
       {legend && (
         <ChartLegend
-          items={series.map((item, index) => ({ label: item.label, color: colors[index] }))}
+          items={series.map((item, index) => ({
+            label: item.label,
+            color: item.color ?? paletteColor(index),
+          }))}
         />
       )}
     </div>

@@ -1,16 +1,7 @@
 import { useMemo } from 'react';
 
 export type CodeLanguage =
-  | 'js'
-  | 'ts'
-  | 'jsx'
-  | 'tsx'
-  | 'json'
-  | 'css'
-  | 'html'
-  | 'bash'
-  | 'ansi'
-  | 'text';
+  'js' | 'ts' | 'jsx' | 'tsx' | 'json' | 'css' | 'html' | 'bash' | 'ansi' | 'text';
 
 export type CodeTokenKind =
   | 'plain'
@@ -50,10 +41,7 @@ const jsRules: Rule[] = [
   r('function', /\b[A-Za-z_$][\w$]*(?=\s*\()/),
 ];
 
-const jsxRules: Rule[] = [
-  r('tag', /<\/?[A-Za-z][\w.:-]*/),
-  r('attr', /[A-Za-z_][\w:-]*(?=\s*=)/),
-];
+const jsxRules: Rule[] = [r('tag', /<\/?[A-Za-z][\w.:-]*/), r('attr', /[A-Za-z_][\w:-]*(?=\s*=)/)];
 
 const jsonRules: Rule[] = [
   r('key', /"(?:\\[\s\S]|[^"\\\n])*"(?=\s*:)/),
@@ -87,7 +75,7 @@ const bashRules: Rule[] = [
   r('property', /\$\{[^}]*\}|\$[A-Za-z_]\w*/),
   r(
     'keyword',
-    /\b(?:if|then|else|elif|fi|for|while|do|done|case|esac|function|in|export|local|return|exit|source|echo|cd|sudo|git|npm|npx|pnpm|yarn|node|docker|curl|vite)\b/,
+    /\b(?:if|then|else|elif|fi|for|while|do|done|case|esac|function|in|export|local|return|exit|source|echo|cd|sudo|git|npm|npx|pnpm|yarn|node|docker|curl|vite)\b/
   ),
   r('number', /\b\d+(?:\.\d+)?\b/),
 ];
@@ -168,7 +156,7 @@ function tokenizeWith(code: string, rules: Rule[]): CodeToken[] {
       }
     }
     if (!matched) {
-      plain += code[position];
+      plain += code.charAt(position);
       position += 1;
     }
   }
@@ -229,7 +217,7 @@ function tokenizeAnsi(code: string): CodeToken[] {
 
   for (let match = escape.exec(code); match; match = escape.exec(code)) {
     push(code.slice(index, match.index), kind);
-    kind = ansiKind(match[1]);
+    kind = ansiKind(match[1] ?? '');
     index = match.index + match[0].length;
   }
   push(code.slice(index), kind);
@@ -242,16 +230,20 @@ export function tokenizeCode(code: string, language: string = 'text'): CodeLine[
   const lang = normalizeLanguage(language);
   const tokens = lang === 'ansi' ? tokenizeAnsi(source) : tokenizeWith(source, rulesFor(lang));
 
-  const lines: CodeLine[] = [[]];
+  const firstLine: CodeLine = [];
+  const lines: CodeLine[] = [firstLine];
+  let current = firstLine;
   for (const token of tokens) {
-    const parts = token.text.split('\n');
-    for (let i = 0; i < parts.length; i += 1) {
-      if (i > 0) lines.push([]);
-      if (parts[i]) lines[lines.length - 1].push({ text: parts[i], kind: token.kind });
+    for (const [index, part] of token.text.split('\n').entries()) {
+      if (index > 0) {
+        current = [];
+        lines.push(current);
+      }
+      if (part) current.push({ text: part, kind: token.kind });
     }
   }
 
-  if (lines.length > 1 && lines[lines.length - 1].length === 0) lines.pop();
+  if (lines.length > 1 && current.length === 0) lines.pop();
   return lines;
 }
 

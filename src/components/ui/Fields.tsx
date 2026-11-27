@@ -336,7 +336,10 @@ export function Select({
       if (current !== '') setCurrent('');
       return;
     }
-    if (!options.some((option) => option.value === current)) setCurrent(options[0].value);
+    if (!options.some((option) => option.value === current)) {
+      const first = options[0];
+      if (first) setCurrent(first.value);
+    }
   }, [options, value, current, setCurrent]);
 
   useEffect(() => {

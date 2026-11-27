@@ -110,8 +110,9 @@ function reconcileSizes(previous: SizeMap, panels: PanelElement[], ids: string[]
   }
   const next: SizeMap = {};
   ids.forEach((id, index) => {
-    if (id in previous) {
-      next[id] = previous[id];
+    const existing = previous[id];
+    if (existing !== undefined) {
+      next[id] = existing;
       return;
     }
     const panel = panels[index];
@@ -120,7 +121,7 @@ function reconcileSizes(previous: SizeMap, panels: PanelElement[], ids: string[]
         ? panel.props.defaultSize
         : 100 / Math.max(ids.length, 1);
   });
-  const total = ids.reduce((sum, id) => sum + next[id], 0);
+  const total = ids.reduce((sum, id) => sum + (next[id] ?? 0), 0);
   if (total <= 0) {
     const equal = 100 / Math.max(ids.length, 1);
     ids.forEach((id) => {
@@ -129,7 +130,7 @@ function reconcileSizes(previous: SizeMap, panels: PanelElement[], ids: string[]
     return next;
   }
   ids.forEach((id) => {
-    next[id] = (next[id] / total) * 100;
+    next[id] = ((next[id] ?? 0) / total) * 100;
   });
   return next;
 }

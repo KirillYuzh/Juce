@@ -115,7 +115,9 @@ export function Carousel({
       const viewport = viewportRef.current;
       if (!list.length || !viewport) return;
       const target = clamp(index, 0, list.length - 1);
-      const start = itemStart(list[target]);
+      const item = list[target];
+      if (!item) return;
+      const start = itemStart(item);
       viewport.scrollTo(orientation === 'horizontal' ? { left: start } : { top: start });
     },
     [items, itemStart, orientation]

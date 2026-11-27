@@ -32,7 +32,7 @@ export function Alert({ tone = 'info', children, action, className }: AlertProps
     <div
       className={cx(
         styles.alert,
-        tone !== 'info' && styles[`alert${tone[0].toUpperCase()}${tone.slice(1)}`],
+        tone !== 'info' && styles[`alert${tone.charAt(0).toUpperCase()}${tone.slice(1)}`],
         className
       )}
       role={tone === 'error' ? 'alert' : 'status'}

@@ -169,7 +169,7 @@ export function ToastProvider({
 
     const resolve = () => {
       const dialogs = document.querySelectorAll<HTMLDialogElement>('dialog[open]');
-      const next = dialogs.length > 0 ? dialogs[dialogs.length - 1] : document.body;
+      const next = dialogs[dialogs.length - 1] ?? document.body;
       if (containerRef.current === next) return;
       containerRef.current = next;
       setContainer(next);

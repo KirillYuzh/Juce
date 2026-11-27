@@ -8,7 +8,9 @@ export type BadgeTone = 'neutral' | 'accent' | 'success' | 'error' | 'warning';
 
 export function Badge({ tone = 'neutral', children }: { tone?: BadgeTone; children: ReactNode }) {
   return (
-    <span className={cx(styles.badge, styles[`badge${tone[0].toUpperCase()}${tone.slice(1)}`])}>
+    <span
+      className={cx(styles.badge, styles[`badge${tone.charAt(0).toUpperCase()}${tone.slice(1)}`])}
+    >
       {children}
     </span>
   );

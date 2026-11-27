@@ -7,6 +7,7 @@ import {
   labelStep,
   linePath,
   lineScale,
+  paletteColor,
   plotSize,
   pointerIndex,
   seriesColors,
@@ -72,9 +73,10 @@ export function LineChart({
     const x = lineScale(data.length, plot.width, padding.left);
     const y = (value: number) => padding.top + plot.height * (1 - value / axisMax);
 
-    const lines = values.map((rowValues) => {
+    const lines = series.map((item, seriesIndex) => {
+      const rowValues = values[seriesIndex] ?? [];
       const points = rowValues.map((value, index) => [x(index), y(value)] as Point);
-      return { path: linePath(points, curve), points };
+      return { key: item.key, path: linePath(points, curve), points };
     });
 
     return {
@@ -102,6 +104,7 @@ export function LineChart({
 
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
   const active = hovered !== null && hovered < data.length ? hovered : null;
+  const activeRow = active === null ? undefined : data[active];
   const tooltipX = active === null ? 0 : geometry.x(active);
   const flipTooltip = width - tooltipX < 190 && tooltipX > 190;
 
@@ -137,7 +140,7 @@ export function LineChart({
 
             {geometry.lines.map((line, index) => (
               <path
-                key={`line-${series[index].key}`}
+                key={`line-${line.key}`}
                 className={styles.line}
                 style={{ animationDelay: `${index * 60}ms`, stroke: colors[index] }}
                 d={line.path}
@@ -153,7 +156,7 @@ export function LineChart({
               geometry.lines.map((line, index) =>
                 line.points.map(([x, y], pointIndex) => (
                   <circle
-                    key={`dot-${series[index].key}-${pointIndex}`}
+                    key={`dot-${line.key}-${pointIndex}`}
                     className={styles.dot}
                     style={{ animationDelay: `${index * 60 + 120}ms`, fill: colors[index] }}
                     cx={x}
@@ -172,31 +175,35 @@ export function LineChart({
                   y2={height - geometry.padding.bottom}
                   style={{ stroke: 'var(--tb-border-strong)' }}
                 />
-                {geometry.lines.map((line, index) => (
-                  <circle
-                    key={`hover-${series[index].key}`}
-                    cx={line.points[active][0]}
-                    cy={line.points[active][1]}
-                    r={4}
-                    strokeWidth={2}
-                    style={{ fill: colors[index], stroke: 'var(--tb-surface)' }}
-                  />
-                ))}
+                {geometry.lines.map((line, index) => {
+                  const point = line.points[active];
+                  if (point === undefined) return null;
+                  return (
+                    <circle
+                      key={`hover-${line.key}`}
+                      cx={point[0]}
+                      cy={point[1]}
+                      r={4}
+                      strokeWidth={2}
+                      style={{ fill: colors[index], stroke: 'var(--tb-surface)' }}
+                    />
+                  );
+                })}
               </g>
             )}
           </svg>
         )}
 
-        {tooltip && active !== null && (
+        {tooltip && active !== null && activeRow !== undefined && (
           <ChartTooltip
             left={flipTooltip ? tooltipX - 14 : tooltipX + 14}
             flip={flipTooltip}
             indicator={tooltipIndicator}
-            title={String(data[active][xKey])}
+            title={String(activeRow[xKey])}
             rows={series.map((item, index) => ({
               label: item.label,
-              value: valueFormat(toNumber(data[active][item.key])),
-              color: colors[index],
+              value: valueFormat(toNumber(activeRow[item.key])),
+              color: item.color ?? paletteColor(index),
             }))}
             top={8}
           />
@@ -205,7 +212,10 @@ export function LineChart({
 
       {legend && (
         <ChartLegend
-          items={series.map((item, index) => ({ label: item.label, color: colors[index] }))}
+          items={series.map((item, index) => ({
+            label: item.label,
+            color: item.color ?? paletteColor(index),
+          }))}
         />
       )}
     </div>

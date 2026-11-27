@@ -144,7 +144,11 @@ export function Questionnaire({
         result[item.name] = item.multiple ? [...selected, other.trim()] : other.trim();
         return;
       }
-      if (Array.isArray(value) ? value.length : value) result[item.name] = value;
+      if (Array.isArray(value)) {
+        if (value.length) result[item.name] = value;
+      } else if (value) {
+        result[item.name] = value;
+      }
     });
     onSubmit(result);
   };

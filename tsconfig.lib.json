@@ -1,13 +1,15 @@
 {
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
+    // Пакет собирается из src/index.ts, а вендорные копии в src/patterns/** в этот граф не входят.
+    "noUncheckedIndexedAccess": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
     "outDir": "dist/types",
     "rootDir": "src",
-    "tsBuildInfoFile": "node_modules/.tmp/tsconfig.lib.tsbuildinfo"
+    "tsBuildInfoFile": "node_modules/.tmp/tsconfig.lib.tsbuildinfo",
   },
   "include": ["src/index.ts"],
-  "exclude": ["**/*.stories.tsx"]
+  "exclude": ["**/*.stories.tsx"],
 }

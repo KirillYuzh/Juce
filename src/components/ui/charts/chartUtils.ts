@@ -13,10 +13,13 @@ export interface ChartSeries {
 
 export type Point = [number, number];
 
-const PALETTE = ['--tb-chart-1', '--tb-chart-2', '--tb-chart-3', '--tb-chart-4'];
+const PALETTE = ['--tb-chart-1', '--tb-chart-2', '--tb-chart-3', '--tb-chart-4'] as const;
+
+export const paletteColor = (index: number) =>
+  `var(${PALETTE[index % PALETTE.length] ?? PALETTE[0]})`;
 
 export const seriesColors = (series: ChartSeries[]) =>
-  series.map((item, index) => item.color ?? `var(${PALETTE[index % PALETTE.length]})`);
+  series.map((item, index) => item.color ?? paletteColor(index));
 
 export const toNumber = (value: string | number | undefined) => {
   const parsed = typeof value === 'number' ? value : Number(value);
@@ -48,29 +51,35 @@ export function signedTicks(minValue: number, maxValue: number, count: number) {
 }
 
 export function linePath(points: Point[], curve: ChartCurve) {
-  if (points.length === 0) return '';
-  const [first, ...rest] = points;
+  const first = points[0];
+  if (first === undefined) return '';
   let path = `M${first[0]},${first[1]}`;
 
   if (curve === 'step') {
-    rest.forEach(([x, y], index) => {
-      const previous = points[index];
+    for (let index = 1; index < points.length; index += 1) {
+      const previous = points[index - 1];
+      const current = points[index];
+      if (previous === undefined || current === undefined) continue;
+      const [x, y] = current;
       path += `H${(previous[0] + x) / 2}V${y}H${x}`;
-    });
+    }
     return path;
   }
 
   if (curve === 'linear') {
-    rest.forEach(([x, y]) => {
-      path += `L${x},${y}`;
-    });
+    for (let index = 1; index < points.length; index += 1) {
+      const current = points[index];
+      if (current === undefined) continue;
+      path += `L${current[0]},${current[1]}`;
+    }
     return path;
   }
 
   for (let index = 1; index < points.length; index += 1) {
-    const p0 = points[index - 2] ?? points[index - 1];
     const p1 = points[index - 1];
     const p2 = points[index];
+    if (p1 === undefined || p2 === undefined) continue;
+    const p0 = points[index - 2] ?? p1;
     const p3 = points[index + 1] ?? p2;
     const c1x = p1[0] + (p2[0] - p0[0]) / 6;
     const c1y = p1[1] + (p2[1] - p0[1]) / 6;
@@ -169,7 +178,10 @@ export function usePlotWidth() {
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    const observer = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry === undefined) return;
+      setWidth(entry.contentRect.width);
+    });
     observer.observe(element);
     return () => observer.disconnect();
   }, []);

@@ -105,8 +105,10 @@ export function ColorPicker({
         return;
     }
 
+    const swatch = swatches[next];
+    if (!swatch) return;
     event.preventDefault();
-    choose(swatches[next]);
+    choose(swatch);
     swatchRefs.current[next]?.focus();
   };
 

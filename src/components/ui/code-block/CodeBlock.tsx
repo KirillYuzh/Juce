@@ -128,7 +128,7 @@ export function CodeBlockLine({
   const variantClass =
     variant === 'default'
       ? undefined
-      : styles[`line${variant[0].toUpperCase()}${variant.slice(1)}`];
+      : styles[`line${variant.charAt(0).toUpperCase()}${variant.slice(1)}`];
 
   return (
     <span className={cx(styles.line, variantClass, className)} {...rest}>
