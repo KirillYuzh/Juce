@@ -12,6 +12,7 @@ import {
   toNumber,
   usePlotWidth,
   valueExtent,
+  xAxisMinGap,
   type ChartRow,
   type ChartSeries,
   type TooltipIndicator,
@@ -56,6 +57,7 @@ export function BarChart({
   const [hover, setHover] = useState<{ index: number; x: number; y: number } | null>(null);
   const colors = seriesColors(series);
   const horizontal = layout === 'horizontal';
+  const xLabels = data.map((row) => String(row[xKey]));
 
   const geometry = useMemo(() => {
     const padding = horizontal
@@ -133,7 +135,11 @@ export function BarChart({
 
   const label = ariaLabel ?? `График: ${series.map((item) => item.label).join(', ')}`;
   const flipTooltip = hover !== null && width - hover.x < 200;
-  const every = labelStep(data.length, geometry.plotWidth);
+  const every = labelStep(
+    data.length,
+    geometry.plotWidth,
+    xAxisMinGap(xLabels, plotRef.current, geometry.plotWidth)
+  );
   const singleSeries = series.length === 1 ? series[0] : undefined;
   const hoveredRow = hover === null ? undefined : data[hover.index];
 
@@ -183,7 +189,7 @@ export function BarChart({
 
             {!horizontal && (
               <ChartXAxis
-                items={data.map((row) => ({ label: String(row[xKey]) }))}
+                items={xLabels.map((label) => ({ label }))}
                 x={(index) => geometry.padding.left + geometry.band * index + geometry.band * 0.5}
                 y={height - 6}
                 every={every}

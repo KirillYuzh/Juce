@@ -6,6 +6,7 @@ import {
   bandIndex,
   labelStep,
   linePath,
+  measureLabelWidth,
   niceStep,
   pointerIndex,
   signedTicks,
@@ -90,6 +91,26 @@ describe('labelStep', () => {
   it('always keeps at least one label per gap', () => {
     expect(labelStep(12, 600, 64)).toBe(2);
     expect(labelStep(120, 640, 64)).toBe(12);
+  });
+
+  it('never forces two slots into a width that fits one label', () => {
+    expect(labelStep(3, 300, 800)).toBe(3);
+    expect(labelStep(8, 320, 240)).toBe(8);
+  });
+
+  it('keeps every second label at a width and gap that fit two', () => {
+    expect(labelStep(6, 348, 64)).toBe(2);
+  });
+});
+
+describe('measureLabelWidth', () => {
+  it('estimates the widest label from its length without canvas', () => {
+    expect(measureLabelWidth([], '400 12px sans-serif')).toBe(0);
+    expect(measureLabelWidth(['abcd', 'abc'], '400 12px sans-serif')).toBe(28);
+  });
+
+  it('scales the estimate with the parsed font size', () => {
+    expect(measureLabelWidth(['abcd'], '400 24px sans-serif')).toBe(56);
   });
 });
 

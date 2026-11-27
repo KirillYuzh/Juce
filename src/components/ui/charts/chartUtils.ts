@@ -132,7 +132,63 @@ export function arcPath(
 }
 
 export function labelStep(count: number, plotWidth: number, minGap = 64) {
-  return Math.max(1, Math.ceil(count / Math.max(2, Math.floor(plotWidth / minGap))));
+  return Math.max(1, Math.ceil(count / Math.max(1, Math.floor(plotWidth / minGap))));
+}
+
+const FALLBACK_FONT_SIZE = 12;
+const FALLBACK_CHAR_WIDTH = 7;
+const MIN_LABEL_GAP = 64;
+const LABEL_GAP_SIDE = 16;
+
+interface TextMeasurer {
+  font: string;
+  measureText(text: string): { width: number };
+}
+
+const labelWidthCache = new Map<string, number>();
+let measurer: TextMeasurer | null | undefined;
+
+function textMeasurer() {
+  if (measurer !== undefined) return measurer;
+  measurer =
+    typeof OffscreenCanvas === 'undefined' ? null : new OffscreenCanvas(1, 1).getContext('2d');
+  return measurer;
+}
+
+function fontSize(font: string) {
+  const parsed = Number(/(\d+(?:\.\d+)?)px/.exec(font)?.[1]);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : FALLBACK_FONT_SIZE;
+}
+
+function estimateLabelWidth(label: string, font: string) {
+  return label.length * FALLBACK_CHAR_WIDTH * (fontSize(font) / FALLBACK_FONT_SIZE);
+}
+
+export function measureLabelWidth(labels: readonly string[], font: string): number {
+  const context = textMeasurer();
+  if (context !== null) context.font = font;
+  let widest = 0;
+  for (const label of labels) {
+    const key = `${font}\u0000${label}`;
+    let width = labelWidthCache.get(key);
+    if (width === undefined) {
+      width =
+        context === null ? estimateLabelWidth(label, font) : context.measureText(label).width;
+      labelWidthCache.set(key, width);
+    }
+    if (width > widest) widest = width;
+  }
+  return widest;
+}
+
+export function xAxisMinGap(labels: readonly string[], element: Element | null, plotWidth: number) {
+  if (element === null || plotWidth <= 0) return MIN_LABEL_GAP;
+  const style = getComputedStyle(element);
+  const font = `${style.fontWeight || '400'} ${style.fontSize || `${FALLBACK_FONT_SIZE}px`} ${
+    style.fontFamily || 'sans-serif'
+  }`;
+  const widest = measureLabelWidth(labels, font);
+  return widest === 0 ? MIN_LABEL_GAP : Math.max(MIN_LABEL_GAP, widest + LABEL_GAP_SIDE);
 }
 
 export interface PlotPadding {

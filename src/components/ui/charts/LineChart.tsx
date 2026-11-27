@@ -14,6 +14,7 @@ import {
   usePlotWidth,
   valueExtent,
   valueTicks,
+  xAxisMinGap,
   type ChartCurve,
   type ChartRow,
   type ChartSeries,
@@ -57,6 +58,7 @@ export function LineChart({
   const [plotRef, width] = usePlotWidth();
   const [hovered, setHovered] = useState<number | null>(null);
   const colors = seriesColors(series);
+  const labels = data.map((row) => String(row[xKey]));
 
   useEffect(() => {
     setHovered((current) => (current !== null && current >= data.length ? null : current));
@@ -91,9 +93,14 @@ export function LineChart({
       y,
       lines,
       tickValues,
-      every: labelStep(data.length, plot.width),
     };
   }, [curve, data, grid, height, series, ticks, width]);
+
+  const every = labelStep(
+    data.length,
+    geometry.plotWidth,
+    xAxisMinGap(labels, plotRef.current, geometry.plotWidth)
+  );
 
   const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -137,10 +144,10 @@ export function LineChart({
             )}
 
             <ChartXAxis
-              items={data.map((row) => ({ label: String(row[xKey]) }))}
+              items={labels.map((label) => ({ label }))}
               x={geometry.x}
               y={height - 6}
-              every={geometry.every}
+              every={every}
             />
 
             {geometry.lines.map((line, index) => (

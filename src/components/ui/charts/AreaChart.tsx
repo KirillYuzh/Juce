@@ -15,6 +15,7 @@ import {
   usePlotWidth,
   valueExtent,
   valueTicks,
+  xAxisMinGap,
   type ChartCurve,
   type ChartRow,
   type ChartSeries,
@@ -63,6 +64,7 @@ export function AreaChart({
   const [hovered, setHovered] = useState<number | null>(null);
   const gradientId = useDomId();
   const colors = seriesColors(series);
+  const labels = data.map((row) => String(row[xKey]));
 
   useEffect(() => {
     setHovered((current) => (current !== null && current >= data.length ? null : current));
@@ -119,9 +121,14 @@ export function AreaChart({
       y,
       bands,
       tickValues,
-      every: labelStep(data.length, plot.width),
     };
   }, [curve, data, grid, height, series, stacked, ticks, width]);
+
+  const every = labelStep(
+    data.length,
+    geometry.plotWidth,
+    xAxisMinGap(labels, plotRef.current, geometry.plotWidth)
+  );
 
   const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -183,10 +190,10 @@ export function AreaChart({
             )}
 
             <ChartXAxis
-              items={data.map((row) => ({ label: String(row[xKey]) }))}
+              items={labels.map((label) => ({ label }))}
               x={geometry.x}
               y={height - 6}
-              every={geometry.every}
+              every={every}
             />
 
             {data.length > 0 &&

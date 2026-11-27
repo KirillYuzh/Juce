@@ -40,6 +40,11 @@ const mixed: ChartRow[] = [
 
 const frame = { width: 560 };
 
+const longLabels: ChartRow[] = Array.from({ length: 8 }, (_, index) => ({
+  week: `Неделя ${index + 1}, январь 2025 г.`,
+  visitors: 120 + index * 40,
+}));
+
 export const Area: Story = {
   render: () => (
     <div style={frame}>
@@ -142,6 +147,20 @@ export const WithoutGrid: Story = {
         grid={false}
         fill="none"
         height={160}
+      />
+    </div>
+  ),
+};
+
+export const LongLabels: Story = {
+  name: 'Long labels',
+  render: () => (
+    <div style={frame}>
+      <AreaChart
+        data={longLabels}
+        xKey="week"
+        series={[{ key: 'visitors', label: 'Посетители' }]}
+        legend
       />
     </div>
   ),
