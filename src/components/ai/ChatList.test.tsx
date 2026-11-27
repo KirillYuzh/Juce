@@ -112,6 +112,24 @@ describe('ChatList', () => {
     expect(document.activeElement).toBe(trigger);
   });
 
+  it('moves focus with the arrow keys in the actions menu', () => {
+    render(<ChatList chats={chats} onDelete={() => {}} />);
+    fireEvent.click(screen.getByLabelText('Действия с чатом «Второй диалог»'));
+
+    const menuItems = within(screen.getByRole('menu')).getAllByRole('menuitem');
+    expect(document.activeElement).toBe(menuItems[0]);
+
+    fireEvent.keyDown(menuItems[0], { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(menuItems[1]);
+    fireEvent.keyDown(menuItems[1], { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(menuItems[2]);
+
+    fireEvent.keyDown(menuItems[2], { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(menuItems[0]);
+    fireEvent.keyDown(menuItems[0], { key: 'ArrowUp' });
+    expect(document.activeElement).toBe(menuItems[2]);
+  });
+
   it('moves focus with Home and End in the chat list', () => {
     render(<ChatList chats={chats} />);
     const search = screen.getByLabelText('Поиск по диалогам');

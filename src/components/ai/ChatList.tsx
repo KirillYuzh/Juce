@@ -8,6 +8,7 @@ import { AlertDialog } from '../ui/AlertDialog';
 import { useCopy } from '../ui/clipboard';
 import { cx } from '../../lib/cx';
 import { useDismiss } from '../../lib/use-dismiss';
+import { useRovingFocus } from '../../lib/use-roving-focus';
 
 export interface ChatListItem {
   id: string;
@@ -58,6 +59,7 @@ interface ChatActionsProps {
 
 function ChatActions({ chat, onCopy, onDownload, onDelete }: ChatActionsProps) {
   const [open, setOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<Array<HTMLButtonElement | null>>([]);
   const { copy } = useCopy(chatText(chat));
@@ -76,31 +78,6 @@ function ChatActions({ chat, onCopy, onDownload, onDelete }: ChatActionsProps) {
     if (!open) return;
     itemsRef.current[0]?.focus();
   }, [open]);
-
-  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const items = itemsRef.current.filter((item): item is HTMLButtonElement => item !== null);
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      close();
-      return;
-    }
-    if (event.key === 'Tab') {
-      close(false);
-      return;
-    }
-    if (items.length === 0) return;
-    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
-      event.preventDefault();
-      const current = items.indexOf(document.activeElement as HTMLButtonElement);
-      const index =
-        event.key === 'Home'
-          ? 0
-          : event.key === 'End'
-            ? items.length - 1
-            : (current + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
-      items[index]?.focus();
-    }
-  };
 
   const actions: Array<{
     id: string;
@@ -133,6 +110,26 @@ function ChatActions({ chat, onCopy, onDownload, onDelete }: ChatActionsProps) {
     });
   }
 
+  const onMenuKeyDown = useRovingFocus({
+    count: actions.length,
+    index: focusedIndex,
+    orientation: 'vertical',
+    onMove: (next) => itemsRef.current[next]?.focus(),
+  });
+
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      close();
+      return;
+    }
+    if (event.key === 'Tab') {
+      close(false);
+      return;
+    }
+    onMenuKeyDown(event);
+  };
+
   return (
     <div className={styles.actions} ref={rootRef} onKeyDown={onKeyDown}>
       <IconButton
@@ -156,6 +153,7 @@ function ChatActions({ chat, onCopy, onDownload, onDelete }: ChatActionsProps) {
                 itemsRef.current[index] = element;
               }}
               className={cx(styles.menuItem, action.danger && styles.menuItemDanger)}
+              onFocus={() => setFocusedIndex(index)}
               onClick={() => {
                 close(false);
                 action.run();
