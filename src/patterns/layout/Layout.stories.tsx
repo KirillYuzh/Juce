@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button } from '../../components/ui/Button';
 import { Input, Select, Textarea, Checkbox, Radio, Switch } from '../../components/ui/Fields';
 import { Chip, Badge, Avatar, Divider } from '../../components/ui/Display';
-import { Alert } from '../../components/ui/Feedback';
+import { Callout } from '../../components/ui/Typography';
 import { Icon } from '../../components/ui/Icon';
 
 const meta: Meta = {
@@ -698,25 +698,22 @@ function NotificationDemo() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 720 }}>
       {visible ? (
-        <Alert
-          tone="success"
-          action={
-            <span style={{ ...row, gap: 'var(--tb-space-2)' }}>
-              <Button variant="secondary" size="s">
-                Открыть
-              </Button>
-              <Button
-                variant="ghost"
-                size="s"
-                iconLeft="close"
-                aria-label="Закрыть уведомление"
-                onClick={() => setVisible(false)}
-              />
-            </span>
-          }
-        >
-          Разбор готов: «Почему утекает горутина». Можно открыть и задать вопросы.
-        </Alert>
+        <div style={{ ...row, alignItems: 'flex-start' }}>
+          <Callout
+            tone="success"
+            style={{ flex: 1 }}
+            action={{ label: 'Открыть', onClick: () => {} }}
+          >
+            Разбор готов: «Почему утекает горутина». Можно открыть и задать вопросы.
+          </Callout>
+          <Button
+            variant="ghost"
+            size="s"
+            iconLeft="close"
+            aria-label="Закрыть уведомление"
+            onClick={() => setVisible(false)}
+          />
+        </div>
       ) : (
         <Button variant="secondary" onClick={() => setVisible(true)}>
           Показать уведомление снова
@@ -730,7 +727,7 @@ const NOTIFICATION_SOURCE = doc(
   `import { useState, type CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button } from '../../components/ui/Button';
-import { Alert } from '../../components/ui/Feedback';`,
+import { Callout } from '../../components/ui/Typography';`,
   DOC_META,
   DOC_STYLES.row,
   `function NotificationDemo() {
@@ -739,25 +736,22 @@ import { Alert } from '../../components/ui/Feedback';`,
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 720 }}>
       {visible ? (
-        <Alert
-          tone="success"
-          action={
-            <span style={{ ...row, gap: 'var(--tb-space-2)' }}>
-              <Button variant="secondary" size="s">
-                Открыть
-              </Button>
-              <Button
-                variant="ghost"
-                size="s"
-                iconLeft="close"
-                aria-label="Закрыть уведомление"
-                onClick={() => setVisible(false)}
-              />
-            </span>
-          }
-        >
-          Разбор готов: «Почему утекает горутина». Можно открыть и задать вопросы.
-        </Alert>
+        <div style={{ ...row, alignItems: 'flex-start' }}>
+          <Callout
+            tone="success"
+            style={{ flex: 1 }}
+            action={{ label: 'Открыть', onClick: () => {} }}
+          >
+            Разбор готов: «Почему утекает горутина». Можно открыть и задать вопросы.
+          </Callout>
+          <Button
+            variant="ghost"
+            size="s"
+            iconLeft="close"
+            aria-label="Закрыть уведомление"
+            onClick={() => setVisible(false)}
+          />
+        </div>
       ) : (
         <Button variant="secondary" onClick={() => setVisible(true)}>
           Показать уведомление снова

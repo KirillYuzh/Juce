@@ -7,46 +7,8 @@ import {
   type ReactNode,
 } from 'react';
 import styles from './Feedback.module.css';
-import { Icon, type IconName } from './Icon';
 import { Button } from './Button';
 import { cx } from '../../lib/cx';
-
-export type AlertTone = 'info' | 'warning' | 'error' | 'success';
-
-const ALERT_ICONS: Record<AlertTone, IconName> = {
-  info: 'info',
-  warning: 'alertCircle',
-  error: 'alertCircle',
-  success: 'checkCircle',
-};
-
-export interface AlertProps {
-  tone?: AlertTone;
-  children: ReactNode;
-  action?: ReactNode;
-  className?: string;
-}
-
-export function Alert({ tone = 'info', children, action, className }: AlertProps) {
-  return (
-    <div
-      className={cx(
-        styles.alert,
-        tone !== 'info' && styles[`alert${tone.charAt(0).toUpperCase()}${tone.slice(1)}`],
-        className
-      )}
-      role={tone === 'error' ? 'alert' : 'status'}
-    >
-      <span className={styles.alertIcon}>
-        <Icon name={ALERT_ICONS[tone]} size={24} />
-      </span>
-      <div className={styles.alertContent}>
-        <span className={styles.alertText}>{children}</span>
-        {action && <span className={styles.alertAction}>{action}</span>}
-      </div>
-    </div>
-  );
-}
 
 export function Tooltip({ text, children }: { text: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);

@@ -130,9 +130,10 @@ export function Quote({ cite, className, children, ...rest }: QuoteProps) {
   );
 }
 
-export type CalloutTone = 'note' | 'important' | 'warning' | 'error' | 'success';
+export type CalloutTone = 'info' | 'note' | 'important' | 'warning' | 'error' | 'success';
 
 const calloutIcon: Record<CalloutTone, IconName> = {
+  info: 'info',
   note: 'info',
   important: 'alertCircle',
   warning: 'alertCircle',
@@ -157,6 +158,7 @@ export function Callout({
   title,
   icon,
   action,
+  role,
   className,
   children,
   ...rest
@@ -166,7 +168,7 @@ export function Callout({
       {...rest}
       className={cx(styles.callout, className)}
       data-tone={tone}
-      role={tone === 'error' ? 'alert' : 'note'}
+      role={role ?? (tone === 'error' ? 'alert' : 'note')}
     >
       <span className={styles.calloutIcon}>
         {icon ?? <Icon name={calloutIcon[tone]} size={20} />}

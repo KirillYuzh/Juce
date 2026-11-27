@@ -106,6 +106,39 @@ describe('Callout', () => {
     expect(screen.getByRole('alert').textContent).toContain('Сборка упала');
   });
 
+  it('uses role note by default', () => {
+    render(<Callout>Сборка прошла</Callout>);
+
+    expect(screen.getByRole('note').textContent).toContain('Сборка прошла');
+  });
+
+  it('lets the caller override the role', () => {
+    render(
+      <Callout tone="error" role="status">
+        Сборка упала
+      </Callout>
+    );
+
+    expect(screen.getByRole('status').textContent).toContain('Сборка упала');
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('renders the info tone with the note roles', () => {
+    const { container } = render(
+      <>
+        <Callout tone="info">Информация</Callout>
+        <Callout tone="note">Заметка</Callout>
+      </>
+    );
+
+    const info = container.querySelector('[data-tone="info"]');
+    const note = container.querySelector('[data-tone="note"]');
+    if (!info || !note) throw new Error('Callout не отрендерен');
+
+    expect(info.className).toBe(note.className);
+    expect(info.querySelector('svg')?.getAttribute('width')).toBe('20');
+  });
+
   it('uses role note for the remaining tones', () => {
     render(<Callout tone="note">Полезно знать</Callout>);
 
