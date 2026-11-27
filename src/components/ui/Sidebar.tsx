@@ -29,6 +29,7 @@ interface SidebarContextValue {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   state: 'expanded' | 'collapsed';
+  sidebarId: string;
   toggleSidebar: () => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 }
@@ -68,6 +69,7 @@ export function SidebarProvider({
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const wasMobileOpen = useRef(false);
+  const sidebarId = useId();
 
   const toggleSidebar = useCallback(() => {
     if (isMobile) setOpenMobile((current) => !current);
@@ -134,10 +136,11 @@ export function SidebarProvider({
       setOpenMobile,
       isMobile,
       state: open ? 'expanded' : 'collapsed',
+      sidebarId,
       toggleSidebar,
       triggerRef,
     }),
-    [open, setOpen, openMobile, isMobile, toggleSidebar]
+    [open, setOpen, openMobile, isMobile, sidebarId, toggleSidebar]
   );
 
   return (
@@ -175,7 +178,7 @@ export function Sidebar({
   collapsible = 'offcanvas',
   className,
 }: SidebarProps) {
-  const { state, openMobile, setOpenMobile, isMobile } = useSidebar();
+  const { state, openMobile, setOpenMobile, isMobile, sidebarId } = useSidebar();
   const titleId = useId();
   const asideRef = useRef<HTMLElement>(null);
 
@@ -211,6 +214,7 @@ export function Sidebar({
       )}
       <aside
         ref={asideRef}
+        id={sidebarId}
         className={cx(styles.sidebar, className)}
         data-state={dataState}
         data-side={side}
@@ -488,12 +492,15 @@ export function SidebarMenuSubSkeleton({ className }: { className?: string }) {
 }
 
 export function SidebarRail({ className }: { className?: string }) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, state, sidebarId } = useSidebar();
+  const expanded = state === 'expanded';
   return (
     <button
       type="button"
       className={cx(styles.rail, className)}
-      aria-label="Свернуть панель"
+      aria-label={expanded ? 'Свернуть панель' : 'Развернуть панель'}
+      aria-expanded={expanded}
+      aria-controls={sidebarId}
       onClick={toggleSidebar}
     />
   );

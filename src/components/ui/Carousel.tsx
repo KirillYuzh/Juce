@@ -40,6 +40,7 @@ interface CarouselContextValue {
   api: CarouselApi;
   atStart: boolean;
   atEnd: boolean;
+  slideRoleDescription: string;
 }
 
 const CarouselContext = createContext<CarouselContextValue | null>(null);
@@ -59,6 +60,8 @@ export interface CarouselProps {
   setApi?: (api: CarouselApi) => void;
   className?: string;
   'aria-label'?: string;
+  roleDescription?: string;
+  slideRoleDescription?: string;
 }
 
 export function Carousel({
@@ -68,6 +71,8 @@ export function Carousel({
   setApi,
   className,
   'aria-label': ariaLabel = 'Карусель',
+  roleDescription = 'карусель',
+  slideRoleDescription = 'слайд',
 }: CarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -198,12 +203,22 @@ export function Carousel({
   }, [api]);
 
   return (
-    <CarouselContext.Provider value={{ orientation, viewportRef, trackRef, api, atStart, atEnd }}>
+    <CarouselContext.Provider
+      value={{
+        orientation,
+        viewportRef,
+        trackRef,
+        api,
+        atStart,
+        atEnd,
+        slideRoleDescription,
+      }}
+    >
       <div
         className={cx(styles.root, className)}
         data-orientation={orientation}
         role="region"
-        aria-roledescription="carousel"
+        aria-roledescription={roleDescription}
         aria-label={ariaLabel}
       >
         {children}
@@ -263,6 +278,7 @@ export interface CarouselItemProps {
 }
 
 export function CarouselItem({ children, basis = '100%', className, style }: CarouselItemProps) {
+  const { slideRoleDescription } = useCarousel('CarouselItem');
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ index: 0, total: 0 });
 
@@ -281,7 +297,7 @@ export function CarouselItem({ children, basis = '100%', className, style }: Car
       className={cx(styles.item, className)}
       style={{ flexBasis: basis, ...style }}
       role="group"
-      aria-roledescription="slide"
+      aria-roledescription={slideRoleDescription}
       aria-label={position.index ? `${position.index} из ${position.total}` : undefined}
     >
       {children}

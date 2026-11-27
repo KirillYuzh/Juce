@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -8,12 +8,26 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarRail,
 } from './Sidebar';
 
 const cssSource = readFileSync(
   resolve(process.cwd(), 'src/components/ui/Sidebar.module.css'),
   'utf8'
 );
+
+function ruleBody(selector: string): string {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const body = new RegExp(`${escaped}\\s*\\{([^}]*)\\}`).exec(cssSource)?.[1];
+  if (body === undefined) throw new Error(`нет правила «${selector}»`);
+  return body;
+}
+
+function px(body: string, property: string): number {
+  const value = new RegExp(`${property}:\\s*(-?\\d+)px`).exec(body)?.[1];
+  if (value === undefined) throw new Error(`нет «${property}» в px: ${body}`);
+  return Number(value);
+}
 
 beforeEach(() => {
   window.matchMedia = ((query: string) => ({
@@ -81,5 +95,41 @@ describe('Sidebar в режиме collapsed + icon', () => {
     );
 
     expect(rule?.[1]).toContain('display: none');
+  });
+});
+
+describe('SidebarRail', () => {
+  function Rail() {
+    return (
+      <SidebarProvider defaultOpen>
+        <Sidebar collapsible="icon">
+          <SidebarRail />
+        </Sidebar>
+      </SidebarProvider>
+    );
+  }
+
+  it('меняет подпись и состояние при сворачивании', () => {
+    render(<Rail />);
+
+    const expanded = screen.getByRole('button', { name: 'Свернуть панель' });
+    expect(expanded.getAttribute('aria-expanded')).toBe('true');
+
+    fireEvent.click(expanded);
+
+    const collapsed = screen.getByRole('button', { name: 'Развернуть панель' });
+    expect(collapsed.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('указывает на панель, которой управляет', () => {
+    render(<Rail />);
+
+    const rail = screen.getByRole('button', { name: 'Свернуть панель' });
+    expect(rail.getAttribute('aria-controls')).toBe(document.querySelector('aside')?.id);
+  });
+
+  it('держит хитзону не уже 24px при видимых 10px', () => {
+    const inset = -px(ruleBody('.rail::before'), 'left');
+    expect(px(ruleBody('.rail'), 'width') + 2 * inset).toBeGreaterThanOrEqual(24);
   });
 });

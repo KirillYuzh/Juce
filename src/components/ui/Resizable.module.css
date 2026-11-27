@@ -37,8 +37,8 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -5px;
-  right: -5px;
+  left: -12px;
+  right: -12px;
 }
 
 .handle:focus-visible {
@@ -62,8 +62,8 @@
 }
 
 .group[data-orientation='vertical'] .handle::before {
-  top: -5px;
-  bottom: -5px;
+  top: -12px;
+  bottom: -12px;
   left: 0;
   right: 0;
 }

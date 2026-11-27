@@ -97,26 +97,33 @@
 .dots {
   display: flex;
   justify-content: center;
-  gap: 6px;
+  gap: var(--tb-space-5);
   margin-top: 16px;
 }
 
 .dot {
+  position: relative;
   width: 6px;
   height: 6px;
   padding: 0;
   border: 0;
   border-radius: var(--tb-radius-circle);
-  background: var(--tb-gray-300);
+  background: var(--tb-gray-500);
   cursor: pointer;
   transition:
     width var(--tb-duration-base) var(--tb-ease-standard),
     background-color var(--tb-duration-base) var(--tb-ease-standard);
 }
 
+.dot::after {
+  content: '';
+  position: absolute;
+  inset: -9px;
+}
+
 @media (hover: hover) {
   .dot:hover {
-    background: var(--tb-gray-500);
+    background: var(--tb-text-primary);
   }
 }
 
