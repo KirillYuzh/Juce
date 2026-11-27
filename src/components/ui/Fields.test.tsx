@@ -168,12 +168,45 @@ describe('Select', () => {
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('сбрасывает выбранное значение, которого больше нет в опциях', () => {
+  it('показывает пустое состояние, пока ничего не выбрано', () => {
+    render(<Select label="Язык" options={options} />);
+    const trigger = screen.getByRole('button', { name: 'Язык' });
+
+    expect(trigger.textContent).toContain('Выберите');
+
+    fireEvent.click(trigger);
+    const marked = screen
+      .getAllByRole('option')
+      .filter((option) => option.getAttribute('aria-selected') === 'true');
+
+    expect(marked).toHaveLength(0);
+  });
+
+  it('отправляет пустую строку, пока ничего не выбрано', () => {
+    render(
+      <form data-testid="form">
+        <Select name="lang" label="Язык" options={options} />
+      </form>
+    );
+    const form = screen.getByTestId('form') as HTMLFormElement;
+
+    expect(new FormData(form).get('lang')).toBe('');
+  });
+
+  it('показывает defaultValue как выбранное значение', () => {
+    render(<Select label="Язык" options={options} defaultValue="go" />);
+
+    expect(screen.getByRole('button', { name: 'Язык' }).textContent).toContain('Go');
+  });
+
+  it('переводит в пустое состояние значение, которого больше нет в опциях', () => {
     const { rerender } = render(<Select label="Язык" options={options} defaultValue="go" />);
     expect(screen.getByRole('button', { name: 'Язык' }).textContent).toContain('Go');
 
     rerender(<Select label="Язык" options={[options[0]]} defaultValue="go" />);
+    const trigger = screen.getByRole('button', { name: 'Язык' });
 
-    expect(screen.getByRole('button', { name: 'Язык' }).textContent).toContain('Java');
+    expect(trigger.textContent).toContain('Выберите');
+    expect(trigger.textContent).not.toContain('Java');
   });
 });
