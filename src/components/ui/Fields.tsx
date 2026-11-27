@@ -10,7 +10,7 @@ import { useDismiss } from '../../lib/use-dismiss';
 interface FieldShellProps {
   label?: string;
   hint?: string;
-  error?: string;
+  error?: ReactNode;
   required?: boolean;
   requiredMark?: boolean;
   id: string;
@@ -18,6 +18,7 @@ interface FieldShellProps {
   className?: string;
   controlClassName?: string;
   controlStyle?: CSSProperties;
+  controlProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 function FieldShell({
@@ -31,11 +32,15 @@ function FieldShell({
   className,
   controlClassName,
   controlStyle,
+  controlProps,
 }: FieldShellProps) {
+  const style =
+    controlStyle || controlProps?.style ? { ...controlStyle, ...controlProps?.style } : undefined;
+
   return (
     <div className={cx(styles.field, className)}>
       {label && (
-        <label className={styles.label} htmlFor={id}>
+        <label id={`${id}-label`} className={styles.label} htmlFor={id}>
           {label}
           {required && requiredMark && (
             <span className={styles.requiredMark} aria-hidden="true">
@@ -45,8 +50,14 @@ function FieldShell({
         </label>
       )}
       <div
-        className={cx(styles.control, controlClassName, error && styles.invalid)}
-        style={controlStyle}
+        {...controlProps}
+        className={cx(
+          styles.control,
+          controlClassName,
+          controlProps?.className,
+          error ? styles.invalid : undefined
+        )}
+        style={style}
       >
         {children}
       </div>
@@ -65,7 +76,7 @@ function FieldShell({
   );
 }
 
-function describedBy(id: string, hint?: string, error?: string) {
+function describedBy(id: string, hint?: string, error?: ReactNode) {
   if (error) return `${id}-error`;
   if (hint) return `${id}-hint`;
   return undefined;
@@ -493,6 +504,9 @@ export interface ChipSelectProps {
   onChange: (value: string[]) => void;
   label?: string;
   hint?: string;
+  error?: ReactNode;
+  required?: boolean;
+  requiredMark?: boolean;
   className?: string;
   fieldClassName?: string;
   'aria-label'?: string;
@@ -504,49 +518,49 @@ export function ChipSelect({
   onChange,
   label,
   hint,
+  error,
+  required,
+  requiredMark = true,
   className,
   fieldClassName,
   'aria-label': ariaLabel,
 }: ChipSelectProps) {
-  const id = useId();
-  const labelId = `${id}-label`;
-  const hintId = `${id}-hint`;
+  const controlId = useId();
 
   const toggle = (option: string) => {
     onChange(value.includes(option) ? value.filter((item) => item !== option) : [...value, option]);
   };
 
   return (
-    <div className={cx(styles.field, fieldClassName)}>
-      {label && (
-        <span id={labelId} className={styles.label}>
-          {label}
-        </span>
-      )}
-      <div
-        className={cx(styles.chipGroup, className)}
-        role="group"
-        aria-label={label ? undefined : ariaLabel}
-        aria-labelledby={label ? labelId : undefined}
-        aria-describedby={hint ? hintId : undefined}
-      >
-        {options.map((option) => (
-          <Chip
-            key={option.value}
-            variant="outline"
-            active={value.includes(option.value)}
-            onClick={() => toggle(option.value)}
-          >
-            {option.label}
-          </Chip>
-        ))}
-      </div>
-      {hint && (
-        <span id={hintId} className={styles.hint}>
-          {hint}
-        </span>
-      )}
-    </div>
+    <FieldShell
+      label={label}
+      hint={hint}
+      error={error}
+      required={required}
+      requiredMark={requiredMark}
+      id={controlId}
+      className={fieldClassName}
+      controlClassName={styles.chipGroup}
+      controlProps={{
+        role: 'group',
+        className,
+        'aria-label': label ? undefined : ariaLabel,
+        'aria-labelledby': label ? `${controlId}-label` : undefined,
+        'aria-describedby': describedBy(controlId, hint, error),
+        'aria-invalid': error ? true : undefined,
+      }}
+    >
+      {options.map((option) => (
+        <Chip
+          key={option.value}
+          variant="outline"
+          active={value.includes(option.value)}
+          onClick={() => toggle(option.value)}
+        >
+          {option.label}
+        </Chip>
+      ))}
+    </FieldShell>
   );
 }
 

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { Input, Select, Textarea } from './Fields';
+import { Input, Select, Textarea, ChipSelect } from './Fields';
 
 describe('поля', () => {
   it('берёт placeholder как доступное имя и помечает обязательное поле', () => {
@@ -55,6 +55,101 @@ describe('поля', () => {
 
     expect(textarea.getAttribute('aria-invalid')).toBe('true');
     expect(textarea.getAttribute('aria-describedby')).toBe(`${textarea.id}-error`);
+  });
+});
+
+describe('ChipSelect', () => {
+  const options = [
+    { value: 'java', label: 'Java' },
+    { value: 'go', label: 'Go' },
+  ];
+
+  it('показывает ошибку и помечает группу невалидной', () => {
+    render(
+      <ChipSelect
+        label="Направления"
+        options={options}
+        value={[]}
+        onChange={() => {}}
+        error="Выберите направление"
+      />
+    );
+
+    expect(screen.getByRole('alert').textContent).toBe('Выберите направление');
+    expect(screen.getByRole('group').getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('связывает подсказку через aria-describedby и уступает её ошибке', () => {
+    const { rerender } = render(
+      <ChipSelect
+        label="Направления"
+        options={options}
+        value={[]}
+        onChange={() => {}}
+        hint="Можно выбрать несколько"
+      />
+    );
+    const described = document.getElementById(
+      screen.getByRole('group').getAttribute('aria-describedby') ?? ''
+    );
+
+    expect(described?.textContent).toBe('Можно выбрать несколько');
+
+    rerender(
+      <ChipSelect
+        label="Направления"
+        options={options}
+        value={[]}
+        onChange={() => {}}
+        hint="Можно выбрать несколько"
+        error="Нужен выбор"
+      />
+    );
+    const invalid = screen.getByRole('group');
+
+    expect(
+      document.getElementById(invalid.getAttribute('aria-describedby') ?? '')?.textContent
+    ).toBe('Нужен выбор');
+    expect(screen.queryByText('Можно выбрать несколько')).toBeNull();
+  });
+
+  it('рисует звёздочку обязательного поля и убирает её по requiredMark={false}', () => {
+    const { container, rerender } = render(
+      <ChipSelect label="Направления" options={options} value={[]} onChange={() => {}} required />
+    );
+
+    expect(container.textContent).toContain('Направления*');
+
+    rerender(
+      <ChipSelect
+        label="Направления"
+        options={options}
+        value={[]}
+        onChange={() => {}}
+        required
+        requiredMark={false}
+      />
+    );
+
+    expect(container.textContent).not.toContain('*');
+  });
+
+  it('называет группу видимой подписью, а без неё — через aria-label', () => {
+    const { rerender } = render(
+      <ChipSelect label="Направления" options={options} value={[]} onChange={() => {}} />
+    );
+    const group = screen.getByRole('group', { name: 'Направления' });
+
+    expect(document.getElementById(group.getAttribute('aria-labelledby') ?? '')?.tagName).toBe(
+      'LABEL'
+    );
+
+    rerender(
+      <ChipSelect aria-label="Направления" options={options} value={[]} onChange={() => {}} />
+    );
+    const withoutLabel = screen.getByRole('group', { name: 'Направления' });
+
+    expect(withoutLabel.hasAttribute('aria-labelledby')).toBe(false);
   });
 });
 
