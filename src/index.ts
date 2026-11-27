@@ -120,8 +120,6 @@ export type {
   StackJustify,
   StackProps,
 } from './components/ui/Layout';
-export { ScrollFade } from './components/ui/ScrollFade';
-export type { ScrollFadeDirection, ScrollFadeProps } from './components/ui/ScrollFade';
 export { Shimmer } from './components/ui/Shimmer';
 export type { ShimmerProps } from './components/ui/Shimmer';
 export { Table } from './components/ui/Table';

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ScrollFade } from './components/ui/ScrollFade';
 import { Shimmer } from './components/ui/Shimmer';
 
 const meta: Meta = {
@@ -54,8 +53,8 @@ function ModelDrivenShimmer() {
   );
 }
 
-export const ScrollFadeStory: Story = {
-  name: 'ScrollFade',
+export const ScrollFadeUtilities: Story = {
+  name: 'Scroll fade',
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div
@@ -67,16 +66,19 @@ export const ScrollFadeStory: Story = {
           overflow: 'hidden',
         }}
       >
-        <ScrollFade
-          direction="y"
+        <div
+          className="tb-scroll-fade-y"
           style={{ height: '100%', padding: 16, fontSize: 15, lineHeight: '28px' }}
         >
           {items.map((item) => (
             <div key={item}>{item}</div>
           ))}
-        </ScrollFade>
+        </div>
       </div>
-      <ScrollFade direction="x" style={{ display: 'flex', gap: 8, width: 420, paddingBlock: 8 }}>
+      <div
+        className="tb-scroll-fade-x"
+        style={{ display: 'flex', gap: 8, width: 420, paddingBlock: 8 }}
+      >
         {Array.from({ length: 12 }, (_, index) => (
           <div
             key={index}
@@ -95,7 +97,7 @@ export const ScrollFadeStory: Story = {
             Карточка {index + 1}
           </div>
         ))}
-      </ScrollFade>
+      </div>
     </div>
   ),
 };
