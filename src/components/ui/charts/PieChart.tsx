@@ -50,17 +50,18 @@ export function PieChart({
   );
 
   const slices = useMemo(() => {
-    const total = data.reduce((sum, row) => sum + toNumber(row[valueKey]), 0) || 1;
+    const values = data.map((row) => toNumber(row[valueKey]));
+    const total = values.reduce((sum, value) => sum + Math.max(value, 0), 0);
     const radius = Math.max(Math.min(width, height) / 2 - 4, 0);
     const inner = radius * Math.min(Math.max(innerRadius, 0), 0.95);
     let angle = -Math.PI / 2;
 
-    return data.map((row) => {
-      const value = toNumber(row[valueKey]);
-      const sweep = (value / total) * Math.PI * 2;
+    return data.map((row, index) => {
+      const value = values[index] ?? 0;
+      const sweep = total > 0 && value > 0 ? (value / total) * Math.PI * 2 : 0;
       const path = arcPath(width / 2, height / 2, inner, radius, angle, angle + sweep);
       angle += sweep;
-      return { path, value, label: String(row[nameKey]) };
+      return { path, value, label: String(row[nameKey]), sweep };
     });
   }, [data, height, innerRadius, nameKey, valueKey, width]);
 
@@ -86,17 +87,19 @@ export function PieChart({
             aria-label={label}
             onPointerLeave={() => setHover(null)}
           >
-            {slices.map((slice, index) => (
-              <path
-                key={`${slice.label}-${index}`}
-                className={styles.slice}
-                style={{ animationDelay: `${index * 60}ms`, fill: colors[index] }}
-                d={slice.path}
-                stroke="var(--tb-surface)"
-                strokeWidth={2}
-                onPointerMove={(event) => onPointerMove(event, index)}
-              />
-            ))}
+            {slices.map((slice, index) =>
+              slice.sweep > 0 ? (
+                <path
+                  key={`${slice.label}-${index}`}
+                  className={styles.slice}
+                  style={{ animationDelay: `${index * 60}ms`, fill: colors[index] }}
+                  d={slice.path}
+                  stroke="var(--tb-surface)"
+                  strokeWidth={2}
+                  onPointerMove={(event) => onPointerMove(event, index)}
+                />
+              ) : null
+            )}
           </svg>
         )}
 

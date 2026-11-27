@@ -4,7 +4,6 @@ import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
 import { cx } from '../../../lib/cx';
 import { useDomId } from '../../../lib/use-id';
 import {
-  axisTicks,
   labelStep,
   linePath,
   lineScale,
@@ -15,6 +14,7 @@ import {
   toNumber,
   usePlotWidth,
   valueExtent,
+  valueTicks,
   type ChartCurve,
   type ChartRow,
   type ChartSeries,
@@ -91,11 +91,16 @@ export function AreaChart({
       return rowValues.map((value, pointIndex) => value + (lowerRow?.[pointIndex] ?? 0));
     });
 
-    const { max } = valueExtent(upper);
-    const { max: axisMax, values: tickValues } = axisTicks(max, ticks);
+    const extent = valueExtent([...upper, ...lower]);
+    const {
+      min: axisMin,
+      max: axisMax,
+      values: tickValues,
+    } = valueTicks(extent.min, extent.max, ticks);
+    const span = axisMax - axisMin || 1;
 
     const x = lineScale(data.length, plot.width, padding.left);
-    const y = (value: number) => padding.top + plot.height * (1 - value / axisMax);
+    const y = (value: number) => padding.top + plot.height * (1 - (value - axisMin) / span);
 
     const bands = series.map((item, seriesIndex) => {
       const upperRow = upper[seriesIndex] ?? [];

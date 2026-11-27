@@ -20,6 +20,15 @@ const data: ChartRow[] = [
   { month: 'Июнь', desktop: 214, mobile: 140 },
 ];
 
+const mixed: ChartRow[] = [
+  { month: 'Январь', desktop: 186, mobile: -80 },
+  { month: 'Февраль', desktop: -120, mobile: 200 },
+  { month: 'Март', desktop: 237, mobile: 120 },
+  { month: 'Апрель', desktop: 173, mobile: -190 },
+  { month: 'Май', desktop: -209, mobile: 130 },
+  { month: 'Июнь', desktop: 214, mobile: 140 },
+];
+
 const frame = { width: 560 };
 const series = [
   { key: 'desktop', label: 'Десктоп' },
@@ -51,6 +60,14 @@ export const Step: Story = {
         series={[{ key: 'desktop', label: 'Десктоп' }]}
         curve="step"
       />
+    </div>
+  ),
+};
+
+export const Negatives: Story = {
+  render: () => (
+    <div style={frame}>
+      <LineChart data={mixed} xKey="month" series={series} dots legend />
     </div>
   ),
 };

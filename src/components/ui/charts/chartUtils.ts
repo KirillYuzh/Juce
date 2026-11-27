@@ -50,6 +50,11 @@ export function signedTicks(minValue: number, maxValue: number, count: number) {
   return { min, max, step, values };
 }
 
+export function valueTicks(minValue: number, maxValue: number, count: number) {
+  if (minValue < 0) return signedTicks(minValue, maxValue, count);
+  return { min: 0, ...axisTicks(maxValue, count) };
+}
+
 export function linePath(points: Point[], curve: ChartCurve) {
   const first = points[0];
   if (first === undefined) return '';

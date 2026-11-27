@@ -29,6 +29,15 @@ const twoSeries: ChartRow[] = [
   { month: 'Июнь', desktop: 374, mobile: 140 },
 ];
 
+const mixed: ChartRow[] = [
+  { month: 'Январь', desktop: 186, mobile: -80 },
+  { month: 'Февраль', desktop: -120, mobile: 200 },
+  { month: 'Март', desktop: 237, mobile: 120 },
+  { month: 'Апрель', desktop: 173, mobile: -190 },
+  { month: 'Май', desktop: -209, mobile: 130 },
+  { month: 'Июнь', desktop: 214, mobile: 140 },
+];
+
 const frame = { width: 560 };
 
 export const Area: Story = {
@@ -100,6 +109,22 @@ export const Stacked: Story = {
           { key: 'mobile', label: 'Мобильные' },
         ]}
         stacked
+        legend
+      />
+    </div>
+  ),
+};
+
+export const Negatives: Story = {
+  render: () => (
+    <div style={frame}>
+      <AreaChart
+        data={mixed}
+        xKey="month"
+        series={[
+          { key: 'desktop', label: 'Десктоп' },
+          { key: 'mobile', label: 'Мобильные' },
+        ]}
         legend
       />
     </div>
