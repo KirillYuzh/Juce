@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import styles from './Chart.module.css';
-import { ChartGrid, ChartLegend, ChartTooltip, ChartXAxis } from './ChartParts';
+import {
+  CHART_TABLE_ROW_LIMIT,
+  ChartDataTable,
+  ChartGrid,
+  ChartLegend,
+  ChartTooltip,
+  ChartXAxis,
+} from './ChartParts';
 import { cx } from '../../../lib/cx';
 import {
   labelStep,
@@ -230,6 +237,17 @@ export function LineChart({
           }))}
         />
       )}
+
+      <ChartDataTable
+        caption={label}
+        rowHeader={xKey}
+        columns={series.map((item) => item.label)}
+        rows={data.slice(0, CHART_TABLE_ROW_LIMIT).map((row, rowIndex) => ({
+          key: `${String(row[xKey])}-${rowIndex}`,
+          header: String(row[xKey]),
+          cells: series.map((item) => valueFormat(toNumber(row[item.key]))),
+        }))}
+      />
     </div>
   );
 }
